@@ -1,7 +1,5 @@
-function Calendar() {
-    return (
-        <div>calendar</div>
-    );
+function WorkCalendar() {
+   return <div></div>;
 }
 
-export default Calendar;
+export default WorkCalendar;

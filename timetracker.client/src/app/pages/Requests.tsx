@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
+import { Button, Box, Divider, Flex, Text } from "@chakra-ui/react";
 import { PiPencilSimple } from "react-icons/pi";
 import { useState } from "react";
 import NewRequestForm from "../../features/requests/NewRequestForm.tsx";
@@ -29,7 +29,7 @@ function Requests() {
                   <Text fontSize="2xl">Your requests</Text>
                   <Button onClick={handleActive} variant="ghost">
                      <PiPencilSimple size="18" />
-                     <Text ml="1"> New request</Text>
+                     <Text ml="1">New request</Text>
                   </Button>
                </Flex>
                <Divider borderColor="gray.300" borderWidth="1.5px" />

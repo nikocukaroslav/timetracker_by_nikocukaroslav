@@ -43,7 +43,7 @@ function Employees() {
                   <Flex direction="column">
                      <Text>Yaroslav Nikonchyk</Text>
                      <Text fontSize="sm" color="gray.500">
-                        nikoc@gmail.com
+                        nikocuk@gmail.com
                      </Text>
                   </Flex>
                </Flex>

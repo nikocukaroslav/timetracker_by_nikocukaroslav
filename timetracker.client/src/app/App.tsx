@@ -7,7 +7,7 @@ import NotFound from "./pages/NotFound.tsx";
 import Employees from "./pages/Employees.tsx";
 import Requests from "./pages/Requests.tsx";
 import TimeTracker from "./pages/TimeTracker.tsx";
-import WorkCalendar from "./pages/Calendar.tsx";
+import Calendar from "./pages/Calendar.tsx";
 
 const router = createBrowserRouter([
    {
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
          },
          {
             path: "/calendar",
-            element: <WorkCalendar />,
+            element: <Calendar />,
          },
          {
             path: "/approves",

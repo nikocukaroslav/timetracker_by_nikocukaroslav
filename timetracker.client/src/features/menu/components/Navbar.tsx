@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Img, Stack } from "@chakra-ui/react";
+import { Divider, Box, Flex, Img, Stack } from "@chakra-ui/react";
 import {
    PiCalendarBlank,
    PiClock,

@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Text } from "@chakra-ui/react";
+import { Divider, Box, Flex, Text } from "@chakra-ui/react";
 
 function Approves() {
    return (
@@ -18,5 +18,5 @@ function Approves() {
       </Box>
    );
 }
-
+//
 export default Approves;

@@ -11,6 +11,7 @@ namespace timetracker.Server.GraphQL.Types
             Field<StringGraphType>("surname");
             Field<StringGraphType>("email");
             Field<StringGraphType>("password");
+            Field<StringGraphType>("employeeType");
             Field<StringGraphType>("permissions");
         }
     }

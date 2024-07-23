@@ -14,7 +14,7 @@ namespace timetracker.Server.Repositories
         {
             using var connection = _connectionFactory.Create();
 
-            var permissions = await connection.QueryFirstAsync<string>(
+            var permissions = await connection.QueryFirstOrDefaultAsync<string>(
                 $"SELECT Permissions FROM {_tableName} WHERE Id = @Id",
                 new { Id = id }
             );
@@ -26,8 +26,7 @@ namespace timetracker.Server.Repositories
             using var connection = _connectionFactory.Create();
 
             var user = await connection.QueryFirstOrDefaultAsync<Users>(
-                $"Select Id, Name, Surname, Email, Password, Permissions FROM {_tableName} " +
-                "WHERE Email = @Email",
+                $"Select * FROM {_tableName} WHERE Email = @Email",
                 new { Email = Email }
             );
 

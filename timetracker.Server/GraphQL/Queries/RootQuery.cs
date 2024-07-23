@@ -1,5 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.Domain.Repositories;
 using timetracker.Server.GraphQL.Types;
 
@@ -11,11 +12,39 @@ namespace timetracker.Server.GraphQL.Queries
         {
             Field<StringGraphType>("Permissions")
                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
-               .ResolveAsync(async context => await userRepository.GetPermissionsAsync(context.GetArgument<Guid>("id")));
+               .ResolveAsync(async context =>
+               {
+                   var permissions = await userRepository.GetPermissionsAsync(context.GetArgument<Guid>("id"));
+
+                   if (permissions == null)
+                   {
+                       context.Errors.Add(new ExecutionError("Invalid id")
+                       {
+                           Code = ExceptionsCode.INVALID_ID.ToString(),
+                       });
+                       return null;
+                   }
+
+                   return permissions;
+               });
 
             Field<UserType>("User")
                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
-               .ResolveAsync(async context => await userRepository.GetByIdAsync(context.GetArgument<Guid>("id")));
+               .ResolveAsync(async context =>
+               {
+                   var user = await userRepository.GetByIdAsync(context.GetArgument<Guid>("id"));
+
+                   if (user == null)
+                   {
+                       context.Errors.Add(new ExecutionError("Invalid id")
+                       {
+                           Code = ExceptionsCode.INVALID_ID.ToString(),
+                       });
+                       return null;
+                   }
+
+                   return user;
+               });
         }
     }
 }

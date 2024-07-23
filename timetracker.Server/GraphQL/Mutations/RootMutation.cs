@@ -4,6 +4,7 @@ using GraphQL.Validation;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using timetracker.Server.Domain.Entities;
+using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.Domain.Repositories;
 using timetracker.Server.GraphQL.Types;
 
@@ -18,58 +19,42 @@ namespace timetracker.Server.GraphQL.Mutations
                                             new QueryArgument<StringGraphType> { Name = "Password" }))
                 .ResolveAsync(async context =>
                 {
-                    try
+                    var email = context.GetArgument<string>("email");
+                    var password = context.GetArgument<string>("password");
+
+                    var user = await userRepository.GetUserByEmailAsync(email);
+
+                    if (user == null || user.Password != password)
                     {
-                        var email = context.GetArgument<string>("email");
-                        var password = context.GetArgument<string>("password");
-
-                        var user = await userRepository.GetUserByEmailAsync(email);
-
-                        if (user == null)
+                        context.Errors.Add(new ExecutionError("Invalid credentials")
                         {
-                            throw new ValidationError("", "400", "Invalid credentials");
-                        }
-
-                        if (user.Password != password)
-                        {
-                            throw new ValidationError("", "400", "Invalid credentials");
-                        }
-
-                        var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim("id", user.Id.ToString())
-                };
-
-                        var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-                        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                        await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
-
-                        return "Login Successful!";
+                            Code = ExceptionsCode.INVALID_CREDENTIALS.ToString(),
+                        });
+                        return null;
                     }
-                    catch (ValidationError ex)
+
+                    var claims = new List<Claim>
                     {
-                        context.Errors.Add(ex);
-                        return "Invalid credentials";
-                    }
-                    catch (Exception ex)
-                    {
-                        context.Errors.Add(new ExecutionError(ex.Message));
-                        return "Unknown error";
-                    }
+                        new Claim("email", user.Email),
+                        new Claim("id", user.Id.ToString())
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
+
+                    return "Login Successful!";
+
                 });
 
             Field<UserType>("AddUser")
-                .Arguments(new QueryArguments(new QueryArgument<UserInputType>
-            {
-                Name = "user"
-            }))
+                .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
                 .ResolveAsync(async context =>
-            {
-                Users user = context.GetArgument<Users>("user");
-                return await userRepository.AddAsync(user);
-            });
+                {
+                    Users user = context.GetArgument<Users>("user");
+                    return await userRepository.AddAsync(user);
+                });
         }
     }
 }

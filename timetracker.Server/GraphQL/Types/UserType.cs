@@ -12,6 +12,7 @@ namespace timetracker.Server.GraphQL.Types
             Field(t => t.Surname);
             Field(t => t.Email);
             Field(t => t.Password);
+            Field(t => t.EmployeeType);
             Field(t => t.Permissions);
         }
     }

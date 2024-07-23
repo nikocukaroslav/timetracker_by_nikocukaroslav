@@ -2,9 +2,8 @@
 using GraphQL.Types;
 using GraphQL.Validation;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Repositories;
 using timetracker.Server.GraphQL.Types;
 
@@ -60,6 +59,17 @@ namespace timetracker.Server.GraphQL.Mutations
                         return "Unknown error";
                     }
                 });
+
+            Field<UserType>("AddUser")
+                .Arguments(new QueryArguments(new QueryArgument<UserInputType>
+            {
+                Name = "user"
+            }))
+                .ResolveAsync(async context =>
+            {
+                Users user = context.GetArgument<Users>("user");
+                return await userRepository.AddAsync(user);
+            });
         }
     }
 }

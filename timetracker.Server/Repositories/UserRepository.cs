@@ -5,32 +5,28 @@ using timetracker.Server.Domain.Repositories;
 
 namespace timetracker.Server.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : DapperRepository<Users>, IUserRepository
     {
-        private readonly ISqlConnectionFactory _connectionFactory;
-
-        public UserRepository(ISqlConnectionFactory connectionFactory)
+        public UserRepository(ISqlConnectionFactory connectionFactory) : base(connectionFactory)
         {
-            _connectionFactory = connectionFactory;
         }
-
         public async Task<string> GetPermissionsAsync(Guid id)
         {
             using var connection = _connectionFactory.Create();
 
             var permissions = await connection.QueryFirstAsync<string>(
-                "SELECT Permissions FROM Users WHERE Id = @Id",
+                $"SELECT Permissions FROM {_tableName} WHERE Id = @Id",
                 new { Id = id }
             );
 
             return permissions;
         }
-        public async Task<User> GetUserByEmailAsync(string Email)
+        public async Task<Users> GetUserByEmailAsync(string Email)
         {
             using var connection = _connectionFactory.Create();
 
-            var user = await connection.QueryFirstOrDefaultAsync<User>(
-                "Select Id, Name, Surname, Email, Password, Permissions FROM Users " +
+            var user = await connection.QueryFirstOrDefaultAsync<Users>(
+                $"Select Id, Name, Surname, Email, Password, Permissions FROM {_tableName} " +
                 "WHERE Email = @Email",
                 new { Email = Email }
             );

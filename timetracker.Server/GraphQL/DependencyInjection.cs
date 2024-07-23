@@ -17,11 +17,12 @@ namespace timetracker.Server.GraphQL
             services.AddTransient<RootMutation>();
 
             services.AddTransient<UserType>();
+            services.AddTransient<UserInputType>();
 
             services.AddGraphQL(options => options
                 .AddAutoSchema<ISchema>()
                 .AddSystemTextJson()
-                //.AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+                .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
                 .AddAuthorizationRule()
                 .AddDataLoader());
 

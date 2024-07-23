@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using timetracker.Server.Database;
+using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Repositories;
 
 namespace timetracker.Server.Repositories
@@ -13,7 +14,7 @@ namespace timetracker.Server.Repositories
             _connectionFactory = connectionFactory;
         }
 
-        public async Task<string> GetPermissions(Guid id)
+        public async Task<string> GetPermissionsAsync(Guid id)
         {
             using var connection = _connectionFactory.Create();
 
@@ -23,6 +24,18 @@ namespace timetracker.Server.Repositories
             );
 
             return permissions;
+        }
+        public async Task<User> GetUserByEmailAsync(string Email)
+        {
+            using var connection = _connectionFactory.Create();
+
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "Select Id, Name, Surname, Email, Password, Permissions FROM Users " +
+                "WHERE Email = @Email",
+                new { Email = Email }
+            );
+
+            return user;
         }
     }
 }

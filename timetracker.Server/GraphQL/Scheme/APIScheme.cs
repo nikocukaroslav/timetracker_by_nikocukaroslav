@@ -6,7 +6,7 @@ namespace App.GraphQL.Scheme
 {
     public class APIScheme : Schema
     {
-        public APIScheme(IServiceProvider serviceProvider) : base(serviceProvider) 
+        public APIScheme(IServiceProvider serviceProvider) : base(serviceProvider)
         {
             Query = serviceProvider.GetRequiredService<RootQuery>();
             Mutation = serviceProvider.GetRequiredService<RootMutation>();

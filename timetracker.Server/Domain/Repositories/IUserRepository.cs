@@ -1,7 +1,10 @@
-﻿namespace timetracker.Server.Domain.Repositories
+﻿using timetracker.Server.Domain.Entities;
+
+namespace timetracker.Server.Domain.Repositories
 {
     public interface IUserRepository
     {
-        Task<string> GetPermissions(Guid id);
+        Task<string> GetPermissionsAsync(Guid id);
+        Task<User> GetUserByEmailAsync(string Email);
     }
 }

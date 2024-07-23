@@ -10,7 +10,7 @@ namespace timetracker.Server.GraphQL.Queries
         {
             Field<StringGraphType>("Permissions")
                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
-               .ResolveAsync(async context => await userRepository.GetPermissions(context.GetArgument<Guid>("id")));
+               .ResolveAsync(async context => await userRepository.GetPermissionsAsync(context.GetArgument<Guid>("id")));
         }
     }
 }

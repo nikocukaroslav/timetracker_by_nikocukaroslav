@@ -1,5 +1,8 @@
 using App.GraphQL.Scheme;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using timetracker.Server.Authentication;
 using timetracker.Server.Database;
 using timetracker.Server.Domain.Repositories;
 using timetracker.Server.GraphQL;
@@ -13,6 +16,9 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.Configure<PasswordHasherSettings>(builder.Configuration.GetSection("PasswordHasher"));
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
 builder.Services.AddGraphQLDI();
 

@@ -23,7 +23,7 @@ namespace timetracker.Server.GraphQL
             
                 .AddAutoSchema<ISchema>()
                 .AddSystemTextJson()
-                //.AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+                .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
                 .AddAuthorizationRule()
                 .AddDataLoader());
 

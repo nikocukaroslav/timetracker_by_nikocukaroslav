@@ -3,6 +3,7 @@ using GraphQL.Types;
 using GraphQL.Validation;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using timetracker.Server.Authentication;
 using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.Domain.Repositories;
@@ -19,12 +20,14 @@ namespace timetracker.Server.GraphQL.Mutations
                                             new QueryArgument<StringGraphType> { Name = "Password" }))
                 .ResolveAsync(async context =>
                 {
+                    var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
+
                     var email = context.GetArgument<string>("email");
                     var password = context.GetArgument<string>("password");
 
                     var user = await userRepository.GetUserByEmailAsync(email);
 
-                    if (user == null || user.Password != password)
+                    if (user == null || !passwordHasher.VerifyHash(password, user.Password))
                     {
                         context.Errors.Add(new ExecutionError("Invalid credentials")
                         {
@@ -52,7 +55,12 @@ namespace timetracker.Server.GraphQL.Mutations
                 .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {
+                    var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
+
                     Users user = context.GetArgument<Users>("user");
+
+                    user.Password = passwordHasher.HashPassword(user.Password);
+
                     return await userRepository.AddAsync(user);
                 });
         }

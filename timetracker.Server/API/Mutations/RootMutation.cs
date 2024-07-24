@@ -50,7 +50,7 @@ namespace timetracker.Server.API.Mutations
                 });
 
             Field<UserType>("AddUser")
-                .AuthorizeWithPolicy("ADD_USER")
+                .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {

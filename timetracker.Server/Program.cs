@@ -1,8 +1,7 @@
 using App.API.Scheme;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using timetracker.Server.API;
+using timetracker.Server.Domain.Entities;
 using timetracker.Server.Infrastructure.Authentication;
 using timetracker.Server.Infrastructure.Database;
 using timetracker.Server.Infrastructure.Repositories.Interfaces;
@@ -28,8 +27,26 @@ builder.Services
 //Authorization
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ADD_USER", policy => policy
-        .RequireAssertion(context => false)
+    options.AddPolicy(Permissions.MANAGE_USERS.ToString(), policy => policy
+        .RequireAssertion(async context =>
+        {
+            var idClaim = context.User.FindFirst("id");
+
+            if (idClaim == null || !Guid.TryParse(idClaim.Value, out Guid userId))
+            {
+                // якщо не вдалос€ знайти id або перетворити в Guid, в≥дмовл€Їмо в доступ≥
+                return false;
+            }
+
+            // ќтримуЇмо серв≥с з HttpContext
+            var userRepository = builder.Services.BuildServiceProvider().GetRequiredService<IUserRepository>();
+
+            // ¬икористовуЇмо userRepository дл€ отриманн€ дозвол≥в користувача
+            var permissions = await userRepository.GetPermissionsAsync(userId);
+
+            // ѕерев≥р€Їмо на€вн≥сть потр≥бного дозволу
+            return permissions.Contains(Permissions.MANAGE_USERS.ToString());
+        })
     );
 });
 

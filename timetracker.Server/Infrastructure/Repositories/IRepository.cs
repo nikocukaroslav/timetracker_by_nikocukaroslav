@@ -1,4 +1,4 @@
-﻿namespace timetracker.Server.Repositories
+﻿namespace timetracker.Server.Infrastructure.Repositories
 {
     public interface IRepository<T>
     {

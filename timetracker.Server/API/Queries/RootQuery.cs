@@ -1,10 +1,10 @@
 ﻿using GraphQL;
 using GraphQL.Types;
 using timetracker.Server.Domain.Exceptions;
-using timetracker.Server.Domain.Repositories;
-using timetracker.Server.GraphQL.Types;
+using timetracker.Server.API.Types;
+using timetracker.Server.Infrastructure.Repositories.Interfaces;
 
-namespace timetracker.Server.GraphQL.Queries
+namespace timetracker.Server.API.Queries
 {
     public class RootQuery : ObjectGraphType
     {

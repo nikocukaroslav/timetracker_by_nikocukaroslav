@@ -1,8 +1,8 @@
 ﻿using GraphQL.Types;
-using timetracker.Server.GraphQL.Mutations;
-using timetracker.Server.GraphQL.Queries;
+using timetracker.Server.API.Mutations;
+using timetracker.Server.API.Queries;
 
-namespace App.GraphQL.Scheme
+namespace App.API.Scheme
 {
     public class APIScheme : Schema
     {

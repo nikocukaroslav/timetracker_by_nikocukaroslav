@@ -1,7 +1,6 @@
 ﻿using timetracker.Server.Domain.Entities;
-using timetracker.Server.Repositories;
 
-namespace timetracker.Server.Domain.Repositories
+namespace timetracker.Server.Infrastructure.Repositories.Interfaces
 {
     public interface IUserRepository : IRepository<Users>
     {

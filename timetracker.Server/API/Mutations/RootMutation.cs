@@ -1,15 +1,14 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using GraphQL.Validation;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
-using timetracker.Server.Authentication;
 using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Exceptions;
-using timetracker.Server.Domain.Repositories;
-using timetracker.Server.GraphQL.Types;
+using timetracker.Server.API.Types;
+using timetracker.Server.Infrastructure.Authentication;
+using timetracker.Server.Infrastructure.Repositories.Interfaces;
 
-namespace timetracker.Server.GraphQL.Mutations
+namespace timetracker.Server.API.Mutations
 {
     public class RootMutation : ObjectGraphType
     {
@@ -48,10 +47,10 @@ namespace timetracker.Server.GraphQL.Mutations
                     await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
 
                     return "Login Successful!";
-
                 });
 
             Field<UserType>("AddUser")
+                .AuthorizeWithPolicy("ADD_USER")
                 .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {
@@ -59,6 +58,14 @@ namespace timetracker.Server.GraphQL.Mutations
 
                     Users user = context.GetArgument<Users>("user");
 
+                    if (user == null)
+                    {
+                        context.Errors.Add(new ExecutionError("Invalid credentials")
+                        {
+                            Code = ExceptionsCode.INVALID_CREDENTIALS.ToString(),
+                        });
+                        return null;
+                    }
                     user.Password = passwordHasher.HashPassword(user.Password);
 
                     return await userRepository.AddAsync(user);

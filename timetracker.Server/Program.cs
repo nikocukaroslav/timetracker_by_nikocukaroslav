@@ -1,12 +1,12 @@
-using App.GraphQL.Scheme;
+using App.API.Scheme;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using timetracker.Server.Authentication;
-using timetracker.Server.Database;
-using timetracker.Server.Domain.Repositories;
-using timetracker.Server.GraphQL;
-using timetracker.Server.Repositories;
+using timetracker.Server.API;
+using timetracker.Server.Infrastructure.Authentication;
+using timetracker.Server.Infrastructure.Database;
+using timetracker.Server.Infrastructure.Repositories.Interfaces;
+using timetracker.Server.Infrastructure.Repositories.ModelRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +20,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.Configure<PasswordHasherSettings>(builder.Configuration.GetSection("PasswordHasher"));
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
-builder.Services.AddGraphQLDI();
-
 //Authentication
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -30,10 +28,12 @@ builder.Services
 //Authorization
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("GET_TASKS", policy => policy
-        .RequireAssertion(context => true)
+    options.AddPolicy("ADD_USER", policy => policy
+        .RequireAssertion(context => false)
     );
 });
+
+builder.Services.AddGraphQLDI();
 
 var app = builder.Build();
 

@@ -1,7 +1,7 @@
 ﻿using GraphQL.Types;
 using timetracker.Server.Domain.Entities;
 
-namespace timetracker.Server.GraphQL.Types
+namespace timetracker.Server.API.Types
 {
     public class UserType : ObjectGraphType<Users>
     {

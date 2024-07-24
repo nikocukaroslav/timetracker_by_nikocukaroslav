@@ -1,9 +1,9 @@
 ﻿using Dapper;
-using timetracker.Server.Database;
 using timetracker.Server.Domain.Entities;
-using timetracker.Server.Domain.Repositories;
+using timetracker.Server.Infrastructure.Database;
+using timetracker.Server.Infrastructure.Repositories.Interfaces;
 
-namespace timetracker.Server.Repositories
+namespace timetracker.Server.Infrastructure.Repositories.ModelRepositories
 {
     public class UserRepository : DapperRepository<Users>, IUserRepository
     {
@@ -27,7 +27,7 @@ namespace timetracker.Server.Repositories
 
             var user = await connection.QueryFirstOrDefaultAsync<Users>(
                 $"Select * FROM {_tableName} WHERE Email = @Email",
-                new { Email = Email }
+                new { Email }
             );
 
             return user;

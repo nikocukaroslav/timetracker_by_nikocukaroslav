@@ -1,4 +1,4 @@
-﻿namespace timetracker.Server.Authentication
+﻿namespace timetracker.Server.Infrastructure.Authentication
 {
     public class PasswordHasherSettings
     {

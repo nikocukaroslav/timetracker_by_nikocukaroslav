@@ -1,6 +1,4 @@
-﻿using timetracker.Server.Domain.Repositories;
-
-namespace timetracker.Server.Domain.Entities
+﻿namespace timetracker.Server.Domain.Entities
 {
     public class Users
     {

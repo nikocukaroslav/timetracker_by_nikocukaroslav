@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace timetracker.Server.Database
+namespace timetracker.Server.Infrastructure.Database
 {
     public class SqlConnectionFactory : ISqlConnectionFactory
     {

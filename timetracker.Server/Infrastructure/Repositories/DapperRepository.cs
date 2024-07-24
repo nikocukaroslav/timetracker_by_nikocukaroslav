@@ -1,7 +1,7 @@
 ﻿using Dapper;
-using timetracker.Server.Database;
+using timetracker.Server.Infrastructure.Database;
 
-namespace timetracker.Server.Repositories
+namespace timetracker.Server.Infrastructure.Repositories
 {
     public class DapperRepository<T> : IRepository<T>
     {
@@ -22,8 +22,7 @@ namespace timetracker.Server.Repositories
         {
             using var connection = _connectionFactory.Create();
             var sql = $"SELECT * FROM {_tableName} WHERE Id = @Id";
-            var user = await connection.QuerySingleOrDefaultAsync<T>(sql, new { Id = id });
-            return user;
+            return await connection.QuerySingleOrDefaultAsync<T>(sql, new { Id = id });
         }
         public virtual async Task<T> AddAsync(T entity)
         {

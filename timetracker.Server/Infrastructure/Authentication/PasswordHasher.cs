@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace timetracker.Server.Authentication
+namespace timetracker.Server.Infrastructure.Authentication
 {
     public class PasswordHasher : IPasswordHasher
     {

@@ -3,7 +3,6 @@ import {PiPauseFill, PiPlayFill, PiSquareFill, PiTimer} from "react-icons/pi";
 import {useEffect, useState} from "react";
 import {calculateTotalTime} from "../../utils/calculateTotalTime.ts";
 import {formatDate, formatTime, formatTrackerTime} from "../../utils/formatters.ts";
-import {generateGUID} from "../../utils/generateGuid.ts";
 
 const workDays = [
     {
@@ -42,7 +41,6 @@ function TimeTracker() {
         setIsTracking(false);
 
         const workDay = {
-            id: generateGUID(),
             startTime: startTime,
             endTime: endTime,
         }

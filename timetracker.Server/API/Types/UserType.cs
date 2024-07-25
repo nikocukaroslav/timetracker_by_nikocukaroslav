@@ -1,9 +1,9 @@
 ﻿using GraphQL.Types;
 using timetracker.Server.Domain.Entities;
 
-namespace timetracker.Server.GraphQL.Types
+namespace timetracker.Server.API.Types
 {
-    public class UserType : ObjectGraphType<User>
+    public class UserType : ObjectGraphType<Users>
     {
         public UserType()
         {
@@ -12,6 +12,7 @@ namespace timetracker.Server.GraphQL.Types
             Field(t => t.Surname);
             Field(t => t.Email);
             Field(t => t.Password);
+            Field(t => t.EmployeeType);
             Field(t => t.Permissions);
         }
     }

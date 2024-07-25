@@ -4,12 +4,24 @@ import CustomInput from "../../components/ui/CustomInput.tsx";
 import {BiHide, BiShow} from "react-icons/bi";
 import {useState} from "react";
 import {NavLink} from "react-router-dom";
+import {login} from "../../features/authentication/authenticationSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
 
 function SignIn() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+
+    const loginStatus = useSelector(state => state.authentication.loginStatus);
+
+    const dispatch = useDispatch();
 
     function handleClick() {
         setShowPassword(!showPassword);
+    }
+
+    function handleLogin() {
+        dispatch(login(email, password))
     }
 
     return (
@@ -34,7 +46,11 @@ function SignIn() {
                             <Icon as={PiUser} w="24px" h="24px"/>
                             <Text>Login</Text>
                         </Flex>
-                        <CustomInput type="text"/>
+                        <CustomInput
+                            type="text"
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
                     </FormLabel>
                     <FormLabel display="flex" flexDirection="column" gap="1">
                         <Flex gap="2" mb="2">
@@ -44,6 +60,7 @@ function SignIn() {
                         <InputGroup>
                             <CustomInput
                                 type={showPassword ? "text" : "password"}
+                                onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
                             <InputRightElement>
@@ -62,9 +79,11 @@ function SignIn() {
                                 Forgot password</Text>
                         </NavLink>
                     </FormLabel>
-                    <Button display="flex" gap="2" mt="auto"
-                            borderColor="gray.300" borderWidth="2px"
-                            _hover={{borderColor: "gray.500", bg: "gray.50"}}>
+                    <Button
+                        onClick={handleLogin}
+                        display="flex" gap="2" mt="auto"
+                        borderColor="gray.300" borderWidth="2px"
+                        _hover={{borderColor: "gray.500", bg: "gray.50"}}>
                         <Icon as={PiSignIn} h="24px" w="24px"/>
                         <Text>Sign in</Text>
                     </Button>

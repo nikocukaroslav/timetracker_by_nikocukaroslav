@@ -1,11 +1,11 @@
-﻿using App.GraphQL.Scheme;
+﻿using App.API.Scheme;
 using GraphQL;
 using GraphQL.Types;
-using timetracker.Server.GraphQL.Mutations;
-using timetracker.Server.GraphQL.Queries;
-using timetracker.Server.GraphQL.Types;
+using timetracker.Server.API.Mutations;
+using timetracker.Server.API.Queries;
+using timetracker.Server.API.Types;
 
-namespace timetracker.Server.GraphQL
+namespace timetracker.Server.API
 {
     public static class DependencyInjection
     {
@@ -17,11 +17,13 @@ namespace timetracker.Server.GraphQL
             services.AddTransient<RootMutation>();
 
             services.AddTransient<UserType>();
+            services.AddTransient<UserInputType>();
 
             services.AddGraphQL(options => options
+
                 .AddAutoSchema<ISchema>()
                 .AddSystemTextJson()
-                //.AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+                // .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
                 .AddAuthorizationRule()
                 .AddDataLoader());
 

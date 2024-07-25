@@ -14,31 +14,58 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Select,
     Text,
 } from "@chakra-ui/react";
-import {useState} from "react";
+import {ChangeEvent, useState} from "react";
 import {BiHide, BiShow} from "react-icons/bi";
 import {PiUser} from "react-icons/pi";
 import CustomInput from "../../components/ui/CustomInput.tsx";
 import CustomCheckbox from "../../components/ui/CustomCheckbox.tsx";
+import {permissionList} from "../../constants.ts";
+import {useDispatch} from "react-redux";
+import {createUser} from "./employeesSlice.ts";
 
 interface UserFormControls {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const permissions = [
-    "approve requests",
-    "check calendar",
-    "create members",
-    "schedule meetings",
-];
-
 function CreateMemberForm({isOpen, onClose}: UserFormControls) {
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [employeeType, setEmployeeType] = useState("full-time");
+    const [permissions, setPermissions] = useState<string[]>([]);
+
     const [showPassword, setShowPassword] = useState(false);
+
+    const dispatch = useDispatch();
 
     function handleClick() {
         setShowPassword(!showPassword);
+    }
+
+    function handleSubmit() {
+        const newUser = {
+            name,
+            surname,
+            email,
+            password,
+            employeeType,
+            permissions: permissions.toString(),
+        }
+
+        dispatch(createUser(newUser))
+    }
+
+    function handlePermissions(e: ChangeEvent<HTMLInputElement>, permission: string) {
+        setPermissions((prevPermissions) =>
+            e.target.checked
+                ? [...prevPermissions, permission]
+                : prevPermissions.filter((perm) => perm !== permission)
+        );
     }
 
     return (
@@ -62,21 +89,34 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                     <Flex direction="column" gap="2">
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Name</Text>
-                            <CustomInput type="text" required/>
+                            <CustomInput
+                                type="text"
+                                onChange={e => setName(e.target.value)}
+                                required
+                            />
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Surname</Text>
-                            <CustomInput type="text" required/>
+                            <CustomInput
+                                type="text"
+                                onChange={e => setSurname(e.target.value)}
+                                required
+                            />
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Email</Text>
-                            <CustomInput type="text" required/>
+                            <CustomInput
+                                type="text"
+                                onChange={e => setEmail(e.target.value)}
+                                required
+                            />
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Password</Text>
                             <InputGroup>
                                 <CustomInput
                                     type={showPassword ? "text" : "password"}
+                                    onChange={e => setPassword(e.target.value)}
                                     required
                                 />
                                 <InputRightElement>
@@ -89,6 +129,13 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                                     </Box>
                                 </InputRightElement>
                             </InputGroup>
+                        </FormLabel>
+                        <FormLabel display="flex" flexDirection="column" gap="1">
+                            <Text>Employee Type</Text>
+                            <Select onChange={e => setEmployeeType(e.target.value)}>
+                                <option value="full-time">full-time</option>
+                                <option value="part-time">part-time</option>
+                            </Select>
                         </FormLabel>
 
                         <FormLabel m="0">
@@ -103,9 +150,9 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                             p="3"
                             rounded="md"
                         >
-                            {permissions.map((permission) => {
+                            {permissionList.map((permission) => {
                                 return (
-                                    <ListItem>
+                                    <ListItem key={permission.name}>
                                         <FormLabel
                                             m="0"
                                             display="flex"
@@ -113,8 +160,10 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                                             gap="2"
                                             alignContent="center"
                                         >
-                                            <CustomCheckbox/>
-                                            <Text>{permission}</Text>
+                                            <CustomCheckbox
+                                                onChange={(e) => handlePermissions(e, permission.name)}
+                                            />
+                                            <Text>{permission.description}</Text>
                                         </FormLabel>
                                     </ListItem>
                                 );
@@ -127,7 +176,7 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                     <Button variant="ghost" onClick={onClose} mr={3}>
                         Cancel
                     </Button>
-                    <Button>
+                    <Button onClick={handleSubmit}>
                         Add
                     </Button>
                 </ModalFooter>

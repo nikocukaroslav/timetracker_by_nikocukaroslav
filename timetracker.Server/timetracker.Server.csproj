@@ -28,4 +28,9 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Application\" />
+    <Folder Include="Domain\Interfaces\" />
+  </ItemGroup>
+
 </Project>

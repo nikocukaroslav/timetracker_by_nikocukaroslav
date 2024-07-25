@@ -1,23 +1,23 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.API.Types;
 using timetracker.Server.Infrastructure.Authentication;
 using timetracker.Server.Infrastructure.Repositories.Interfaces;
-using timetracker.Server.API.Types.DTO;
 
 namespace timetracker.Server.API.Mutations
 {
     public class RootMutation : ObjectGraphType
     {
-        public RootMutation(IUserRepository userRepository, IHttpContextAccessor _httpContextAccessor)
+        public RootMutation(IUserRepository userRepository, IJwtTokenUtils jwtTokenUtils)
         {
-            Field<UserType>("Login")
-                .Arguments(new QueryArguments(new QueryArgument<StringGraphType> { Name = "Email" },
-                                            new QueryArgument<StringGraphType> { Name = "Password" }))
+            Field<StringGraphType>("Login")
+                .Arguments(new QueryArguments(
+                    new QueryArgument<StringGraphType> { Name = "Email" },
+                    new QueryArgument<StringGraphType> { Name = "Password" })
+                )gg
                 .ResolveAsync(async context =>
                 {
                     var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
@@ -38,16 +38,12 @@ namespace timetracker.Server.API.Mutations
 
                     var claims = new List<Claim>
                     {
-                        new Claim("email", user.Email),
                         new Claim("id", user.Id.ToString())
                     };
 
-                    var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                    var token = jwtTokenUtils.GenerateToken(user.Id);
 
-                    await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
-
-                    return user;
+                    return token;
                 });
 
             Field<UserType>("AddUser")

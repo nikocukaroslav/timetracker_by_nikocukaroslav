@@ -7,6 +7,7 @@ using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.API.Types;
 using timetracker.Server.Infrastructure.Authentication;
 using timetracker.Server.Infrastructure.Repositories.Interfaces;
+using timetracker.Server.API.Types.DTO;
 
 namespace timetracker.Server.API.Mutations
 {
@@ -14,7 +15,7 @@ namespace timetracker.Server.API.Mutations
     {
         public RootMutation(IUserRepository userRepository, IHttpContextAccessor _httpContextAccessor)
         {
-            Field<StringGraphType>("Login")
+            Field<LoginResponseType>("Login")
                 .Arguments(new QueryArguments(new QueryArgument<StringGraphType> { Name = "Email" },
                                             new QueryArgument<StringGraphType> { Name = "Password" }))
                 .ResolveAsync(async context =>
@@ -46,7 +47,7 @@ namespace timetracker.Server.API.Mutations
 
                     await _httpContextAccessor.HttpContext.SignInAsync(claimsPrincipal);
 
-                    return "Login Successful!";
+                    return user;
                 });
 
             Field<UserType>("AddUser")

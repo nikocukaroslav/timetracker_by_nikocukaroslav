@@ -1,14 +1,16 @@
-import { Checkbox } from "@chakra-ui/react";
-import { MouseEventHandler } from "react";
+import {Checkbox} from "@chakra-ui/react";
+import {ChangeEvent, MouseEventHandler} from "react";
 
 interface CheckboxProps {
-   onClick?: MouseEventHandler<HTMLDivElement>;
+    onClick?: MouseEventHandler<HTMLInputElement>;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-function CustomCheckbox({ onClick }: CheckboxProps) {
-   return (
-      <Checkbox onClick={onClick} colorScheme="gray" borderColor="gray.500" />
-   );
+function CustomCheckbox({onClick, onChange}: CheckboxProps) {
+    return (
+        <Checkbox onChange={onChange} onClick={onClick} colorScheme="gray" borderColor="gray.500"/>
+
+    );
 }
 
 export default CustomCheckbox;

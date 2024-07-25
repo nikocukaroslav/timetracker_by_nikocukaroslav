@@ -22,7 +22,7 @@ builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 //Authentication
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie();
+    .AddCookie(options => options.LoginPath = "/sign-in");
 
 //Authorization
 builder.Services.AddAuthorization(options =>
@@ -60,7 +60,8 @@ app.UseHttpsRedirection();
 app.UseCors(builder => builder
     .AllowAnyHeader()
     .AllowAnyMethod()
-    .AllowAnyOrigin());
+    .WithOrigins("https://localhost:5175")
+    .AllowCredentials());
 
 app.UseAuthentication();
 app.UseAuthorization();

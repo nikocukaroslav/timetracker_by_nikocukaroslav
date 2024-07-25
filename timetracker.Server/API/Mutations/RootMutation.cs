@@ -15,7 +15,7 @@ namespace timetracker.Server.API.Mutations
     {
         public RootMutation(IUserRepository userRepository, IHttpContextAccessor _httpContextAccessor)
         {
-            Field<LoginResponseType>("Login")
+            Field<UserType>("Login")
                 .Arguments(new QueryArguments(new QueryArgument<StringGraphType> { Name = "Email" },
                                             new QueryArgument<StringGraphType> { Name = "Password" }))
                 .ResolveAsync(async context =>

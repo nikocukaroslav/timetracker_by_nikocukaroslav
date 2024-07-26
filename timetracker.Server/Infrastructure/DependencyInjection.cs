@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using timetracker.Server.Domain.Entities;
-using timetracker.Server.Infrastructure.Authentication;
+using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Database;
-using timetracker.Server.Infrastructure.Repositories.Interfaces;
-using timetracker.Server.Infrastructure.Repositories.ModelRepositories;
+using timetracker.Server.Infrastructure.Interfaces;
+using timetracker.Server.Infrastructure.Repositories;
 
 namespace timetracker.Server.Infrastructure
 {
@@ -29,12 +28,6 @@ namespace timetracker.Server.Infrastructure
             this IServiceCollection services,
             ConfigurationManager configuration)
         {
-            services.Configure<JwtSettings>(configuration.GetSection("JWT"));
-            services.Configure<PasswordHasherSettings>(configuration.GetSection("PasswordHasher"));
-
-            services.AddSingleton<IJwtTokenUtils, JwtTokenUtils>();
-            services.AddSingleton<IPasswordHasher, PasswordHasher>();
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -55,15 +48,15 @@ namespace timetracker.Server.Infrastructure
                 options.AddPolicy(Permissions.MANAGE_USERS.ToString(), policy => policy
                     .RequireAssertion(async context =>
                     {
-                        var idClaim = context.User.FindFirst("id");
+                        var email = context.User.FindFirst("email")?.Value;
 
-                        if (idClaim == null || !Guid.TryParse(idClaim.Value, out Guid userId))
+                        if (email == null)
                         {
                             return false;
                         }
 
                         var userRepository = services.BuildServiceProvider().GetRequiredService<IUserRepository>();
-                        var permissions = await userRepository.GetPermissionsAsync(userId);
+                        var permissions = await userRepository.GetPermissionsByEmailAsync(email);
 
                         return permissions.Contains(Permissions.MANAGE_USERS.ToString());
                     })

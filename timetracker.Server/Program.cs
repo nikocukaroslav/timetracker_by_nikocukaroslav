@@ -1,5 +1,5 @@
-using App.API.Scheme;
 using timetracker.Server.API;
+using timetracker.Server.Application;
 using timetracker.Server.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +8,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.AddGraphQLDI();
 
 var app = builder.Build();

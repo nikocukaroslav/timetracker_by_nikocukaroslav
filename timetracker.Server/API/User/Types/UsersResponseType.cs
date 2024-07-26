@@ -1,10 +1,11 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using timetracker.Server.Domain.Entities;
+using UserModel = timetracker.Server.Domain.Entities.User;
+using timetracker.Server.Domain.Enums;
 
-namespace timetracker.Server.API.Types.DTO
+namespace timetracker.Server.API.User.Types
 {
-    public class UsersResponseType : ObjectGraphType<Users>
+    public class UsersResponseType : ObjectGraphType<UserModel>
     {
         public UsersResponseType()
         {

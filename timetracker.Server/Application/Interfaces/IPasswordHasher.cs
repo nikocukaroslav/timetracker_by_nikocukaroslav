@@ -1,4 +1,4 @@
-﻿namespace timetracker.Server.Infrastructure.Authentication
+﻿namespace timetracker.Server.Application.Interfaces
 {
     public interface IPasswordHasher
     {

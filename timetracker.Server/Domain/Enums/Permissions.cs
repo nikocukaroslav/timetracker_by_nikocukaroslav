@@ -1,4 +1,4 @@
-﻿namespace timetracker.Server.Domain.Entities
+﻿namespace timetracker.Server.Domain.Enums
 {
     public enum Permissions
     {

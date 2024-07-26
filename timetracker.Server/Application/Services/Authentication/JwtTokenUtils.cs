@@ -3,18 +3,20 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using timetracker.Server.Application.Interfaces;
 
-namespace timetracker.Server.Infrastructure.Authentication
+namespace timetracker.Server.Application.Services.Authentication
 {
     public class JwtTokenUtils : IJwtTokenUtils
     {
         private readonly JwtSettings _jwtSettings;
+
         public JwtTokenUtils(IOptions<JwtSettings> jwtOptions)
-        { 
+        {
             _jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(Guid Id)
+        public string GenerateToken(string Email)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -23,7 +25,7 @@ namespace timetracker.Server.Infrastructure.Authentication
 
             var claims = new Claim[]
             {
-                new("id", Id.ToString()),
+                new("email", Email),
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -39,6 +41,5 @@ namespace timetracker.Server.Infrastructure.Authentication
 
             return tokenHandler.WriteToken(token);
         }
-
     }
 }

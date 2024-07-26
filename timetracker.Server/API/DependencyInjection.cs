@@ -1,10 +1,9 @@
-﻿using App.API.Scheme;
-using GraphQL;
+﻿using GraphQL;
 using GraphQL.Types;
-using timetracker.Server.API.Mutations;
-using timetracker.Server.API.Queries;
-using timetracker.Server.API.Types;
-using timetracker.Server.API.Types.DTO;
+using timetracker.Server.API.Auth;
+using timetracker.Server.API.Auth.Types;
+using timetracker.Server.API.User;
+using timetracker.Server.API.User.Types;
 
 namespace timetracker.Server.API
 {
@@ -17,13 +16,19 @@ namespace timetracker.Server.API
             services.AddTransient<RootQuery>();
             services.AddTransient<RootMutation>();
 
+            //Users
+            services.AddTransient<UserQuery>();
+            services.AddTransient<UserMutation>();
             services.AddTransient<UserType>();
-            services.AddTransient<LoginResponseType>();
-            services.AddTransient<UsersResponseType>();
             services.AddTransient<UserInputType>();
+            services.AddTransient<UsersResponseType>();
+
+            //Auth
+            services.AddTransient<AuthQuery>();
+            services.AddTransient<LoginUserType>();
+            services.AddTransient<LoginResponseType>();
 
             services.AddGraphQL(options => options
-
                 .AddAutoSchema<ISchema>()
                 .AddSystemTextJson()
                 // .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)

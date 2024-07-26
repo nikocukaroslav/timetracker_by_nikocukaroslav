@@ -1,16 +1,20 @@
 ﻿using Dapper;
+using timetracker.Server.Domain.Attributes;
 using timetracker.Server.Infrastructure.Database;
+using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.Infrastructure.Repositories
 {
-    public class DapperRepository<T> : IRepository<T>
+    public class Repository<T> : IRepository<T>
     {
         protected readonly ISqlConnectionFactory _connectionFactory;
         protected readonly string _tableName;
-        public DapperRepository(ISqlConnectionFactory connectionFactory)
+        public Repository(ISqlConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
-            _tableName = $"{typeof(T).Name}";
+
+            var tableNameAttribute = (TableNameAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(TableNameAttribute));
+            _tableName = tableNameAttribute.TableName;
         }
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {

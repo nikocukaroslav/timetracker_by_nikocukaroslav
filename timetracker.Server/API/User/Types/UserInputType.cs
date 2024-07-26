@@ -1,6 +1,6 @@
 ﻿using GraphQL.Types;
 
-namespace timetracker.Server.API.Types
+namespace timetracker.Server.API.User.Types
 {
     public class UserInputType : InputObjectGraphType
     {

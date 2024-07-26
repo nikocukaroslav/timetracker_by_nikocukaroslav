@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;
+using timetracker.Server.Application.Interfaces;
 
-namespace timetracker.Server.Infrastructure.Authentication
+namespace timetracker.Server.Application.Services.Authentication
 {
     public class PasswordHasher : IPasswordHasher
     {

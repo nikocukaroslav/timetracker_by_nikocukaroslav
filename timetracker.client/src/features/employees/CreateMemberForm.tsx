@@ -19,12 +19,13 @@ import {
 } from "@chakra-ui/react";
 import {ChangeEvent, useState} from "react";
 import {BiHide, BiShow} from "react-icons/bi";
-import {PiUser} from "react-icons/pi";
+import {PiDiceThree, PiUser} from "react-icons/pi";
 import CustomInput from "../../components/ui/CustomInput.tsx";
 import CustomCheckbox from "../../components/ui/CustomCheckbox.tsx";
 import {permissionList} from "../../constants.ts";
 import {useDispatch} from "react-redux";
 import {createUser} from "./employeesSlice.ts";
+import {generatePassword} from "../../utils/generatePassword.ts";
 
 interface UserFormControls {
     isOpen: boolean;
@@ -66,6 +67,10 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                 ? [...prevPermissions, permission]
                 : prevPermissions.filter((perm) => perm !== permission)
         );
+    }
+
+    function setRandomPassword() {
+        setPassword(generatePassword())
     }
 
     return (
@@ -112,22 +117,29 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                             />
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">
-                            <Text>Password</Text>
+                            <Flex>
+                                <Text>Password</Text>
+                                <Button variant="ghost" _hover="" _active="" size="xs" onClick={setRandomPassword}>
+                                    <PiDiceThree size="18"/>
+                                </Button>
+                            </Flex>
                             <InputGroup>
                                 <CustomInput
                                     type={showPassword ? "text" : "password"}
                                     onChange={e => setPassword(e.target.value)}
+                                    value={password}
                                     required
                                 />
                                 <InputRightElement>
                                     <Box w="24px" onClick={handleClick}>
                                         {showPassword ? (
-                                            <BiHide size="md"/>
+                                            <BiHide size="24"/>
                                         ) : (
-                                            <BiShow size="md"/>
+                                            <BiShow size="24"/>
                                         )}
                                     </Box>
                                 </InputRightElement>
+
                             </InputGroup>
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">

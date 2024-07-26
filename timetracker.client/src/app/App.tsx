@@ -1,7 +1,5 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import AppLayout from "../components/layouts/AppLayout.tsx";
 import Teams from "./pages/Teams.tsx";
-import Approves from "./pages/Approves.tsx";
 import Settings from "./pages/Settings.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Employees from "./pages/Employees.tsx";
@@ -9,39 +7,66 @@ import Requests from "./pages/Requests.tsx";
 import TimeTracker from "./pages/TimeTracker.tsx";
 import Calendar from "./pages/Calendar.tsx";
 import SignIn from "./pages/SignIn.tsx";
+import ProtectedRoute from "./pages/ProtectedRoute.tsx";
+import Approves from "./pages/Approves.tsx";
+import AppLayout from "../components/layouts/AppLayout.tsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <AppLayout/>,
+        element:
+            <ProtectedRoute>
+                <AppLayout/>
+            </ProtectedRoute>,
         children: [
             {
                 path: "/employees",
-                element: <Employees/>,
+                element:
+                    <ProtectedRoute>
+                        <Employees/>
+                    </ProtectedRoute>
             },
             {
                 path: "/time-tracker",
-                element: <TimeTracker/>,
+                element:
+                    <ProtectedRoute>
+                        <TimeTracker/>
+                    </ProtectedRoute>
             },
             {
                 path: "/teams",
-                element: <Teams/>,
+                element:
+                    <ProtectedRoute>
+                        <Teams/>
+                    </ProtectedRoute>,
             },
             {
                 path: "/calendar",
-                element: <Calendar/>,
+                element:
+                    <ProtectedRoute>
+                        <Calendar/>
+                    </ProtectedRoute>,
             },
             {
                 path: "/approves",
-                element: <Approves/>,
+                element:
+                    <ProtectedRoute>
+                        <Approves/>
+                    </ProtectedRoute>,
             },
             {
                 path: "/requests",
-                element: <Requests/>,
+                element:
+                    <ProtectedRoute>
+                        <Requests/>
+                    </ProtectedRoute>,
             },
             {
                 path: "/settings",
-                element: <Settings/>,
+                element:
+                    <ProtectedRoute>
+                        <Settings/>
+                    </ProtectedRoute>,
             },
         ],
     },

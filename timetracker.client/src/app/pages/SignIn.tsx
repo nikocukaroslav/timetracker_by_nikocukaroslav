@@ -1,10 +1,22 @@
-import {Box, Button, Divider, Flex, FormLabel, Icon, Img, InputGroup, InputRightElement, Text} from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    Divider,
+    Flex,
+    FormLabel,
+    Icon,
+    Img,
+    InputGroup,
+    InputRightElement,
+    Spinner,
+    Text
+} from "@chakra-ui/react";
 import {PiKey, PiSignIn, PiUser} from "react-icons/pi";
 import CustomInput from "../../components/ui/CustomInput.tsx";
 import {BiHide, BiShow} from "react-icons/bi";
-import {useState} from "react";
-import {NavLink} from "react-router-dom";
-import {login} from "../../features/authentication/authenticationSlice.ts";
+import {useEffect, useState} from "react";
+import {NavLink, useNavigate} from "react-router-dom";
+import {login, resetLoginStatus} from "../../features/authentication/authenticationSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 
 function SignIn() {
@@ -13,6 +25,10 @@ function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
 
     const loginStatus = useSelector(state => state.authentication.loginStatus);
+    const loading = useSelector(state => state.authentication.loading);
+    const error = useSelector(state => state.authentication.error);
+
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
 
@@ -22,12 +38,23 @@ function SignIn() {
 
     function handleLogin() {
         dispatch(login(email, password))
+
     }
+
+    useEffect(() => {
+        dispatch(resetLoginStatus())
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (loginStatus) {
+            navigate("/");
+        }
+    }, [loginStatus, navigate]);
 
     return (
         <Flex as="main" align="center" justify="center" bg="gray.100" h="100dvh" color="gray.700">
             <Box
-                w="25%" h="50%" bg="gray.50" rounded="md"
+                w="25%" h="50%" minW="420px" bg="gray.50" rounded="md"
                 boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)">
 
                 <Flex p="5" direction="column" gap="5" h="full">
@@ -66,9 +93,9 @@ function SignIn() {
                             <InputRightElement>
                                 <Box w="24px" onClick={handleClick}>
                                     {showPassword ? (
-                                        <BiHide size="md"/>
+                                        <BiHide size="24px"/>
                                     ) : (
-                                        <BiShow size="md"/>
+                                        <BiShow size="24px"/>
                                     )}
                                 </Box>
                             </InputRightElement>
@@ -79,13 +106,20 @@ function SignIn() {
                                 Forgot password</Text>
                         </NavLink>
                     </FormLabel>
+                    <Text color="red.500">{error}</Text>
                     <Button
                         onClick={handleLogin}
                         display="flex" gap="2" mt="auto"
                         borderColor="gray.300" borderWidth="2px"
+                        disabled={loading}
                         _hover={{borderColor: "gray.500", bg: "gray.50"}}>
-                        <Icon as={PiSignIn} h="24px" w="24px"/>
-                        <Text>Sign in</Text>
+                        {
+                            loading ? <Spinner width="24px" h="24px"/> :
+                                <>
+                                    <Icon as={PiSignIn} h="24px" w="24px"/>
+                                    <Text>Sign in</Text>
+                                </>
+                        }
                     </Button>
                 </Flex>
             </Box>

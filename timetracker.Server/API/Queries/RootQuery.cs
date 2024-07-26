@@ -3,6 +3,7 @@ using GraphQL.Types;
 using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.API.Types;
 using timetracker.Server.Infrastructure.Repositories.Interfaces;
+using timetracker.Server.API.Types.DTO;
 
 namespace timetracker.Server.API.Queries
 {
@@ -10,7 +11,7 @@ namespace timetracker.Server.API.Queries
     {
         public RootQuery(IUserRepository userRepository)
         {
-            Field<StringGraphType>("Permissions")
+            Field<StringGraphType>("GetPermissionsUser")
                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                .ResolveAsync(async context =>
                {
@@ -28,7 +29,7 @@ namespace timetracker.Server.API.Queries
                    return permissions;
                });
 
-            Field<UserType>("User")
+            Field<UserType>("GetUser")
                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                .ResolveAsync(async context =>
                {
@@ -44,6 +45,24 @@ namespace timetracker.Server.API.Queries
                    }
 
                    return user;
+               });
+
+            Field<ListGraphType<UsersResponseType>>("GetUsers")
+               .Arguments()
+               .ResolveAsync(async context =>
+               {
+                   var users = await userRepository.GetAllAsync();
+
+                   if (users == null)
+                   {
+                       context.Errors.Add(new ExecutionError("Invalid id")
+                       {
+                           Code = ExceptionsCode.INVALID_ID.ToString(),
+                       });
+                       return null;
+                   }
+
+                   return users;
                });
         }
     }

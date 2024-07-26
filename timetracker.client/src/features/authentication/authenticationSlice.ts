@@ -25,6 +25,7 @@ const authenticationSlice = createSlice({
             state.userType = payload.employeeType
             state.userPermissions = payload.permissions;
             state.loginStatus = true;
+            localStorage.setItem("token", payload.login)
             localStorage.setItem("userId", payload.id)
             localStorage.setItem("userName", payload.name)
             localStorage.setItem("userType", payload.employeeType)

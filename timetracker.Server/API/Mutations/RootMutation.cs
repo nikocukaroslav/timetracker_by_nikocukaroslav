@@ -17,7 +17,7 @@ namespace timetracker.Server.API.Mutations
                 .Arguments(new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "Email" },
                     new QueryArgument<StringGraphType> { Name = "Password" })
-                )gg
+                )
                 .ResolveAsync(async context =>
                 {
                     var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();

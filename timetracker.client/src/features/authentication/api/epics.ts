@@ -17,12 +17,7 @@ export const loginEpic = (action$) =>
                 password: action.payload.password
             })
                 .pipe(
-                    map(response => {
-                        if (response.data.login)
-                            return loginUser(response.data.login)
-                        
-                        return setError(response.errors[0].message)
-                    }),
+                    map(response => loginUser(response.data.login)),
                     catchError((error) =>
                         of(setError(error.message))
                     ),

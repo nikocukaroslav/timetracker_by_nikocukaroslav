@@ -4,9 +4,9 @@ import {BASE_URL} from "../constants.ts";
 export const graphQlQuery = (query: string, variables: object) => {
     return from(fetch(BASE_URL, {
         method: "POST",
-        credentials: "include",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")} `,
         },
         body: JSON.stringify({
             query,

@@ -25,8 +25,8 @@ namespace timetracker.Server.API
 
             //Auth
             services.AddTransient<AuthQuery>();
-            services.AddTransient<LoginUserType>();
             services.AddTransient<LoginResponseType>();
+            services.AddTransient<LoginUserResponseType>();
 
             services.AddGraphQL(options => options
                 .AddAutoSchema<ISchema>()

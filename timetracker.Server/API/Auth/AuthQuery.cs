@@ -1,6 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using timetracker.Server.API.Auth.DTO;
+using timetracker.Server.API.Auth.Models;
 using timetracker.Server.API.Auth.Types;
 using timetracker.Server.Application.Interfaces;
 using timetracker.Server.Domain.Exceptions;
@@ -13,7 +13,7 @@ namespace timetracker.Server.API.Auth
         public AuthQuery(
             IUserRepository userRepository, 
             IJwtTokenUtils jwtTokenUtils, 
-            IPasswordHasher passwordHasher) 
+            IPasswordHasher passwordHasher)
         {
             Field<LoginResponseType>("Login")
                 .Arguments(new QueryArguments(
@@ -38,7 +38,10 @@ namespace timetracker.Server.API.Auth
 
                     var token = jwtTokenUtils.GenerateToken(user.Email);
 
-                    return new LoginResponse(user, token);
+                    return new LoginResponse(
+                        user,
+                        token
+                    );
                 });
         }
     }

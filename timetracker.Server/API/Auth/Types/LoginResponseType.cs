@@ -1,5 +1,5 @@
 ﻿using GraphQL.Types;
-using timetracker.Server.API.Auth.DTO;
+using timetracker.Server.API.Auth.Models;
 
 namespace timetracker.Server.API.Auth.Types
 {
@@ -7,7 +7,7 @@ namespace timetracker.Server.API.Auth.Types
     {
         public LoginResponseType()
         {
-            Field(t => t.User);
+            Field<LoginUserResponseType>("user").Resolve(context => context.Source.User);
             Field(t => t.Token);
         }
     }

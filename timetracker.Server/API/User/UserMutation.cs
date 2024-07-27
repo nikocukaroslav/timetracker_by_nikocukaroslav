@@ -18,8 +18,6 @@ namespace timetracker.Server.API.User
                 .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {
-                    var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
-
                     Entities.User user = context.GetArgument<Entities.User>("user");
 
                     if (user is null)
@@ -31,6 +29,35 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
+                    if (await userRepository.GetUserByEmailAsync(user.Email) != null)
+                    {
+                        context.Errors.Add(new ExecutionError("This email is already registered")
+                        {
+                            Code = ExceptionsCode.EMAIL_EXIST.ToString(),
+                        });
+                        return null;
+                    }
+
+                    if (user.Password.Length < 8 || user.Password.Length > 20)
+                    {
+                        context.Errors.Add(new ExecutionError("Password must be between 8 and 20 characters")
+                        {
+                            Code = ExceptionsCode.INVALID_PASSWORD_LENGTH.ToString(),
+                        });
+                        return null;
+                    }
+
+                    var emailRegex = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+                    if (!emailRegex.IsMatch(user.Email))
+                    {
+                        context.Errors.Add(new ExecutionError("Invalid email format")
+                        {
+                            Code = ExceptionsCode.INVALID_EMAIL_FORMAT.ToString(),
+                        });
+                        return null;
+                    }
+
+                    var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
                     user.Password = passwordHasher.HashPassword(user.Password);
 
                     return await userRepository.AddAsync(user);

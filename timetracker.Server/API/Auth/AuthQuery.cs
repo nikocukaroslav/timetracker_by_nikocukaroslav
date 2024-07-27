@@ -29,7 +29,7 @@ namespace timetracker.Server.API.Auth
 
                     if (user == null || !passwordHasher.VerifyHash(password, user.Password))
                     {
-                        context.Errors.Add(new ExecutionError("Invalid credentials")
+                        context.Errors.Add(new ExecutionError("Incorrect email or password")
                         {
                             Code = ExceptionsCode.INVALID_CREDENTIALS.ToString(),
                         });

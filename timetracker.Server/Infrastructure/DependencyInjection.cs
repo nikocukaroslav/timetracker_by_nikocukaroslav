@@ -46,7 +46,9 @@ namespace timetracker.Server.Infrastructure
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Permissions.MANAGE_USERS.ToString(), policy => policy
+                foreach (var permission in Enum.GetValues(typeof(Permissions)).Cast<Permissions>())
+                {
+                    options.AddPolicy(permission.ToString(), policy => policy
                     .RequireAssertion(async context =>
                     {
                         var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
@@ -59,9 +61,11 @@ namespace timetracker.Server.Infrastructure
                         var userRepository = services.BuildServiceProvider().GetRequiredService<IUserRepository>();
                         var permissions = await userRepository.GetPermissionsByEmailAsync(email);
 
-                        return permissions.Contains(Permissions.MANAGE_USERS.ToString());
+                        return permissions.Contains(permission.ToString());
                     })
                 );
+                }
+                
             });
 
             return services;

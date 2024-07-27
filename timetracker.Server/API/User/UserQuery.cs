@@ -14,16 +14,6 @@ namespace timetracker.Server.API.User
                .ResolveAsync(async context =>
                {
                    var users = await userRepository.GetAllAsync();
-
-                   if (users == null)
-                   {
-                       context.Errors.Add(new ExecutionError("User is not found")
-                       {
-                           Code = ExceptionsCode.USER_NOT_FOUND.ToString(),
-                       });
-                       return null;
-                   }
-
                    return users;
                });
 

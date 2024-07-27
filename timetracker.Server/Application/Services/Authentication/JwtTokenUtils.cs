@@ -25,7 +25,7 @@ namespace timetracker.Server.Application.Services.Authentication
 
             var claims = new Claim[]
             {
-                new("email", Email),
+                new(ClaimTypes.Email, Email),
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

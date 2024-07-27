@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Database;
@@ -48,7 +49,7 @@ namespace timetracker.Server.Infrastructure
                 options.AddPolicy(Permissions.MANAGE_USERS.ToString(), policy => policy
                     .RequireAssertion(async context =>
                     {
-                        var email = context.User.FindFirst("email")?.Value;
+                        var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
 
                         if (email == null)
                         {

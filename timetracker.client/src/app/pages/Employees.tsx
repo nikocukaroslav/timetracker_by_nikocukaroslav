@@ -1,14 +1,27 @@
-import {Box, Button, Divider, Flex, Img, Text} from "@chakra-ui/react";
+import {Box, Button, Divider, Flex, List, Text} from "@chakra-ui/react";
 import {PiPlus} from "react-icons/pi";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import CreateMemberForm from "../../features/employees/CreateMemberForm.tsx";
+import {getUsers} from "../../features/employees/employeesSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import Employee from "../../features/employees/Employee.tsx";
+
 
 function Employees() {
     const [active, setActive] = useState(false);
 
+    const employees = useSelector(state => state.employees.users)
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getUsers());
+    }, [dispatch]);
+
     function handleActive() {
         setActive(!active);
     }
+
 
     return (
         <>
@@ -22,31 +35,23 @@ function Employees() {
                     <Flex
                         justify="space-between"
                         w="full"
-                        px="5"
-                        py="3"
+                        p="5"
                         align="center"
                     >
-                        <Text fontSize="2xl">Company</Text>
+                        <Text fontSize="2xl">Company ({employees.length} members)</Text>
                         <Button onClick={handleActive} variant="ghost">
                             <PiPlus/>
                             <Text ml="1"> Add member</Text>
                         </Button>
                     </Flex>
                     <Divider borderColor="gray.300" borderWidth="1.5px"/>
-                    <Flex py="4" align="center" gap="5" px="5">
-                        <Img
-                            alt="user-img"
-                            w="28px"
-                            h="28px"
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
-                        />
-                        <Flex direction="column">
-                            <Text>Yaroslav Nikonchyk</Text>
-                            <Text fontSize="sm" color="gray.500">
-                                nikocuk@gmail.com
-                            </Text>
-                        </Flex>
-                    </Flex>
+                    <List display="flex" flexDirection="column">
+                        {
+                            employees.map((employee) =>
+                                <Employee employee={employee} key={employee.id}/>
+                            )
+                        }
+                    </List>
                 </Flex>
             </Box>
             <CreateMemberForm isOpen={active} onClose={handleActive}/>

@@ -6,7 +6,7 @@ export const graphQlQuery = (query: string, variables: object) => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")} `,
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
             query,

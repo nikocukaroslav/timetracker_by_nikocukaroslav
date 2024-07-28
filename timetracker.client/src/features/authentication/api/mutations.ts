@@ -1,5 +1,14 @@
 export const loginMutation = `
-mutation Login($email: String!, $password: String!) {
-  login(email: $email, password: $password)
+query login($email: String!, $password: String!) {
+  auth {
+    login(email: $email, password: $password) {
+      user {
+        id
+        name
+        permissions
+      }
+      token
+    }
+  }
 }
 `

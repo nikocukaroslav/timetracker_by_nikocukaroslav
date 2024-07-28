@@ -2,12 +2,14 @@ import {configureStore} from "@reduxjs/toolkit";
 import {combineEpics, createEpicMiddleware} from "redux-observable";
 import authenticationReducer from "./features/authentication/authenticationSlice.ts";
 import {loginEpic} from "./features/authentication/api/epics.ts";
-import {createUserEpic} from "./features/employees/api/epics.ts";
+import {createUserEpic, deleteUserEpic, getUsersEpic} from "./features/employees/api/epics.ts";
 import employeesReducer from "./features/employees/employeesSlice.ts";
 
 const epics = [
     loginEpic,
-    createUserEpic
+    createUserEpic,
+    getUsersEpic,
+    deleteUserEpic,
 ]
 
 const epicMiddleware = createEpicMiddleware();

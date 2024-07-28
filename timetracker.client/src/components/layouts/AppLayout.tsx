@@ -1,5 +1,5 @@
 import {Outlet} from "react-router-dom";
-import Navbar from "../../features/menu/components/Navbar.tsx";
+import Navbar from "../../features/menu/Navbar.tsx";
 import {Grid, GridItem} from "@chakra-ui/react";
 
 function AppLayout() {

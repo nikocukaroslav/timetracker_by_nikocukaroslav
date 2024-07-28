@@ -5,8 +5,7 @@ export const initialState = {
     userId: localStorage.getItem("userId") || "",
     userName: localStorage.getItem("userName") || "",
     userAvatar: "",
-    userPermissions: localStorage.getItem("userPermissions") || [],
-    userType: localStorage.getItem("userType") || "",
+    userPermissions: localStorage.getItem("userPermissions") || ["MANAGE_TEAMS"],
     loginStatus: localStorage.getItem("loginStatus") || false,
     loading: false,
     error: "",
@@ -20,27 +19,24 @@ const authenticationSlice = createSlice({
     initialState,
     reducers: {
         loginUser(state, {payload}) {
-            state.userId = payload.id;
-            state.userName = payload.name;
-            state.userType = payload.employeeType
-            state.userPermissions = payload.permissions;
+            state.userId = payload.user.id;
+            state.userName = payload.user.name;
+            state.userPermissions = payload.user.permissions;
             state.loginStatus = true;
-            localStorage.setItem("token", payload.login)
-            localStorage.setItem("userId", payload.id)
-            localStorage.setItem("userName", payload.name)
-            localStorage.setItem("userType", payload.employeeType)
-            localStorage.setItem("userPermissions", JSON.stringify(payload.permissions))
+            localStorage.setItem("token", payload.token)
+            localStorage.setItem("userId", payload.user.id)
+            localStorage.setItem("userName", payload.user.name)
+            localStorage.setItem("userPermissions", JSON.stringify(payload.user.permissions))
             localStorage.setItem("loginStatus", "true")
         },
         resetLoginStatus(state) {
             state.userId = "";
             state.userName = "";
-            state.userType = "";
             state.userPermissions = "";
             state.loginStatus = false;
+            localStorage.removeItem("token");
             localStorage.removeItem("userId");
             localStorage.removeItem("userName");
-            localStorage.removeItem("userType");
             localStorage.removeItem("userPermissions");
             localStorage.removeItem("loginStatus");
         },

@@ -67,7 +67,7 @@ function SignIn() {
                             company
                         </Text>
                     </Box>
-                    <Divider borderColor="gray.300" w="full" borderWidth="1.5px"/>
+                    <Divider borderColor="gray.300" borderWidth="1px"/>
                     <FormLabel>
                         <Flex gap="2" mb="2">
                             <Icon as={PiUser} w="24px" h="24px"/>

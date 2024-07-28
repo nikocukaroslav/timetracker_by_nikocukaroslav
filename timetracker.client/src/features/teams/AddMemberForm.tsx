@@ -1,16 +1,16 @@
 import {
-   Button,
-   Divider,
-   Flex,
-   Img,
-   Modal,
-   ModalBody,
-   ModalContent,
-   ModalFooter,
-   ModalHeader,
-   ModalOverlay,
-   Spacer,
-   Text,
+    Button,
+    Divider,
+    Flex,
+    Img,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Spacer,
+    Text,
 } from "@chakra-ui/react";
 import {PiMagnifyingGlass, PiUsersThree} from "react-icons/pi";
 import CustomInput from "../../components/ui/CustomInput.tsx";

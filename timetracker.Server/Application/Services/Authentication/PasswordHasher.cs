@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using timetracker.Server.Application.Interfaces;
+using timetracker.Server.Application.Models;
 
 namespace timetracker.Server.Application.Services.Authentication
 {
@@ -14,23 +15,28 @@ namespace timetracker.Server.Application.Services.Authentication
             _settings = settings.Value;
         }
 
-        public string HashPassword(string password)
+        public HashPasswordResponce HashPassword(string password)
         {
+            byte[] salt_bytes = RandomNumberGenerator.GetBytes(_settings.SaltBytesSize);
             var hash = Rfc2898DeriveBytes.Pbkdf2(
                 Encoding.UTF8.GetBytes(password),
-                Encoding.UTF8.GetBytes(_settings.Salt),
+                salt_bytes,
                 _settings.Iterations,
                 HashAlgorithmName.SHA256,
                 _settings.KeySize);
 
-            return Convert.ToHexString(hash);
+            return new HashPasswordResponce()
+            {
+                Password = Convert.ToHexString(hash),
+                Salt = Convert.ToHexString(salt_bytes)
+            };
         }
 
-        public bool VerifyHash(string password, string hashedPassword)
+        public bool VerifyHash(string password, string hashedPassword, string salt)
         {
             var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(
                 password,
-                Encoding.UTF8.GetBytes(_settings.Salt),
+                Convert.FromHexString(salt),
                 _settings.Iterations,
                 HashAlgorithmName.SHA256,
                 _settings.KeySize);

@@ -58,7 +58,10 @@ namespace timetracker.Server.API.User
                     }
 
                     var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
-                    user.Password = passwordHasher.HashPassword(user.Password);
+                    var hashPasswordResponce = passwordHasher.HashPassword(user.Password);
+
+                    user.Password = hashPasswordResponce.Password;
+                    user.Salt = hashPasswordResponce.Salt;
 
                     return await userRepository.AddAsync(user);
                 });

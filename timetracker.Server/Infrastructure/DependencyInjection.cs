@@ -53,13 +53,12 @@ namespace timetracker.Server.Infrastructure
                     {
                         var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
 
-                        if (email == null)
-                        {
-                            return false;
-                        }
+                        if (email == null) return false;
 
                         var userRepository = services.BuildServiceProvider().GetRequiredService<IUserRepository>();
                         var permissions = await userRepository.GetPermissionsByEmailAsync(email);
+
+                        if (permissions is null) return false;
 
                         return permissions.Contains(permission.ToString());
                     })

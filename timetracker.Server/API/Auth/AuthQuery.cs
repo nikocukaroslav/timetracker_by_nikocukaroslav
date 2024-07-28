@@ -3,6 +3,7 @@ using GraphQL.Types;
 using timetracker.Server.API.Auth.Models;
 using timetracker.Server.API.Auth.Types;
 using timetracker.Server.Application.Interfaces;
+using timetracker.Server.Application.Models;
 using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.Infrastructure.Interfaces;
 
@@ -27,7 +28,7 @@ namespace timetracker.Server.API.Auth
 
                     var user = await userRepository.GetUserByEmailAsync(email);
 
-                    if (user == null || !passwordHasher.VerifyHash(password, user.Password))
+                    if (user == null || !passwordHasher.VerifyHash(password, user.Password, user.Salt))
                     {
                         context.Errors.Add(new ExecutionError("Incorrect email or password")
                         {

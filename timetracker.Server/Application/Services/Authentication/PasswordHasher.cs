@@ -15,7 +15,7 @@ namespace timetracker.Server.Application.Services.Authentication
             _settings = settings.Value;
         }
 
-        public HashPasswordResponce HashPassword(string password)
+        public HashPasswordResponse HashPassword(string password)
         {
             byte[] salt_bytes = RandomNumberGenerator.GetBytes(_settings.SaltBytesSize);
             var hash = Rfc2898DeriveBytes.Pbkdf2(
@@ -25,7 +25,7 @@ namespace timetracker.Server.Application.Services.Authentication
                 HashAlgorithmName.SHA256,
                 _settings.KeySize);
 
-            return new HashPasswordResponce()
+            return new HashPasswordResponse()
             {
                 Password = Convert.ToHexString(hash),
                 Salt = Convert.ToHexString(salt_bytes)

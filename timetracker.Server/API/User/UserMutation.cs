@@ -6,6 +6,7 @@ using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Interfaces;
 using timetracker.Server.Application.Interfaces;
+using timetracker.Server.API.User.Models;
 
 namespace timetracker.Server.API.User
 {
@@ -18,9 +19,9 @@ namespace timetracker.Server.API.User
                 .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {
-                    Entities.User user = context.GetArgument<Entities.User>("user");
+                    AddUserModel userInput = context.GetArgument<AddUserModel>("user");
 
-                    if (user is null)
+                    if (userInput is null)
                     {
                         context.Errors.Add(new ExecutionError("Invalid credentials")
                         {
@@ -29,39 +30,47 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    if (await userRepository.GetUserByEmailAsync(user.Email) != null)
+                    if (await userRepository.GetUserByEmailAsync(userInput.Email) != null)
                     {
                         context.Errors.Add(new ExecutionError("This email is already registered")
                         {
                             Code = ExceptionsCode.EMAIL_EXIST.ToString(),
                         });
-                        return null;
                     }
 
-                    if (user.Password.Length < 8 || user.Password.Length > 20)
+                    if (userInput.Password.Length < 8 || userInput.Password.Length > 20)
                     {
                         context.Errors.Add(new ExecutionError("Password must be between 8 and 20 characters")
                         {
                             Code = ExceptionsCode.INVALID_PASSWORD_LENGTH.ToString(),
                         });
-                        return null;
                     }
 
                     var emailRegex = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-                    if (!emailRegex.IsMatch(user.Email))
+                    if (!emailRegex.IsMatch(userInput.Email))
                     {
                         context.Errors.Add(new ExecutionError("Invalid email format")
                         {
                             Code = ExceptionsCode.INVALID_EMAIL_FORMAT.ToString(),
                         });
-                        return null;
                     }
 
-                    var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
-                    var hashPasswordResponce = passwordHasher.HashPassword(user.Password);
+                    if (context.Errors.Count > 0) return null;
 
-                    user.Password = hashPasswordResponce.Password;
-                    user.Salt = hashPasswordResponce.Salt;
+                    var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
+                    var hashPasswordResponce = passwordHasher.HashPassword(userInput.Password);
+
+
+                    var user = new Entities.User()
+                    {
+                        Name = userInput.Name,
+                        Surname = userInput.Surname,
+                        Email = userInput.Email,
+                        Password = hashPasswordResponce.Password,
+                        Salt = hashPasswordResponce.Salt,
+                        EmployeeType = userInput.EmployeeType,
+                        Permissions = string.Join(",", userInput.Permissions)
+                    };
 
                     return await userRepository.AddAsync(user);
                 });
@@ -85,6 +94,32 @@ namespace timetracker.Server.API.User
 
                     return "User deleted successful";
                 });
+            Field<UserType>("UpdateUserPermissions")
+                 .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
+                 .Arguments(new QueryArguments(new QueryArgument<ListGraphType<StringGraphType>> { Name = "permissions" },
+                                               new QueryArgument<GuidGraphType> { Name = "id"}))
+                 .ResolveAsync(async context =>
+                 {
+                     var permissions = string.Join(",", context.GetArgument<List<string>>("permissions"));
+                     var id = context.GetArgument<Guid>("id");
+
+                     var user = await userRepository.GetByIdAsync(id);
+
+                     if(user is null)
+                     {
+                         context.Errors.Add(new ExecutionError("User is not found")
+                         {
+                             Code = ExceptionsCode.USER_NOT_FOUND.ToString(),
+                         });
+                         return null;
+                     }
+
+                     user.Permissions = permissions;
+
+                     await userRepository.UpdateAsync(user);
+
+                     return user;
+                 });
         }
     }
 }

@@ -6,13 +6,12 @@ namespace timetracker.Server.API.User.Types
     {
         public UserInputType()
         {
-            Field<GuidGraphType>("id");
             Field<StringGraphType>("name");
             Field<StringGraphType>("surname");
             Field<StringGraphType>("email");
             Field<StringGraphType>("password");
             Field<StringGraphType>("employeeType");
-            Field<StringGraphType>("permissions");
+            Field<ListGraphType<StringGraphType>>("permissions");
         }
     }
 }

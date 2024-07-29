@@ -1,6 +1,6 @@
 ﻿namespace timetracker.Server.Application.Models
 {
-    public class HashPasswordResponce
+    public class HashPasswordResponse
     {
         public string Password { get; set; }
         public string Salt { get; set; }

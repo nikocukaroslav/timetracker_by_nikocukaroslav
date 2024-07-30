@@ -5,8 +5,7 @@ namespace timetracker.Server.API.Auth.Types
 {
     public class TokenResponseType : ObjectGraphType<TokenResponse>
     {
-        public TokenResponseType()
-        {
+        public TokenResponseType() {
             Field(t => t.Token);
             Field(t => t.ExpiresAt);
         }

@@ -8,5 +8,6 @@
         INVALID_PASSWORD_LENGTH,
         INVALID_EMAIL_FORMAT,
         INVALID_TOKEN,
+        UNAUTHORIZED
     }
 }

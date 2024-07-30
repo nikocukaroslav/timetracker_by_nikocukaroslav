@@ -1,6 +1,6 @@
 ﻿namespace timetracker.Server.API.User.Models
 {
-    public class AddUserModel
+    public class AddUserRequest
     {
         public string Name { get; set; }
         public string Surname { get; set; }

@@ -2,19 +2,28 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using timetracker.Server.API.Auth.Models;
 using timetracker.Server.Application.Interfaces;
+using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.Application.Services.Authentication
 {
     public class JwtTokenUtils : IJwtTokenUtils
     {
         private readonly JwtSettings _jwtSettings;
+        private readonly IUserRepository _userRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public JwtTokenUtils(IOptions<JwtSettings> jwtOptions)
+        public JwtTokenUtils(
+            IOptions<JwtSettings> jwtOptions, 
+            IUserRepository userRepository, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _jwtSettings = jwtOptions.Value;
+            _userRepository = userRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public string GenerateToken(Claim[] claims, DateTime expiresAt)
@@ -38,32 +47,95 @@ namespace timetracker.Server.Application.Services.Authentication
             return tokenHandler.WriteToken(token);
         }
 
-        public TokenResponse GenerateAccessToken(string Email)
+        public ClaimsPrincipal? ValidateToken(string token)
         {
-            var accessExpiresAt = DateTime.Now.AddMinutes(_jwtSettings.AccessTokenExpiryMinutes);
-            var accessToken = GenerateToken(
-                [
-                    new(ClaimTypes.Email, Email)
-                ],
-                 accessExpiresAt);
+            var tokenHandler = new JwtSecurityTokenHandler();
 
-            var accessExpiresAtTimeStamp = new DateTimeOffset(accessExpiresAt).ToUnixTimeMilliseconds();
-            var tokenResponse = new TokenResponse(accessToken, accessExpiresAtTimeStamp);
-            return tokenResponse;
+            return tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = _jwtSettings.Issuer,
+                ValidateAudience = true,
+                ValidAudience = _jwtSettings.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+            }, out _);
         }
 
-        public string GenerateRefreshToken(string Email, string refreshTokenHash)
+        public TokenResponse GenerateAccessToken(string email)
         {
-            var refreshExpiresAt = DateTime.Now.AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes);
+            var expiresAt = DateTime.Now.AddMinutes(_jwtSettings.AccessTokenExpiryMinutes);
+
+            var accessToken = GenerateToken(
+                [ new(ClaimTypes.Email, email) ],
+                expiresAt
+            );
+
+            var expiresAtTimeStamp = new DateTimeOffset(expiresAt).ToUnixTimeMilliseconds();
+
+            return new TokenResponse(accessToken, expiresAtTimeStamp);
+        }
+
+        public async Task AssignRefreshToken(string email, string tokenHash)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(email);
+
+            if (user == null)
+            {
+                throw new Exception();
+            }
+
+            if (user.RefreshTokenHash != tokenHash)
+            {
+                throw new Exception();
+            }
+
+            var newTokenHash = Convert.ToHexString(RandomNumberGenerator.GetBytes(16));
+            user.RefreshTokenHash = newTokenHash;
+
+            await _userRepository.UpdateAsync(user);
+
+            var expiresAt = DateTime.Now.AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes);
 
             var refreshToken = GenerateToken(
                 [
-                    new(ClaimTypes.Email, Email),
-                    new("hash", refreshTokenHash)
+                    new(ClaimTypes.Email, email),
+                    new("hash", newTokenHash)
                 ],
-                refreshExpiresAt);
+                expiresAt
+            );
 
-            return refreshToken;
+            var options = new CookieOptions()
+            {
+                Expires = expiresAt,
+                HttpOnly = true,
+                Secure = true,
+            };
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, options);
+        }
+
+        public async Task RevokeRefreshToken(string email, string tokenHash)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(email);
+
+            if (user == null)
+            {
+                throw new Exception();
+            }
+
+            if (user.RefreshTokenHash != tokenHash)
+            {
+                throw new Exception();
+            }
+
+            user.RefreshTokenHash = null;
+
+            await _userRepository.UpdateAsync(user);
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("refreshToken");
         }
     }
 }

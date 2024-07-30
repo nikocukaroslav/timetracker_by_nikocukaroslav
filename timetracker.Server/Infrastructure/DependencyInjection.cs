@@ -41,6 +41,7 @@ namespace timetracker.Server.Infrastructure
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
                         ValidateIssuerSigningKey = true,
                         ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
                     };
                 });
 

@@ -10,6 +10,7 @@ using timetracker.Server.API.User.Models;
 
 namespace timetracker.Server.API.User
 {
+    [Authorize]
     public class UserMutation : ObjectGraphType
     {
         public UserMutation(IUserRepository userRepository)
@@ -19,7 +20,7 @@ namespace timetracker.Server.API.User
                 .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {
-                    AddUserModel userInput = context.GetArgument<AddUserModel>("user");
+                    var userInput = context.GetArgument<AddUserRequest>("user");
 
                     if (userInput is null)
                     {
@@ -74,6 +75,7 @@ namespace timetracker.Server.API.User
 
                     return await userRepository.AddAsync(user);
                 });
+
             Field<StringGraphType>("DeleteUser")
                 .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
@@ -94,10 +96,13 @@ namespace timetracker.Server.API.User
 
                     return "User deleted successful";
                 });
+
             Field<UserType>("UpdateUserPermissions")
                  .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
-                 .Arguments(new QueryArguments(new QueryArgument<ListGraphType<StringGraphType>> { Name = "permissions" },
-                                               new QueryArgument<GuidGraphType> { Name = "id"}))
+                 .Arguments(new QueryArguments(
+                    new QueryArgument<ListGraphType<StringGraphType>> { Name = "permissions" },
+                    new QueryArgument<GuidGraphType> { Name = "id" })
+                 )
                  .ResolveAsync(async context =>
                  {
                      var permissions = string.Join(",", context.GetArgument<List<string>>("permissions"));

@@ -1,31 +1,26 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using timetracker.Server.API.Auth.Models;
 using timetracker.Server.API.Auth.Types;
 using timetracker.Server.API.User.Types;
 using timetracker.Server.Application.Interfaces;
-using timetracker.Server.Application.Services.Authentication;
 using timetracker.Server.Domain.Exceptions;
 using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.API.Auth
 {
+    [Authorize]
     public class AuthQuery : ObjectGraphType
     {
         public AuthQuery(
             IUserRepository userRepository,
             IJwtTokenUtils jwtTokenUtils,
             IPasswordHasher passwordHasher,
-            IOptions<JwtSettings> jwtOptions,
             IHttpContextAccessor httpContextAccessor)
         {
             Field<LoginResponseType>("Login")
+                .AllowAnonymous()
                 .Arguments(new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "Email" },
                     new QueryArgument<StringGraphType> { Name = "Password" })
@@ -46,42 +41,20 @@ namespace timetracker.Server.API.Auth
                         return null;
                     }
 
-                    var refreshTokenHash = Convert.ToHexString(RandomNumberGenerator.GetBytes(16));
-                    user.RefreshTokenHash = refreshTokenHash;
-                    user = await userRepository.UpdateAsync(user);
+                    await jwtTokenUtils.AssignRefreshToken(email, user.RefreshTokenHash);
 
-                    var refreshToken = jwtTokenUtils.GenerateRefreshToken(email, user.RefreshTokenHash);
-                    var refreshExpiresAt = DateTime.Now.AddMinutes(jwtOptions.Value.RefreshTokenExpiryMinutes);
-
-                    CookieOptions options = new CookieOptions()
-                    {
-                        Expires = refreshExpiresAt,
-                        HttpOnly = true,
-                        Secure = true,
-                    };
-
-                    httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, options);
-
-                    var AccesstokenResponse = jwtTokenUtils.GenerateAccessToken(user.Email);
+                    var accessToken = jwtTokenUtils.GenerateAccessToken(user.Email);
 
                     return new LoginResponse(
                         user,
-                        AccesstokenResponse
+                        accessToken
                     );
                 });
+
             Field<UserType>("Authorize").
                 ResolveAsync(async context =>
                 {
                     var email = context.User?.FindFirst(ClaimTypes.Email)?.Value;
-
-                    if (email == null)
-                    {
-                        context.Errors.Add(new ExecutionError("Token is not valid")
-                        {
-                            Code = ExceptionsCode.INVALID_TOKEN.ToString(),
-                        });
-                        return null;
-                    }
 
                     var user = await userRepository.GetUserByEmailAsync(email);
 
@@ -91,67 +64,65 @@ namespace timetracker.Server.API.Auth
                         {
                             Code = ExceptionsCode.USER_NOT_FOUND.ToString(),
                         });
+                        return null;
                     }
-
-                    if (context.Errors.Count > 0) return null;
 
                     return user;
                 });
-            Field<TokenResponseType>("RefreshToken").
-                ResolveAsync(async context =>
+
+            Field<TokenResponseType>("RefreshToken")
+                .ResolveAsync(async context =>
                 {
                     try
                     {
                         httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("refreshToken", out string? refreshTokenCookie);
-                        var tokenHandler = new JwtSecurityTokenHandler();
-                        ClaimsPrincipal principal = tokenHandler.ValidateToken(refreshTokenCookie, new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidIssuer = jwtOptions.Value.Issuer,
-                            ValidateAudience = true,
-                            ValidAudience = jwtOptions.Value.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Secret)),
-                            ValidateIssuerSigningKey = true,
-                            ValidateLifetime = true,
-                        }, out SecurityToken validatedToken);
+
+                        ClaimsPrincipal? principal = jwtTokenUtils.ValidateToken(refreshTokenCookie);
 
                         var email = principal.FindFirst(ClaimTypes.Email)?.Value;
-                        var user = await userRepository.GetUserByEmailAsync(email);
+                        var refreshTokenHash = principal.FindFirst("hash")?.Value;
 
-                        var hash = principal.FindFirst("hash")?.Value;
+                        await jwtTokenUtils.AssignRefreshToken(email, refreshTokenHash);
 
-                        if (user.RefreshTokenHash != hash)
-                        {
-                            throw new Exception();
-                        }
+                        var accessToken = jwtTokenUtils.GenerateAccessToken(email);
 
-                        var refreshTokenHash = Convert.ToHexString(RandomNumberGenerator.GetBytes(16));
-                        user.RefreshTokenHash = refreshTokenHash;
-                        user = await userRepository.UpdateAsync(user);
-
-                        var refreshToken = jwtTokenUtils.GenerateRefreshToken(email, user.RefreshTokenHash);
-                        var refreshExpiresAt = DateTime.Now.AddMinutes(jwtOptions.Value.RefreshTokenExpiryMinutes);
-
-                        CookieOptions options = new CookieOptions()
-                        {
-                            Expires = refreshExpiresAt,
-                            HttpOnly = true,
-                            Secure = true,
-                        };
-
-                        httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, options);
-
-                        var AccesstokenResponse = jwtTokenUtils.GenerateAccessToken(user.Email);
-                        return AccesstokenResponse;
+                        return accessToken;
                     }
                     catch
                     {
-                        context.Errors.Add(new ExecutionError("")
+                        context.Errors.Add(new ExecutionError("Unauthorized")
                         {
-                            Code = "401",
+                            Code = ExceptionsCode.UNAUTHORIZED.ToString(),
                         });
+                        return null;
                     }
-                    return null;
+                });
+
+            Field<BooleanGraphType>("Logout")
+                .ResolveAsync(async context =>
+                {
+                    try
+                    {
+                        httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("refreshToken", out string? refreshTokenCookie);
+
+                        ClaimsPrincipal? principal = jwtTokenUtils.ValidateToken(refreshTokenCookie);
+
+                        var email = principal.FindFirst(ClaimTypes.Email)?.Value;
+                        var refreshTokenHash = principal.FindFirst("hash")?.Value;
+
+                        await jwtTokenUtils.RevokeRefreshToken(email, refreshTokenHash);
+
+                        return true;
+                    }
+                    catch
+                    {
+                        context.Errors.Add(new ExecutionError("Unauthorized")
+                        {
+                            Code = ExceptionsCode.UNAUTHORIZED.ToString(),
+                        });
+
+                        return null;
+                    }
                 });
         }
     }

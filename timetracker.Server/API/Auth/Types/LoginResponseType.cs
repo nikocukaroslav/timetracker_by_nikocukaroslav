@@ -8,7 +8,7 @@ namespace timetracker.Server.API.Auth.Types
         public LoginResponseType()
         {
             Field<LoginUserResponseType>("user").Resolve(context => context.Source.User);
-            Field(t => t.Token);
+            Field<TokenResponseType>("token").Resolve(context => context.Source.Access);
         }
     }
 }

@@ -116,9 +116,7 @@ namespace timetracker.Server.API.User
 
                      user.Permissions = permissions;
 
-                     await userRepository.UpdateAsync(user);
-
-                     return user;
+                     return await userRepository.UpdateAsync(user);
                  });
         }
     }

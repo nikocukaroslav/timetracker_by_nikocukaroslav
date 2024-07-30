@@ -48,10 +48,12 @@ namespace timetracker.Server.Infrastructure.Repositories
             var insertedEntity = await connection.QuerySingleAsync<T>(sql, parameterValues);
             return insertedEntity;
         }
-        public virtual async Task UpdateAsync(T entity)
+        public virtual async Task<T> UpdateAsync(T entity)
         {
+            var entityType = typeof(T);
+
             using var connection = _connectionFactory.Create();
-            var properties = typeof(T).GetProperties()
+            var properties = entityType.GetProperties()
                                        .Where(p => p.Name != "Id")
                                        .Select(p => $"{p.Name} = @{p.Name}");
 
@@ -59,6 +61,10 @@ namespace timetracker.Server.Infrastructure.Repositories
             var sql = $"UPDATE {_tableName} SET {setClause} WHERE Id = @Id";
 
             await connection.ExecuteAsync(sql, entity);
+
+            var sqlSelect = $"SELECT * FROM {_tableName} WHERE Id = @Id";
+
+            return await connection.QuerySingleOrDefaultAsync<T>(sqlSelect, new { Id = entityType.GetProperty("Id").GetValue(entity) });
         }
         public virtual async Task DeleteAsync(Guid id)
         {

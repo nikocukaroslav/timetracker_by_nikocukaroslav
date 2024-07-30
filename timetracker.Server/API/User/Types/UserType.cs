@@ -1,6 +1,4 @@
-﻿using GraphQL;
-using GraphQL.Types;
-using timetracker.Server.Domain.Enums;
+﻿using GraphQL.Types;
 using UserModel = timetracker.Server.Domain.Entities.User;
 
 namespace timetracker.Server.API.User.Types

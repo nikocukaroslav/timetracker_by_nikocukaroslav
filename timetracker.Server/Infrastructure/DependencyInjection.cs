@@ -18,7 +18,7 @@ namespace timetracker.Server.Infrastructure
 
             services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
 
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserRepository, UserRepository>();
 
             services.AddAuth(configuration);
 

@@ -1,3 +1,4 @@
+using GraphQL;
 using timetracker.Server.API;
 using timetracker.Server.Application;
 using timetracker.Server.Infrastructure;
@@ -10,7 +11,14 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddGraphQLDI();
+
+builder.Services.AddGraphQL(options => options
+    .AddSchema<APIScheme>()
+    .AddSystemTextJson()
+    .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+    .AddAuthorizationRule()
+    .AddDataLoader()
+    .AddGraphTypes(typeof(APIScheme).Assembly));
 
 var app = builder.Build();
 

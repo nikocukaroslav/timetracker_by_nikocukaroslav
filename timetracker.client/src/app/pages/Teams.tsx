@@ -1,7 +1,7 @@
 import {Box, Button, Divider, Flex, Img, Text} from "@chakra-ui/react";
 import {PiPlus} from "react-icons/pi";
 import {useState} from "react";
-import AddMemberForm from "../../features/teams/AddMemberForm.tsx";
+import AddMemberForm from "../../features/teams/components/AddMemberForm.tsx";
 
 function Teams() {
     const [active, setActive] = useState(false);

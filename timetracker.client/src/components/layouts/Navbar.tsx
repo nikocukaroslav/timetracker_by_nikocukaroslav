@@ -1,8 +1,8 @@
 import {AbsoluteCenter, Box, Divider, Flex, Img, Stack} from "@chakra-ui/react";
 import {PiCalendarBlank, PiClock, PiGear, PiListChecks, PiNote, PiUserPlus, PiUsersThree,} from "react-icons/pi";
-import NavigationLink from "../../components/ui/NavigationLink.tsx";
-import CustomNavbarDivider from "../../components/ui/CustomNavbarDivider.tsx";
-import PermissionChecker from "../../components/layouts/PermissionChecker.tsx";
+import NavigationLink from "../ui/NavigationLink.tsx";
+import CustomNavbarDivider from "../ui/CustomNavbarDivider.tsx";
+import PermissionChecker from "./PermissionChecker.tsx";
 import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS, WORKING_PART_TIME} from "../../constants.ts";
 
 function Navbar() {

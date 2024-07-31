@@ -1,12 +1,6 @@
 import {NavLink} from "react-router-dom";
 import {Flex, Text} from "@chakra-ui/react";
-import {IconType} from "react-icons";
-
-interface NavigationLinkProps {
-    icon: IconType;
-    label: string;
-    to: string;
-}
+import {NavigationLinkProps} from "../../interfaces/components.ts";
 
 function NavigationLink({icon: Icon, label, to}: NavigationLinkProps) {
     return (
@@ -17,9 +11,15 @@ function NavigationLink({icon: Icon, label, to}: NavigationLinkProps) {
                     gap="2"
                     py="2"
                     px="4"
+
                     bg={isActive ? "gray.700" : "transparent"}
                     borderRadius="md"
                     _hover={{bg: "gray.700"}}
+                    onClick={(e) => {
+                        if (isActive) {
+                            e.preventDefault();
+                        }
+                    }}
                 >
                     <Icon size="28"/>
                     <Text>{label}</Text>

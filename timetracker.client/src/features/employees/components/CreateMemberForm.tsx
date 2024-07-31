@@ -7,7 +7,6 @@ import {
     InputGroup,
     InputRightElement,
     List,
-    ListItem,
     Modal,
     ModalBody,
     ModalContent,
@@ -15,24 +14,30 @@ import {
     ModalHeader,
     ModalOverlay,
     Select,
+    Spinner,
     Text,
 } from "@chakra-ui/react";
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {BiHide, BiShow} from "react-icons/bi";
-import {PiDiceThree, PiUser} from "react-icons/pi";
-import CustomInput from "../../components/ui/CustomInput.tsx";
-import CustomCheckbox from "../../components/ui/CustomCheckbox.tsx";
-import {permissionList} from "../../constants.ts";
+import {PiUser} from "react-icons/pi";
+import CustomInput from "../../../components/ui/CustomInput.tsx";
+import {permissionList} from "../../../constants.ts";
 import {useDispatch} from "react-redux";
-import {createUser} from "./employeesSlice.ts";
-import {generatePassword} from "../../utils/generatePassword.ts";
+import {createUser, updateUserPermissions} from "../employeesSlice.ts";
+import {generatePassword} from "../../../utils/generatePassword.ts";
+import PermissionItem from "./PermissionItem.tsx";
+import WorkingPartTimePermissionItem from "./WorkingPartTimePermissionItem.tsx";
+import RandomPasswordButton from "./RandomPasswordButton.tsx";
+import {useAppSelector} from "../../../hooks/useAppSelector.ts";
+
 
 interface UserFormControls {
     isOpen: boolean;
     onClose: () => void;
+    isEditing?: boolean;
 }
 
-function CreateMemberForm({isOpen, onClose}: UserFormControls) {
+function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [email, setEmail] = useState("");
@@ -42,23 +47,54 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
 
     const [showPassword, setShowPassword] = useState(false);
 
+    const loading = useAppSelector(state => state.employees.loading)
+    const user = useAppSelector(state => state.employees.user)
+
+
     const dispatch = useDispatch();
 
     function handleClick() {
         setShowPassword(!showPassword);
     }
 
-    function handleSubmit() {
+    useEffect(() => {
+        if (isEditing) {
+            setName(user.name || "");
+            setSurname(user.surname || "");
+            setEmail(user.email || "");
+            setEmployeeType(user.employeeType || "full-time");
+            setPermissions(user.permissions || []);
+        }
+    }, [user, isEditing]);
+
+    function updatePermissions(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        dispatch(updateUserPermissions({permissions, userId: user.id}))
+
+        onClose()
+    }
+
+    function handleSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault()
         const newUser = {
             name,
             surname,
             email,
             password,
             employeeType,
-            permissions: permissions.toString(),
+            permissions,
         };
 
         dispatch(createUser(newUser));
+
+        onClose()
+
+        setName("")
+        setSurname("")
+        setEmail("")
+        setPassword("")
+        setEmployeeType("full-time")
+        setPermissions([])
     }
 
     function handlePermissions(
@@ -97,13 +133,19 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
             onClose={onClose}
             isCentered
             size="xl"
+
         >
             <ModalOverlay/>
-            <ModalContent>
+            <ModalContent as="form" onSubmit={(e: FormEvent<HTMLFormElement>) => {
+                if (!isEditing)
+                    return handleSubmit(e);
+                else
+                    return updatePermissions(e);
+            }}>
                 <ModalHeader>
                     <Flex gap="2" align="center">
                         <PiUser size="24px"/>
-                        <Text>New member</Text>
+                        <Text>{`${isEditing ? "Edit member" : "New member"}`}</Text>
                     </Flex>
                 </ModalHeader>
                 <Divider borderColor="gray.300" borderWidth="1.5px"/>
@@ -112,28 +154,34 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Name</Text>
                             <CustomInput
+                                readOnly={isEditing}
                                 type="text"
                                 onChange={(e) => setName(e.target.value)}
+                                value={name}
                                 required
                             />
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Surname</Text>
                             <CustomInput
+                                readOnly={isEditing}
                                 type="text"
                                 onChange={(e) => setSurname(e.target.value)}
+                                value={surname}
                                 required
                             />
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Email</Text>
                             <CustomInput
+                                readOnly={isEditing}
                                 type="text"
                                 onChange={(e) => setEmail(e.target.value)}
+                                value={email}
                                 required
                             />
                         </FormLabel>
-                        <Box position="relative">
+                        {!isEditing && <Box position="relative">
                             <FormLabel display="flex" flexDirection="column" gap="1">
                                 <Text>Password</Text>
                                 <InputGroup>
@@ -154,22 +202,12 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                                     </InputRightElement>
                                 </InputGroup>
                             </FormLabel>
-                            <Button
-                                position="absolute"
-                                top="0"
-                                right="2"
-                                variant="ghost"
-                                size="xs"
-                                onClick={setRandomPassword}
-                            >
-                                <Flex gap="1">
-                                    <PiDiceThree size="18px"/> <Text mt="2px">Generate</Text>
-                                </Flex>
-                            </Button>
-                        </Box>
+                            <RandomPasswordButton setRandomPassword={setRandomPassword}/>
+                        </Box>}
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Employee Type</Text>
-                            <Select onChange={(e) => setEmployeeType(e.target.value)}>
+                            <Select value={employeeType} isDisabled={isEditing}
+                                    onChange={(e) => setEmployeeType(e.target.value)}>
                                 <option value="full-time">full-time</option>
                                 <option value="part-time">part-time</option>
                             </Select>
@@ -189,43 +227,14 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                         >
                             {permissionList.map((permission) => {
                                 return (
-                                    <ListItem key={permission.name}>
-                                        <FormLabel
-                                            m="0"
-                                            display="flex"
-                                            fontWeight="normal"
-                                            gap="2"
-                                            alignContent="center"
-                                        >
-                                            <CustomCheckbox
-                                                onChange={(e) =>
-                                                    handlePermissions(e, permission.name)
-                                                }
-                                            />
-                                            <Text>{permission.description}</Text>
-                                        </FormLabel>
-                                    </ListItem>
+                                    <PermissionItem key={permission.name} permission={permission}
+                                                    permissions={permissions}
+                                                    handlePermissions={handlePermissions}/>
                                 );
                             })}
                             {
-                                employeeType === "part-time" && <ListItem>
-                                    <FormLabel
-                                        m="0"
-                                        display="flex"
-                                        fontWeight="normal"
-                                        gap="2"
-                                        alignContent="center"
-                                    >
-                                        <CustomCheckbox
-                                            onChange={(e) =>
-                                                handlePermissions(e, "WORKING_PART_TIME")
-                                            }
-                                            disabled
-                                            checked
-                                        />
-                                        <Text>working part-time</Text>
-                                    </FormLabel>
-                                </ListItem>
+                                employeeType === "part-time" &&
+                                <WorkingPartTimePermissionItem handlePermissions={handlePermissions}/>
                             }
                         </List>
                     </Flex>
@@ -235,7 +244,9 @@ function CreateMemberForm({isOpen, onClose}: UserFormControls) {
                     <Button variant="ghost" onClick={onClose} mr={3}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSubmit}>Add</Button>
+                    <Button w="16" disabled={loading} type="submit"
+                    >{loading ? <Spinner width="24px" h="24px"/> : isEditing ? "Edit" : "Add"}
+                    </Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

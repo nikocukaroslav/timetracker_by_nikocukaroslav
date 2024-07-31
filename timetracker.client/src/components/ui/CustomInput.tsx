@@ -1,16 +1,10 @@
 import {Input} from "@chakra-ui/react";
-import {ChangeEventHandler} from "react";
+import {InputProps} from "../../interfaces/components.ts";
 
-interface InputProps {
-    type: string;
-    required?: boolean;
-    onChange?: ChangeEventHandler<HTMLInputElement>,
-    value?: string;
-}
-
-function CustomInput({type, required, onChange, value}: InputProps) {
+function CustomInput({type, required, onChange, value, readOnly}: InputProps) {
     return (
         <Input
+            readOnly={readOnly}
             type={type}
             required={required}
             onChange={onChange}

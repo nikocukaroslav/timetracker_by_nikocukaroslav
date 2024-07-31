@@ -12,10 +12,12 @@ import Approves from "./pages/Approves.tsx";
 import AppLayout from "../components/layouts/AppLayout.tsx";
 import PermissionChecker from "../components/layouts/PermissionChecker.tsx";
 import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS, WORKING_PART_TIME} from "../constants.ts";
+import {employeesLoader, userLoader} from "../utils/loaders.ts";
 
 const router = createBrowserRouter([
     {
         path: "/",
+        loader: userLoader,
         element:
             <ProtectedRoute>
                 <AppLayout/>
@@ -44,7 +46,8 @@ const router = createBrowserRouter([
                         <PermissionChecker redirectToSignIn permissions={[MANAGE_USERS]}>
                             <Employees/>
                         </PermissionChecker>
-                    </ProtectedRoute>
+                    </ProtectedRoute>,
+                loader: employeesLoader,
             },
             {
                 path: "/teams",

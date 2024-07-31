@@ -28,10 +28,40 @@ export const getUsersQuery = `
 }
 `
 
+export const getUserQuery = `
+query GetUser($id: Guid!) {
+  users {
+    getUser(id: $id) {
+      id
+      name
+      surname
+      email
+      employeeType
+      permissions
+    }
+  }
+}
+`
+
 export const deleteUserMutation = `
 mutation DeleteUser($userId: Guid!) {
   users {
     deleteUser(id: $userId)
+  }
+}
+`
+
+export const updateUserPermissionsMutation = `
+mutation UpdateUserPermissions($permissions: [String!], $id: Guid!) {
+  users {
+    updateUserPermissions(permissions: $permissions, id: $id) {
+      id
+      name
+      surname
+      email
+      employeeType
+      permissions
+    }
   }
 }
 `

@@ -1,7 +1,7 @@
 import {Box, Button, Divider, Flex, Text} from "@chakra-ui/react";
 import {PiPencilSimple} from "react-icons/pi";
 import {useState} from "react";
-import NewRequestForm from "../../features/requests/NewRequestForm.tsx";
+import NewRequestForm from "../../features/requests/components/NewRequestForm.tsx";
 
 function Requests() {
     const [active, setActive] = useState(false);

@@ -1,8 +1,11 @@
-import NavigationLink from "../../components/ui/NavigationLink.tsx";
 import {PiSignOut} from "react-icons/pi";
+import {Button} from "@chakra-ui/react";
+import {useDispatch} from "react-redux";
+import {logout} from "../../features/authentication/authenticationSlice.ts";
 
 function Settings() {
-    return <NavigationLink to="/sign-in" label="Logout" icon={PiSignOut}/>;
+    const dispatch = useDispatch()
+    return <Button onClick={() => dispatch(logout())}><PiSignOut/>Logout</Button>;
 }
 
 export default Settings;

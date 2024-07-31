@@ -1,27 +1,20 @@
 import {Box, Button, Divider, Flex, List, Text} from "@chakra-ui/react";
 import {PiPlus} from "react-icons/pi";
-import {useEffect, useState} from "react";
-import CreateMemberForm from "../../features/employees/CreateMemberForm.tsx";
-import {getUsers} from "../../features/employees/employeesSlice.ts";
-import {useDispatch, useSelector} from "react-redux";
-import Employee from "../../features/employees/Employee.tsx";
+import {useState} from "react";
+import CreateMemberForm from "../../features/employees/components/CreateMemberForm.tsx";
+import Employee from "../../features/employees/components/Employee.tsx";
+import {useAppSelector} from "../../hooks/useAppSelector.ts";
+import {User} from "../../interfaces/actions.ts";
 
 
 function Employees() {
     const [active, setActive] = useState(false);
 
-    const employees = useSelector(state => state.employees.users)
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getUsers());
-    }, [dispatch]);
+    const employees = useAppSelector(state => state.employees.users)
 
     function handleActive() {
         setActive(!active);
     }
-
 
     return (
         <>
@@ -45,9 +38,13 @@ function Employees() {
                         </Button>
                     </Flex>
                     <Divider borderColor="gray.300" borderWidth="1.5px"/>
-                    <List display="flex" flexDirection="column">
+                    <List display="flex" flexDirection="column"
+                          overflowY="auto"
+                          max-h="90dvh" h="90dvh"
+                          flexGrow={1} overflowX="hidden"
+                    >
                         {
-                            employees.map((employee) =>
+                            employees.map((employee: User) =>
                                 <Employee employee={employee} key={employee.id}/>
                             )
                         }

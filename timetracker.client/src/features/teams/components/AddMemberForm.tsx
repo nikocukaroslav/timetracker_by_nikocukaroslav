@@ -13,8 +13,8 @@ import {
     Text,
 } from "@chakra-ui/react";
 import {PiMagnifyingGlass, PiUsersThree} from "react-icons/pi";
-import CustomInput from "../../components/ui/CustomInput.tsx";
-import CustomCheckbox from "../../components/ui/CustomCheckbox.tsx";
+import CustomInput from "../../../components/ui/CustomInput.tsx";
+import CustomCheckbox from "../../../components/ui/CustomCheckbox.tsx";
 
 interface UserFormControls {
     isOpen: boolean;

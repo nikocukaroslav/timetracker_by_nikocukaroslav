@@ -16,7 +16,7 @@ import CustomInput from "../../components/ui/CustomInput.tsx";
 import {BiHide, BiShow} from "react-icons/bi";
 import {useEffect, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
-import {login, resetLoginStatus} from "../../features/authentication/authenticationSlice.ts";
+import {login} from "../../features/authentication/authenticationSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 
 function SignIn() {
@@ -24,7 +24,7 @@ function SignIn() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
-    const loginStatus = useSelector(state => state.authentication.loginStatus);
+    const loginStatus = useSelector(state => state.authentication.userId);
     const loading = useSelector(state => state.authentication.loading);
     const error = useSelector(state => state.authentication.error);
 
@@ -38,12 +38,7 @@ function SignIn() {
 
     function handleLogin() {
         dispatch(login(email, password))
-
     }
-
-    useEffect(() => {
-        dispatch(resetLoginStatus())
-    }, [dispatch]);
 
     useEffect(() => {
         if (loginStatus) {

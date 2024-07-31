@@ -26,9 +26,10 @@ app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 app.UseCors(builder => builder
+    .SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
     .AllowAnyHeader()
     .AllowAnyMethod()
-    .AllowAnyOrigin());
+    .AllowCredentials());
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -20,8 +20,8 @@ namespace timetracker.Server.API.Auth
             Field<LoginResponseType>("Login")
                 .Arguments(new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "Email" },
-                    new QueryArgument<StringGraphType> { Name = "Password" })
-                )
+                    new QueryArgument<StringGraphType> { Name = "Password" }
+                ))
                 .ResolveAsync(async context =>
                 {
                     var email = context.GetArgument<string>("email");
@@ -38,40 +38,40 @@ namespace timetracker.Server.API.Auth
                         return null;
                     }
 
-                    await jwtTokenUtils.AssignRefreshToken(email, user.RefreshTokenHash);
-
                     var accessToken = jwtTokenUtils.GenerateAccessToken(user.Email);
+                    var refreshToken = await jwtTokenUtils.GenerateRefreshToken(email, user.RefreshTokenHash);
 
                     return new LoginResponse(
                         user,
-                        accessToken
+                        accessToken,
+                        refreshToken
                     );
                 });
 
             Field<LoginResponseType>("Authorize")
+                .Arguments(new QueryArguments(
+                    new QueryArgument<StringGraphType> { Name = "RefreshToken" }
+                ))
                 .ResolveAsync(async context =>
                 {
                     try
                     {
-                        httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("refreshToken", out string? refreshTokenCookie);
+                        var refreshToken = context.GetArgument<string>("refreshToken");
 
-                        ClaimsPrincipal? principal = jwtTokenUtils.ValidateToken(refreshTokenCookie);
+                        var principal = jwtTokenUtils.ValidateToken(refreshToken);
 
                         var email = principal.FindFirst(ClaimTypes.Email)?.Value;
                         var refreshTokenHash = principal.FindFirst("hash")?.Value;
 
-                        await jwtTokenUtils.AssignRefreshToken(email, refreshTokenHash);
+                        var user = await userRepository.GetUserByEmailAsync(email) ?? throw new Exception();
 
-                        var accessToken = jwtTokenUtils.GenerateAccessToken(email);
-
-                        var user = await userRepository.GetUserByEmailAsync(email);
-
-                        if (user == null)
-                            throw new Exception();
+                        var newAccessToken = jwtTokenUtils.GenerateAccessToken(email);
+                        var newRefreshToken = await jwtTokenUtils.GenerateRefreshToken(email, refreshTokenHash);
 
                         return new LoginResponse(
                             user,
-                            accessToken
+                            newAccessToken,
+                            newRefreshToken
                         );
                     }
                     catch
@@ -84,23 +84,25 @@ namespace timetracker.Server.API.Auth
                     }
                 });
 
-            Field<TokenResponseType>("RefreshToken")
+            Field<RefreshTokenResponseType>("RefreshToken")
+                .Arguments(new QueryArguments(
+                    new QueryArgument<StringGraphType> { Name = "RefreshToken" }
+                ))
                .ResolveAsync(async context =>
                {
                    try
                    {
-                       httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("refreshToken", out string? refreshTokenCookie);
+                       var refreshToken = context.GetArgument<string>("refreshToken");
 
-                       ClaimsPrincipal? principal = jwtTokenUtils.ValidateToken(refreshTokenCookie);
+                       var principal = jwtTokenUtils.ValidateToken(refreshToken);
 
                        var email = principal.FindFirst(ClaimTypes.Email)?.Value;
                        var refreshTokenHash = principal.FindFirst("hash")?.Value;
 
-                       await jwtTokenUtils.AssignRefreshToken(email, refreshTokenHash);
+                       var newAccessToken = jwtTokenUtils.GenerateAccessToken(email);
+                       var newRefreshToken = await jwtTokenUtils.GenerateRefreshToken(email, refreshTokenHash);
 
-                       var accessToken = jwtTokenUtils.GenerateAccessToken(email);
-
-                       return accessToken;
+                       return new RefreshTokenResponse(newAccessToken, newRefreshToken);
                    }
                    catch
                    {
@@ -114,13 +116,16 @@ namespace timetracker.Server.API.Auth
 
 
             Field<BooleanGraphType>("Logout")
+                .Arguments(new QueryArguments(
+                    new QueryArgument<StringGraphType> { Name = "RefreshToken" }
+                ))
                 .ResolveAsync(async context =>
                 {
                     try
                     {
-                        httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("refreshToken", out string? refreshTokenCookie);
+                        var refreshToken = context.GetArgument<string>("refreshToken");
 
-                        ClaimsPrincipal? principal = jwtTokenUtils.ValidateToken(refreshTokenCookie);
+                        var principal = jwtTokenUtils.ValidateToken(refreshToken);
 
                         var email = principal.FindFirst(ClaimTypes.Email)?.Value;
                         var refreshTokenHash = principal.FindFirst("hash")?.Value;

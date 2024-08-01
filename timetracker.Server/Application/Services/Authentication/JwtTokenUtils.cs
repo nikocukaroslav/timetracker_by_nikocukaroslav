@@ -26,25 +26,30 @@ namespace timetracker.Server.Application.Services.Authentication
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string GenerateToken(Claim[] claims, DateTime expiresAt)
+        public TokenResponse GenerateToken(Claim[] claims, int expireMinutes)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var expires = DateTime.Now.AddMinutes(expireMinutes);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = expiresAt,
+                Expires = expires,
                 Issuer = _jwtSettings.Issuer,
                 Audience = _jwtSettings.Audience,
                 SigningCredentials = signingCredentials
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
+            var responseToken = tokenHandler.WriteToken(token);
 
-            return tokenHandler.WriteToken(token);
+            var expiresAtTimeStamp = new DateTimeOffset(expires).ToUnixTimeMilliseconds();
+
+            return new TokenResponse(responseToken, expiresAtTimeStamp);
         }
 
         public ClaimsPrincipal? ValidateToken(string token)
@@ -66,19 +71,15 @@ namespace timetracker.Server.Application.Services.Authentication
 
         public TokenResponse GenerateAccessToken(string email)
         {
-            var expiresAt = DateTime.Now.AddMinutes(_jwtSettings.AccessTokenExpiryMinutes);
-
             var accessToken = GenerateToken(
                 [ new(ClaimTypes.Email, email) ],
-                expiresAt
+                _jwtSettings.AccessTokenExpiryMinutes
             );
 
-            var expiresAtTimeStamp = new DateTimeOffset(expiresAt).ToUnixTimeMilliseconds();
-
-            return new TokenResponse(accessToken, expiresAtTimeStamp);
+            return accessToken;
         }
 
-        public async Task AssignRefreshToken(string email, string tokenHash)
+        public async Task<TokenResponse> GenerateRefreshToken(string email, string tokenHash)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
 
@@ -97,24 +98,15 @@ namespace timetracker.Server.Application.Services.Authentication
 
             await _userRepository.UpdateAsync(user);
 
-            var expiresAt = DateTime.Now.AddMinutes(_jwtSettings.RefreshTokenExpiryMinutes);
-
             var refreshToken = GenerateToken(
                 [
                     new(ClaimTypes.Email, email),
                     new("hash", newTokenHash)
                 ],
-                expiresAt
+                _jwtSettings.RefreshTokenExpiryMinutes
             );
 
-            var options = new CookieOptions()
-            {
-                Expires = expiresAt,
-                HttpOnly = true,
-                Secure = true,
-            };
-
-            _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, options);
+            return refreshToken;
         }
 
         public async Task RevokeRefreshToken(string email, string tokenHash)
@@ -134,8 +126,6 @@ namespace timetracker.Server.Application.Services.Authentication
             user.RefreshTokenHash = null;
 
             await _userRepository.UpdateAsync(user);
-
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("refreshToken");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace timetracker.Server.API.User.Types
             Field(t => t.Name);
             Field(t => t.Surname);
             Field(t => t.Email);
-            Field(t => t.EmployeeType);
+            Field(t => t.EmploymentType);
             Field<ListGraphType<StringGraphType>>("permissions")
                 .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
                 .Resolve(context => context.Source.Permissions.Split(',', StringSplitOptions.RemoveEmptyEntries));

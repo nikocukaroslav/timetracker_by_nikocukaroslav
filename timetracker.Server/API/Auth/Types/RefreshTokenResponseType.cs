@@ -3,11 +3,10 @@ using timetracker.Server.API.Auth.Models;
 
 namespace timetracker.Server.API.Auth.Types
 {
-    public class LoginResponseType : ObjectGraphType<LoginResponse>
+    public class RefreshTokenResponseType : ObjectGraphType<RefreshTokenResponse>
     {
-        public LoginResponseType()
+        public RefreshTokenResponseType()
         {
-            Field<LoginUserResponseType>("user").Resolve(context => context.Source.User);
             Field<TokenResponseType>("accessToken").Resolve(context => context.Source.AccessToken);
             Field<TokenResponseType>("refreshToken").Resolve(context => context.Source.RefreshToken);
         }

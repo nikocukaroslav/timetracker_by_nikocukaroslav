@@ -4,6 +4,7 @@ namespace timetracker.Server.API.Auth.Models
 {
     public record LoginResponse(
          UserModel User,
-         TokenResponse AccessToken
+         TokenResponse AccessToken,
+         TokenResponse RefreshToken
     );
 }

@@ -10,7 +10,7 @@ namespace timetracker.Server.API.User.Types
             Field<StringGraphType>("surname");
             Field<StringGraphType>("email");
             Field<StringGraphType>("password");
-            Field<StringGraphType>("employeeType");
+            Field<StringGraphType>("employmentType");
             Field<ListGraphType<StringGraphType>>("permissions");
         }
     }

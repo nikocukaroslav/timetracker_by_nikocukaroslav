@@ -5,10 +5,10 @@ namespace timetracker.Server.Application.Interfaces
 {
     public interface IJwtTokenUtils
     {
-        string GenerateToken(Claim[] claims, DateTime expiresAt);
+        TokenResponse GenerateToken(Claim[] claims, int expireMinutes);
         ClaimsPrincipal? ValidateToken(string token);
         TokenResponse GenerateAccessToken(string Email);
-        Task AssignRefreshToken(string email, string tokenHash);
+        Task<TokenResponse> GenerateRefreshToken(string email, string tokenHash);
         Task RevokeRefreshToken(string email, string tokenHash);
     }
 }

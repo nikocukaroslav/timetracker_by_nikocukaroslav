@@ -6,11 +6,12 @@ using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.API.User
 {
-    [Authorize]
     public class UserQuery : ObjectGraphType
     {
         public UserQuery(IUserRepository userRepository)
         {
+            this.Authorize();
+
             Field<ListGraphType<UsersResponseType>>("GetUsers")
                .ResolveAsync(async context =>
                {

@@ -9,7 +9,6 @@ using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.API.Auth
 {
-    [Authorize]
     public class AuthMutation : ObjectGraphType
     {
         public AuthMutation(
@@ -19,7 +18,6 @@ namespace timetracker.Server.API.Auth
             IHttpContextAccessor httpContextAccessor)
         {
             Field<LoginResponseType>("Login")
-                .AllowAnonymous()
                 .Arguments(new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "Email" },
                     new QueryArgument<StringGraphType> { Name = "Password" })
@@ -49,6 +47,43 @@ namespace timetracker.Server.API.Auth
                         accessToken
                     );
                 });
+
+            Field<LoginResponseType>("Authorize")
+                .ResolveAsync(async context =>
+                {
+                    try
+                    {
+                        httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("refreshToken", out string? refreshTokenCookie);
+
+                        ClaimsPrincipal? principal = jwtTokenUtils.ValidateToken(refreshTokenCookie);
+
+                        var email = principal.FindFirst(ClaimTypes.Email)?.Value;
+                        var refreshTokenHash = principal.FindFirst("hash")?.Value;
+
+                        await jwtTokenUtils.AssignRefreshToken(email, refreshTokenHash);
+
+                        var accessToken = jwtTokenUtils.GenerateAccessToken(email);
+
+                        var user = await userRepository.GetUserByEmailAsync(email);
+
+                        if (user == null)
+                            throw new Exception();
+
+                        return new LoginResponse(
+                            user,
+                            accessToken
+                        );
+                    }
+                    catch
+                    {
+                        context.Errors.Add(new ExecutionError("Unauthorized")
+                        {
+                            Code = ExceptionsCode.UNAUTHORIZED.ToString(),
+                        });
+                        return null;
+                    }
+                });
+
             Field<TokenResponseType>("RefreshToken")
                .ResolveAsync(async context =>
                {
@@ -76,6 +111,7 @@ namespace timetracker.Server.API.Auth
                        return null;
                    }
                });
+
 
             Field<BooleanGraphType>("Logout")
                 .ResolveAsync(async context =>

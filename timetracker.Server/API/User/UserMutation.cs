@@ -10,11 +10,13 @@ using timetracker.Server.API.User.Models;
 
 namespace timetracker.Server.API.User
 {
-    [Authorize]
     public class UserMutation : ObjectGraphType
     {
+
         public UserMutation(IUserRepository userRepository)
         {
+            this.Authorize();
+
             Field<UserType>("AddUser")
                 .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))

@@ -3,7 +3,6 @@ export const BASE_URL = "https://localhost:7023/graphql";
 export const APPROVE_REQUESTS = "APPROVE_REQUESTS"
 export const MANAGE_USERS = "MANAGE_USERS"
 export const MANAGE_TEAMS = "MANAGE_TEAMS"
-export const WORKING_PART_TIME = "WORKING_PART_TIME"
 
 export const permissionList = [
     {

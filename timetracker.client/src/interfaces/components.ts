@@ -1,9 +1,8 @@
-import {ChangeEvent, ChangeEventHandler, MouseEventHandler, ReactNode} from "react";
+import {ChangeEvent, ChangeEventHandler, ReactNode} from "react";
 import {IconType} from "react-icons";
 import {User} from "./actions.ts";
 
 export interface CheckboxProps {
-    onClick?: MouseEventHandler<HTMLInputElement>;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
     disabled?: boolean;
     checked?: boolean;
@@ -30,8 +29,8 @@ export interface NavigationLinkProps {
 
 export interface LayoutProps {
     children: ReactNode;
-    redirectToSignIn?: boolean;
-    permissions: string[];
+    redirectToNotFound?: boolean;
+    permissions?: string[];
 }
 
 export interface EmployeeProps {

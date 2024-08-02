@@ -1,20 +1,26 @@
 import {Box, Button, Divider, Flex, List, Text} from "@chakra-ui/react";
 import {PiPlus} from "react-icons/pi";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import CreateMemberForm from "../../features/employees/components/CreateMemberForm.tsx";
 import Employee from "../../features/employees/components/Employee.tsx";
 import {useAppSelector} from "../../hooks/useAppSelector.ts";
 import {User} from "../../interfaces/actions.ts";
+import {getUsers} from "../../features/employees/employeesSlice.ts";
+import {useDispatch} from "react-redux";
 
 
 function Employees() {
     const [active, setActive] = useState(false);
-
+    const dispatch = useDispatch()
     const employees = useAppSelector(state => state.employees.users)
 
     function handleActive() {
         setActive(!active);
     }
+
+    useEffect(() => {
+        dispatch(getUsers());
+    }, [dispatch]);
 
     return (
         <>

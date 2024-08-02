@@ -1,17 +1,16 @@
-import {Navigate} from "react-router-dom";
 import {useAppSelector} from "../../hooks/useAppSelector.ts";
 import {LayoutProps} from "../../interfaces/components.ts";
+import {Navigate} from "react-router-dom";
 
-function PermissionChecker({children, permissions, redirectToSignIn = false}: LayoutProps) {
+function PermissionChecker({children, permissions, redirectToNotFound = false}: LayoutProps) {
     const userPermissions = useAppSelector((state) => state.authentication.userPermissions);
-
     const hasPermission = permissions.some(permission => userPermissions.includes(permission));
 
     if (!hasPermission) {
-        if (redirectToSignIn) {
-            return <Navigate to="/sign-in"/>
+        if (redirectToNotFound) {
+            return <Navigate to="/not-found"/>;
         }
-        return <Navigate to="dfsdfsdffd"/>;
+        return null;
     }
 
     return children;

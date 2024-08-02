@@ -1,15 +1,17 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN} from "../../constants.ts";
+import {deleteCookie, setCookie} from "../../utils/cookieHandler.ts";
 
 export const initialState = {
     userId: "",
     userName: "",
     userAvatar: "",
     userPermissions: [],
+    userType: "",
     loading: false,
     error: "",
     expiresAt: null,
-    loginStatus: localStorage.getItem("loginStatus") || false
+    loginStatus: false
 }
 
 export const login = (email: string, password: string) => ({type: LOGIN, payload: {email, password}})
@@ -21,17 +23,16 @@ const authenticationSlice = createSlice({
     name: "authentication",
     initialState,
     reducers: {
-        loginUser(state, {payload}) {
+        authorizeUser(state, {payload}) {
             state.userId = payload.user.id;
             state.userName = payload.user.name;
             state.userPermissions = payload.user.permissions;
             state.expiresAt = payload.accessToken.expiresAt;
             state.loginStatus = true;
-            localStorage.setItem("loginStatus", "true");
+            setCookie("refreshToken", payload.refreshToken.token, payload.refreshToken.expiresAt)
             localStorage.setItem("token", payload.accessToken.token)
         },
-        silentLogin(state, {payload}) {
-            console.log(payload)
+        silentTokenRefresh(state, {payload}) {
             localStorage.setItem("token", payload.refreshToken.token)
             state.expiresAt = payload.refreshToken.expiresAt;
         },
@@ -40,7 +41,7 @@ const authenticationSlice = createSlice({
             state.userName = "";
             state.userPermissions = [];
             state.loginStatus = false;
-            localStorage.removeItem("loginStatus");
+            deleteCookie("refreshToken")
             localStorage.removeItem("token");
         },
         setLoading(state, action) {
@@ -49,14 +50,15 @@ const authenticationSlice = createSlice({
         setError(state, action) {
             state.error = action.payload;
         },
-        authorizeUser(state, {payload}) {
-            state.userId = payload.id;
-            state.userName = payload.name;
-            state.userPermissions = payload.permissions;
-        }
     },
 })
 
-export const {loginUser, logoutUser, setLoading, setError, authorizeUser, silentLogin} = authenticationSlice.actions;
+export const {
+    logoutUser,
+    setLoading,
+    setError,
+    authorizeUser,
+    silentTokenRefresh
+} = authenticationSlice.actions;
 
 export default authenticationSlice.reducer;

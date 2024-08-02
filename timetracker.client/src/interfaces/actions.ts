@@ -12,10 +12,9 @@ import {
 import {removeUser, setUser, setUsers, updateUser} from "../features/employees/employeesSlice.ts";
 import {
     authorizeUser,
-    loginUser,
     logoutUser,
     setError,
-    silentLogin
+    silentTokenRefresh
 } from "../features/authentication/authenticationSlice.ts";
 
 export interface User {
@@ -83,11 +82,6 @@ interface LoginAction {
     }
 }
 
-interface LoginUserAction {
-    type: typeof loginUser.type;
-    payload: object;
-}
-
 interface SetErrorAction {
     type: typeof setError.type;
     payload: string
@@ -114,8 +108,8 @@ interface RefreshTokenAction {
     type: typeof REFRESH_TOKEN,
 }
 
-interface SilentLoginAction {
-    type: typeof silentLogin.type,
+interface SilentRefreshToken {
+    type: typeof silentTokenRefresh.type,
 }
 
 export type MyAction =
@@ -129,11 +123,10 @@ export type MyAction =
     | RemoveUserAction
     | UpdateUserPermissionsAction
     | LoginAction
-    | LoginUserAction
     | SetErrorAction
     | AuthorizeAction
     | AuthorizeUserAction
     | LogoutAction
     | LogoutUserAction
     | RefreshTokenAction
-    | SilentLoginAction
+    | SilentRefreshToken

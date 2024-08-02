@@ -65,13 +65,14 @@ function Employee({employee}: EmployeeProps) {
                         <MenuList>
                             {
                                 employee.permissions.length > 0 ?
-                                    permissionList.filter(permission => employee.permissions.includes(permission.name)).map((permission, index) => (
-                                        <MenuItem key={index}>{permission.description}</MenuItem>
-                                    )) :
+                                    permissionList
+                                        .filter(permission => employee.permissions.includes(permission.name))
+                                        .map((permission, index) => (
+                                            <MenuItem key={index}>{permission.description}</MenuItem>
+                                        )) :
                                     <MenuItem>No permissions</MenuItem>
                             }
                         </MenuList>
-
                     </Menu>
                 </Flex>
                 <Spacer/>

@@ -13,11 +13,9 @@ const customTheme = extendTheme({
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-        <ChakraProvider theme={customTheme}>
-            <Provider store={store}>
-                <App/>
-            </Provider>
-        </ChakraProvider>
-    </React.StrictMode>
+    <ChakraProvider theme={customTheme}>
+        <Provider store={store}>
+            <App/>
+        </Provider>
+    </ChakraProvider>
 );

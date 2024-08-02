@@ -11,5 +11,7 @@ export interface State {
         loginStatus: boolean;
         expiresAt: number;
         userPermissions: string[];
+        loading: boolean;
+        error: string;
     }
 }

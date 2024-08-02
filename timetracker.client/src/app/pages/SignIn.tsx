@@ -17,19 +17,19 @@ import {BiHide, BiShow} from "react-icons/bi";
 import {useEffect, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import {login} from "../../features/authentication/authenticationSlice.ts";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
+import {useAppSelector} from "../../hooks/useAppSelector.ts";
 
 function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
-    const loginStatus = useSelector(state => state.authentication.userId);
-    const loading = useSelector(state => state.authentication.loading);
-    const error = useSelector(state => state.authentication.error);
+    const loginStatus = useAppSelector(state => state.authentication.loginStatus);
+    const loading = useAppSelector(state => state.authentication.loading);
+    const error = useAppSelector(state => state.authentication.error);
 
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
 
     function handleClick() {
@@ -41,13 +41,12 @@ function SignIn() {
     }
 
     useEffect(() => {
-        if (loginStatus) {
+        if (loginStatus)
             navigate("/");
-        }
     }, [loginStatus, navigate]);
 
     return (
-        <Flex as="main" align="center" justify="center" bg="gray.100" h="100dvh" color="gray.700">
+        <Flex as="main" align="center" justify="center" bg="gray.100" overflow="hidden" h="100dvh" color="gray.700">
             <Box
                 w="25%" h="50%" minW="420px" bg="gray.50" rounded="md"
                 boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)">

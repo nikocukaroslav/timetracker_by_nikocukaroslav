@@ -6,7 +6,7 @@ mutation addUser($user: UserInputType) {
       name
       surname
       email
-      employeeType
+      employmentType
       permissions
     }
   }
@@ -21,7 +21,7 @@ export const getUsersQuery = `
       name
       email
       surname
-      employeeType
+      employmentType
       permissions
     }
   }
@@ -36,7 +36,7 @@ query GetUser($id: Guid!) {
       name
       surname
       email
-      employeeType
+      employmentType
       permissions
     }
   }
@@ -59,7 +59,7 @@ mutation UpdateUserPermissions($permissions: [String!], $id: Guid!) {
       name
       surname
       email
-      employeeType
+      employmentType
       permissions
     }
   }

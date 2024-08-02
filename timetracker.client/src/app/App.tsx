@@ -7,79 +7,60 @@ import Requests from "./pages/Requests.tsx";
 import TimeTracker from "./pages/TimeTracker.tsx";
 import Calendar from "./pages/Calendar.tsx";
 import SignIn from "./pages/SignIn.tsx";
-import ProtectedRoute from "../components/layouts/ProtectedRoute.tsx";
 import Approves from "./pages/Approves.tsx";
 import AppLayout from "../components/layouts/AppLayout.tsx";
 import PermissionChecker from "../components/layouts/PermissionChecker.tsx";
-import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS, WORKING_PART_TIME} from "../constants.ts";
-import {employeesLoader, userLoader} from "../utils/loaders.ts";
+import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS} from "../constants.ts";
+import ProtectedRoute from "../components/layouts/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        loader: userLoader,
         element:
             <ProtectedRoute>
                 <AppLayout/>
             </ProtectedRoute>,
         children: [
             {
-                path: "/time-tracker",
+                path: "time-tracker",
                 element:
-                    <ProtectedRoute>
-                        <PermissionChecker redirectToSignIn permissions={[WORKING_PART_TIME]}>
-                            <TimeTracker/>
-                        </PermissionChecker>
-                    </ProtectedRoute>
+                    <TimeTracker/>
             },
             {
-                path: "/calendar",
+                path: "calendar",
                 element:
-                    <ProtectedRoute>
-                        <Calendar/>
-                    </ProtectedRoute>,
+                    <Calendar/>
             },
             {
-                path: "/employees",
+                path: "employees",
                 element:
-                    <ProtectedRoute>
-                        <PermissionChecker redirectToSignIn permissions={[MANAGE_USERS]}>
-                            <Employees/>
-                        </PermissionChecker>
-                    </ProtectedRoute>,
-                loader: employeesLoader,
+                    <PermissionChecker redirectToNotFound permissions={[MANAGE_USERS]}>
+                        <Employees/>
+                    </PermissionChecker>,
             },
             {
-                path: "/teams",
+                path: "teams",
                 element:
-                    <ProtectedRoute>
-                        <PermissionChecker redirectToSignIn permissions={[MANAGE_TEAMS]}>
-                            <Teams/>
-                        </PermissionChecker>
-                    </ProtectedRoute>,
+                    <PermissionChecker redirectToNotFound permissions={[MANAGE_TEAMS]}>
+                        <Teams/>
+                    </PermissionChecker>
             },
             {
-                path: "/approves",
+                path: "approves",
                 element:
-                    <ProtectedRoute>
-                        <PermissionChecker redirectToSignIn permissions={[APPROVE_REQUESTS]}>
-                            <Approves/>
-                        </PermissionChecker>
-                    </ProtectedRoute>
+                    <PermissionChecker redirectToNotFound permissions={[APPROVE_REQUESTS]}>
+                        <Approves/>
+                    </PermissionChecker>
             },
             {
-                path: "/requests",
+                path: "requests",
                 element:
-                    <ProtectedRoute>
-                        <Requests/>
-                    </ProtectedRoute>,
+                    <Requests/>
             },
             {
-                path: "/settings",
+                path: "settings",
                 element:
-                    <ProtectedRoute>
-                        <Settings/>
-                    </ProtectedRoute>,
+                    <Settings/>
             },
         ],
     },

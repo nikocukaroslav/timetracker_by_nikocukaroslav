@@ -3,7 +3,7 @@ import {PiCalendarBlank, PiClock, PiGear, PiListChecks, PiNote, PiUserPlus, PiUs
 import NavigationLink from "../ui/NavigationLink.tsx";
 import CustomNavbarDivider from "../ui/CustomNavbarDivider.tsx";
 import PermissionChecker from "./PermissionChecker.tsx";
-import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS, WORKING_PART_TIME} from "../../constants.ts";
+import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS} from "../../constants.ts";
 
 function Navbar() {
     return (
@@ -31,13 +31,11 @@ function Navbar() {
             </Box>
 
             <Stack direction="column" spacing="1" py="8">
-                <PermissionChecker permissions={[WORKING_PART_TIME]}>
-                    <NavigationLink
-                        to="time-tracker"
-                        icon={PiClock}
-                        label="Time Tracker"
-                    />
-                </PermissionChecker>
+                <NavigationLink
+                    to="time-tracker"
+                    icon={PiClock}
+                    label="Time Tracker"
+                />
                 <NavigationLink
                     to="calendar"
                     icon={PiCalendarBlank}

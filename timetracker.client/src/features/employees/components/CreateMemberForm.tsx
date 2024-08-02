@@ -26,7 +26,6 @@ import {useDispatch} from "react-redux";
 import {createUser, updateUserPermissions} from "../employeesSlice.ts";
 import {generatePassword} from "../../../utils/generatePassword.ts";
 import PermissionItem from "./PermissionItem.tsx";
-import WorkingPartTimePermissionItem from "./WorkingPartTimePermissionItem.tsx";
 import RandomPasswordButton from "./RandomPasswordButton.tsx";
 import {useAppSelector} from "../../../hooks/useAppSelector.ts";
 
@@ -107,20 +106,6 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                 : prevPermissions.filter((perm) => perm !== permission)
         );
     }
-
-    useEffect(() => {
-        if (employeeType === "part-time") {
-            setPermissions((prevPermissions) =>
-                prevPermissions.includes("WORKING_PART_TIME")
-                    ? prevPermissions
-                    : [...prevPermissions, "WORKING_PART_TIME"]
-            );
-        } else {
-            setPermissions((prevPermissions) =>
-                prevPermissions.filter((perm) => perm !== "WORKING_PART_TIME")
-            );
-        }
-    }, [employeeType]);
 
     function setRandomPassword() {
         setPassword(generatePassword());
@@ -232,10 +217,6 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                                                     handlePermissions={handlePermissions}/>
                                 );
                             })}
-                            {
-                                employeeType === "part-time" &&
-                                <WorkingPartTimePermissionItem handlePermissions={handlePermissions}/>
-                            }
                         </List>
                     </Flex>
                 </ModalBody>

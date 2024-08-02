@@ -19,6 +19,7 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(CREATE_USER),
         tap(() => store.dispatch(setLoading(true))),
+        tap(() => store.dispatch(setError(""))),
         switchMap(action =>
             graphQlQuery(addUserMutation, {
                     user: action.payload
@@ -35,7 +36,6 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
                         of(setError(error.message))
                     ),
                     tap(() => store.dispatch(setLoading(false))),
-                    tap(() => store.dispatch(setError(""))),
                 )
         )
     );
@@ -80,6 +80,7 @@ export const updateUserPermissionsEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(UPDATE_USER_PERMISSIONS),
         tap(() => store.dispatch(setLoading(true))),
+        tap(() => store.dispatch(setError(""))),
         switchMap(action =>
             graphQlQuery(updateUserPermissionsMutation,
                 {
@@ -89,7 +90,6 @@ export const updateUserPermissionsEpic: Epic<MyAction> = (action$) =>
                 .pipe(
                     map(response => updateUser(response.data.users.updateUserPermissions)),
                     tap(() => store.dispatch(setLoading(false))),
-                    tap(() => store.dispatch(setError(""))),
                 )
         )
     )

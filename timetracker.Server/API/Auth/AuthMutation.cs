@@ -4,7 +4,7 @@ using System.Security.Claims;
 using timetracker.Server.API.Auth.Models;
 using timetracker.Server.API.Auth.Types;
 using timetracker.Server.Application.Interfaces;
-using timetracker.Server.Domain.Exceptions;
+using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.API.Auth
@@ -31,10 +31,7 @@ namespace timetracker.Server.API.Auth
 
                     if (user == null || !passwordHasher.VerifyHash(password, user.Password, user.Salt))
                     {
-                        context.Errors.Add(new ExecutionError("Incorrect email or password")
-                        {
-                            Code = ExceptionsCode.INVALID_CREDENTIALS.ToString(),
-                        });
+                        context.Errors.Add(ErrorCode.INVALID_CREDENTIALS);
                         return null;
                     }
 
@@ -76,10 +73,7 @@ namespace timetracker.Server.API.Auth
                     }
                     catch
                     {
-                        context.Errors.Add(new ExecutionError("Unauthorized")
-                        {
-                            Code = ExceptionsCode.UNAUTHORIZED.ToString(),
-                        });
+                        context.Errors.Add(ErrorCode.UNAUTHORIZED);
                         return null;
                     }
                 });
@@ -106,10 +100,7 @@ namespace timetracker.Server.API.Auth
                    }
                    catch
                    {
-                       context.Errors.Add(new ExecutionError("Unauthorized")
-                       {
-                           Code = ExceptionsCode.UNAUTHORIZED.ToString(),
-                       });
+                       context.Errors.Add(ErrorCode.UNAUTHORIZED);
                        return null;
                    }
                });
@@ -136,10 +127,7 @@ namespace timetracker.Server.API.Auth
                     }
                     catch
                     {
-                        context.Errors.Add(new ExecutionError("Unauthorized")
-                        {
-                            Code = ExceptionsCode.UNAUTHORIZED.ToString(),
-                        });
+                        context.Errors.Add(ErrorCode.UNAUTHORIZED);
 
                         return null;
                     }

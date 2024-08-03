@@ -2,7 +2,7 @@
 using GraphQL.Types;
 using timetracker.Server.API.User.Types;
 using Entities = timetracker.Server.Domain.Entities;
-using timetracker.Server.Domain.Exceptions;
+using timetracker.Server.Domain.Errors;
 using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Interfaces;
 using timetracker.Server.Application.Interfaces;
@@ -15,8 +15,6 @@ namespace timetracker.Server.API.User
 
         public UserMutation(IUserRepository userRepository)
         {
-            this.Authorize();
-
             Field<UserType>("AddUser")
                 .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
@@ -26,36 +24,24 @@ namespace timetracker.Server.API.User
 
                     if (userInput is null)
                     {
-                        context.Errors.Add(new ExecutionError("Invalid credentials")
-                        {
-                            Code = ExceptionsCode.INVALID_CREDENTIALS.ToString(),
-                        });
+                        context.Errors.Add(ErrorCode.INVALID_INPUT_DATA);
                         return null;
                     }
 
                     if (await userRepository.GetUserByEmailAsync(userInput.Email) != null)
                     {
-                        context.Errors.Add(new ExecutionError("This email is already registered")
-                        {
-                            Code = ExceptionsCode.EMAIL_EXIST.ToString(),
-                        });
+                        context.Errors.Add(ErrorCode.EMAIL_EXIST);
                     }
 
                     if (userInput.Password.Length < 8 || userInput.Password.Length > 20)
                     {
-                        context.Errors.Add(new ExecutionError("Password must be between 8 and 20 characters")
-                        {
-                            Code = ExceptionsCode.INVALID_PASSWORD_LENGTH.ToString(),
-                        });
+                        context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
                     }
 
                     var emailRegex = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
                     if (!emailRegex.IsMatch(userInput.Email))
                     {
-                        context.Errors.Add(new ExecutionError("Invalid email format")
-                        {
-                            Code = ExceptionsCode.INVALID_EMAIL_FORMAT.ToString(),
-                        });
+                        context.Errors.Add(ErrorCode.INVALID_EMAIL_FORMAT);
                     }
 
                     if (context.Errors.Count > 0) return null;
@@ -87,10 +73,7 @@ namespace timetracker.Server.API.User
                     var user = await userRepository.GetByIdAsync(id);
                     if (user is null)
                     {
-                        context.Errors.Add(new ExecutionError("User is not found")
-                        {
-                            Code = ExceptionsCode.USER_NOT_FOUND.ToString(),
-                        });
+                        context.Errors.Add(ErrorCode.USER_NOT_FOUND);
                         return null;
                     }
 
@@ -114,10 +97,7 @@ namespace timetracker.Server.API.User
 
                      if(user is null)
                      {
-                         context.Errors.Add(new ExecutionError("User is not found")
-                         {
-                             Code = ExceptionsCode.USER_NOT_FOUND.ToString(),
-                         });
+                         context.Errors.Add(ErrorCode.USER_NOT_FOUND);
                          return null;
                      }
 

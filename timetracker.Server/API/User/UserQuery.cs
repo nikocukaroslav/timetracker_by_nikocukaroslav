@@ -1,7 +1,7 @@
 ﻿using GraphQL;
 using GraphQL.Types;
 using timetracker.Server.API.User.Types;
-using timetracker.Server.Domain.Exceptions;
+using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.API.User
@@ -27,10 +27,7 @@ namespace timetracker.Server.API.User
 
                    if (user == null)
                    {
-                       context.Errors.Add(new ExecutionError("User is not found")
-                       {
-                           Code = ExceptionsCode.USER_NOT_FOUND.ToString(),
-                       });
+                       context.Errors.Add(ErrorCode.USER_NOT_FOUND);
                        return null;
                    }
 

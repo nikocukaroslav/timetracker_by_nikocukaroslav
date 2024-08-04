@@ -7,6 +7,7 @@ using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Interfaces;
 using timetracker.Server.Application.Interfaces;
 using timetracker.Server.API.User.Models;
+using System.ComponentModel.Design;
 
 namespace timetracker.Server.API.User
 {
@@ -15,9 +16,9 @@ namespace timetracker.Server.API.User
 
         public UserMutation(IUserRepository userRepository)
         {
-            Field<UserType>("AddUser")
+            Field<UserResponseType>("AddUser")
                 .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
-                .Arguments(new QueryArguments(new QueryArgument<UserInputType> { Name = "user" }))
+                .Arguments(new QueryArguments(new QueryArgument<AddUserRequestType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {
                     var userInput = context.GetArgument<AddUserRequest>("user");
@@ -83,26 +84,31 @@ namespace timetracker.Server.API.User
                     return "User deleted successful";
                 });
 
-            Field<UserType>("UpdateUserPermissions")
+            Field<UserResponseType>("UpdateUser")
                  .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
                  .Arguments(new QueryArguments(
-                    new QueryArgument<ListGraphType<StringGraphType>> { Name = "permissions" },
-                    new QueryArgument<GuidGraphType> { Name = "id" })
+                    new QueryArgument<UpdateUserRequestType> { Name = "user" })
                  )
                  .ResolveAsync(async context =>
                  {
-                     var permissions = string.Join(",", context.GetArgument<List<string>>("permissions"));
-                     var id = context.GetArgument<Guid>("id");
+                     var updateInput = context.GetArgument<UpdateUserRequest>("user");
 
-                     var user = await userRepository.GetByIdAsync(id);
+                     var user = await userRepository.GetByIdAsync(updateInput.UserId);
 
-                     if(user is null)
+                     if (user is null)
                      {
                          context.Errors.Add(ErrorCode.USER_NOT_FOUND);
                          return null;
                      }
 
-                     user.Permissions = permissions;
+                     user.Name = updateInput.Name ?? user.Name;
+                     user.Surname = updateInput.Surname ?? user.Surname;
+                     user.Position = updateInput.Position ?? user.Position;
+                     user.Timeload = updateInput.Timeload ?? user.Timeload;
+                     if (updateInput.Permissions != null)
+                     {
+                         user.Permissions = string.Join(",", updateInput.Permissions);
+                     }
 
                      return await userRepository.UpdateAsync(user);
                  });

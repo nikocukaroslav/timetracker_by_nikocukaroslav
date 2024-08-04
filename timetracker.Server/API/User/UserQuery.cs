@@ -12,14 +12,14 @@ namespace timetracker.Server.API.User
         {
             this.Authorize();
 
-            Field<ListGraphType<UsersResponseType>>("GetUsers")
+            Field<ListGraphType<UserResponseType>>("GetUsers")
                .ResolveAsync(async context =>
                {
                    var users = await userRepository.GetAllAsync();
                    return users;
                });
 
-            Field<UserType>("GetUser")
+            Field<UserResponseType>("GetUser")
                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                .ResolveAsync(async context =>
                {

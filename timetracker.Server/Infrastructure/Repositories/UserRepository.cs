@@ -34,5 +34,24 @@ namespace timetracker.Server.Infrastructure.Repositories
 
             return user;
         }
+
+        public async Task<IDictionary<Guid?, User>> GetUsersByIdAsync(IEnumerable<Guid?> ids)
+        {
+            using var connection = _connectionFactory.Create();
+
+            var users = await connection.QueryAsync<User>(
+                $"SELECT * FROM {_tableName} WHERE Id IN @Ids",
+                 new { Ids = ids });
+            return users.ToDictionary(x => (Guid?)x.Id);
+        }
+
+        public async Task<List<WorkSession>> GetWorkSessionsByIdAsync(Guid id)
+        {
+            using var connection = _connectionFactory.Create();
+            var query = "SELECT * FROM WorkSessions WHERE UserId = @UserId";
+            var workSessions = await connection.QueryAsync<WorkSession>(query, new { UserId = id });
+
+            return workSessions.ToList();
+        }
     }
 }

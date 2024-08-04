@@ -1,6 +1,7 @@
 ﻿using GraphQL;
 using GraphQL.Types;
 using timetracker.Server.API.User.Types;
+using timetracker.Server.API.WorkSession.Types;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 
@@ -33,6 +34,13 @@ namespace timetracker.Server.API.User
 
                    return user;
                });
+            Field<ListGraphType<WorkSessionResponseType>>("GetWorkSessions")
+                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
+                .ResolveAsync(async context =>
+                {
+                    var workSessions = await userRepository.GetWorkSessionsByIdAsync(context.GetArgument<Guid>("id"));
+                    return workSessions;
+                });
         }
     }
 }

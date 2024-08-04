@@ -8,7 +8,7 @@ namespace timetracker.Server.API.User.Types
     {
         public UpdateUserRequestType()
         {
-            this.AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString());
+            this.AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString());
             Field<GuidGraphType>("id");
             Field<StringGraphType>("name");
             Field<StringGraphType>("surname");

@@ -7,7 +7,6 @@ using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Interfaces;
 using timetracker.Server.Application.Interfaces;
 using timetracker.Server.API.User.Models;
-using System.ComponentModel.Design;
 
 namespace timetracker.Server.API.User
 {
@@ -29,23 +28,25 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    if (await userRepository.GetUserByEmailAsync(userInput.Email) != null)
-                    {
-                        context.Errors.Add(ErrorCode.EMAIL_EXIST);
-                    }
-
-                    if (userInput.Password.Length < 8 || userInput.Password.Length > 20)
-                    {
-                        context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
-                    }
-
                     var emailRegex = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
                     if (!emailRegex.IsMatch(userInput.Email))
                     {
                         context.Errors.Add(ErrorCode.INVALID_EMAIL_FORMAT);
+                        return null;
                     }
 
-                    if (context.Errors.Count > 0) return null;
+                    if (userInput.Password is null || userInput.Password.Length < 8 || userInput.Password.Length > 20)
+                    {
+                        context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
+                        return null;
+                    }
+
+                    if (await userRepository.GetUserByEmailAsync(userInput.Email) != null)
+                    {
+                        context.Errors.Add(ErrorCode.EMAIL_EXIST);
+                        return null;
+                    }
+
 
                     var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
                     var hashPasswordResponce = passwordHasher.HashPassword(userInput.Password);
@@ -60,7 +61,8 @@ namespace timetracker.Server.API.User
                         Salt = hashPasswordResponce.Salt,
                         Timeload = userInput.Timeload,
                         Position = userInput.Position,
-                        Permissions = string.Join(",", userInput.Permissions)
+                        Permissions = string.Join(",", userInput.Permissions),
+                        Status = UserStatus.ACTIVE.ToString()
                     };
 
                     return await userRepository.AddAsync(user);
@@ -105,6 +107,7 @@ namespace timetracker.Server.API.User
                      user.Surname = updateInput.Surname ?? user.Surname;
                      user.Position = updateInput.Position ?? user.Position;
                      user.Timeload = updateInput.Timeload ?? user.Timeload;
+                     user.Status = updateInput.Status ?? user.Status;
                      if (updateInput.Permissions != null)
                      {
                          user.Permissions = string.Join(",", updateInput.Permissions);

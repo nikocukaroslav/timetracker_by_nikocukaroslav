@@ -11,8 +11,9 @@ namespace timetracker.Server.Domain.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public string Salt { get; set; }
-        public string EmploymentType { get; set; }
+        public string Position { get; set; }
         public string Permissions { get; set; }
         public string? RefreshTokenHash { get; set; }
+        public int Timeload { get; set; }
     }
 }

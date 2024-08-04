@@ -9,7 +9,8 @@ namespace timetracker.Server.API.Auth.Types
         {
             Field(t => t.Id);
             Field(t => t.Name);
-            Field(t => t.EmploymentType);
+            Field(t => t.Timeload);
+            Field(t => t.Position);
             Field<ListGraphType<StringGraphType>>("permissions")
                  .Resolve(context => context.Source.Permissions.Split(',', StringSplitOptions.RemoveEmptyEntries));
         }

@@ -57,7 +57,8 @@ namespace timetracker.Server.API.User
                         Email = userInput.Email,
                         Password = hashPasswordResponce.Password,
                         Salt = hashPasswordResponce.Salt,
-                        EmploymentType = userInput.EmploymentType,
+                        Timeload = userInput.Timeload,
+                        Position = userInput.Position,
                         Permissions = string.Join(",", userInput.Permissions)
                     };
 

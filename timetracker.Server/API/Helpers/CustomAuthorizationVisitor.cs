@@ -16,8 +16,8 @@ namespace timetracker.Server.API.Helpers
 
         protected override void HandleNodeNotAuthorized(ValidationInfo info)
         {
-            var resource = GenerateResourceDescription(info);
-            info.Context.ReportError(ErrorCode.UNAUTHORIZED);
+            if(!info.Context.HasErrors)
+                info.Context.ReportError(ErrorCode.UNAUTHORIZED);
         }
     }
 }

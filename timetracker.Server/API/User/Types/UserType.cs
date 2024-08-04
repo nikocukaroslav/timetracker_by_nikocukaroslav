@@ -1,4 +1,6 @@
-﻿using GraphQL.Types;
+﻿using GraphQL;
+using GraphQL.Types;
+using timetracker.Server.Domain.Enums;
 using UserModel = timetracker.Server.Domain.Entities.User;
 
 namespace timetracker.Server.API.User.Types
@@ -11,9 +13,12 @@ namespace timetracker.Server.API.User.Types
             Field(t => t.Name);
             Field(t => t.Surname);
             Field(t => t.Email);
-            Field(t => t.EmploymentType);
+            Field(t => t.Timeload)
+                .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString());
+            Field(t => t.Position);
             Field<ListGraphType<StringGraphType>>("permissions")
-               .Resolve(context => context.Source.Permissions.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
+                .Resolve(context => context.Source.Permissions.Split(',', StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

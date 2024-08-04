@@ -20,7 +20,7 @@ namespace timetracker.Server.Infrastructure
             services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
 
             services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IWorkSessionRepository, WorkSessionRepository>();
+            services.AddSingleton<IRepository<WorkSession>, Repository<WorkSession>>();
 
             services.AddAuth(configuration);
 
@@ -59,7 +59,7 @@ namespace timetracker.Server.Infrastructure
                         if (email == null) return false;
 
                         var userRepository = services.BuildServiceProvider().GetRequiredService<IUserRepository>();
-                        var permissions = await userRepository.GetPermissionsByEmailAsync(email);
+                        var permissions = await userRepository.GetUserPermissionsByEmailAsync(email);
 
                         if (permissions is null) return false;
 

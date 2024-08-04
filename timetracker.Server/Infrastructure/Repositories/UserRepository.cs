@@ -11,28 +11,49 @@ namespace timetracker.Server.Infrastructure.Repositories
         {
         }
 
-        public async Task<string> GetPermissionsByEmailAsync(string Email)
+        public async Task<string> GetUserPermissionsByEmailAsync(string email)
         {
             using var connection = _connectionFactory.Create();
 
             var permissions = await connection.QueryFirstOrDefaultAsync<string>(
                 $"SELECT Permissions FROM {_tableName} WHERE Email = @Email",
-                new { Email }
+                new { Email = email }
             );
 
             return permissions;
         }
 
-        public async Task<User> GetUserByEmailAsync(string Email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
             using var connection = _connectionFactory.Create();
 
             var user = await connection.QueryFirstOrDefaultAsync<User>(
                 $"Select * FROM {_tableName} WHERE Email = @Email",
-                new { Email }
+                new { Email = email }
             );
 
             return user;
+        }
+
+        public async Task<WorkSession> GetUserLastWorkSessionAsync(Guid id)
+        {
+            using var connection = _connectionFactory.Create();
+
+            var workSession = await connection.QueryFirstOrDefaultAsync<WorkSession>(
+                "SELECT * FROM WorkSessions WHERE UserId = @UserId AND EndTime IS NULL",
+                new { UserId = id }
+            );
+
+            return workSession;
+        }
+
+        public async Task<List<WorkSession>> GetUserWorkSessionsByIdAsync(Guid id)
+        {
+            using var connection = _connectionFactory.Create();
+            var query = "SELECT * FROM WorkSessions WHERE UserId = @UserId";
+            var workSessions = await connection.QueryAsync<WorkSession>(query, new { UserId = id });
+
+            return workSessions.ToList();
         }
 
         public async Task<IDictionary<Guid?, User>> GetUsersByIdAsync(IEnumerable<Guid?> ids)
@@ -41,17 +62,10 @@ namespace timetracker.Server.Infrastructure.Repositories
 
             var users = await connection.QueryAsync<User>(
                 $"SELECT * FROM {_tableName} WHERE Id IN @Ids",
-                 new { Ids = ids });
+                new { Ids = ids }
+            );
+
             return users.ToDictionary(x => (Guid?)x.Id);
-        }
-
-        public async Task<List<WorkSession>> GetWorkSessionsByIdAsync(Guid id)
-        {
-            using var connection = _connectionFactory.Create();
-            var query = "SELECT * FROM WorkSessions WHERE UserId = @UserId";
-            var workSessions = await connection.QueryAsync<WorkSession>(query, new { UserId = id });
-
-            return workSessions.ToList();
         }
     }
 }

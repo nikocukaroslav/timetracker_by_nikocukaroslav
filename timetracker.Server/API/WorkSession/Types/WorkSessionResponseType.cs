@@ -1,5 +1,4 @@
-﻿using GraphQL.Reflection;
-using GraphQL.Types;
+﻿using GraphQL.Types;
 using timetracker.Server.API.User.Types;
 using WorkSessionModel = timetracker.Server.Domain.Entities.WorkSession;
 using UserModel = timetracker.Server.Domain.Entities.User;
@@ -18,12 +17,12 @@ namespace timetracker.Server.API.WorkSession.Types
             Field(t => t.SetBy);
             Field(t => t.EditedAt, true);
             Field(t => t.UserId);
-            Field<UserResponseType, UserModel>("editedBy")
+            Field<UserResponseType, UserModel>("editor")
                 .ResolveAsync(context =>
                 {
                     var loader = accessor.Context.GetOrAddBatchLoader<Guid?, UserModel>("GetUsersByIdAsync", userRepository.GetUsersByIdAsync);
 
-                    return loader.LoadAsync(context.Source.EditedById);
+                    return loader.LoadAsync(context.Source.EditorId);
                 });
         }
     }

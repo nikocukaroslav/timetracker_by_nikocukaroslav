@@ -4,9 +4,10 @@ namespace timetracker.Server.Infrastructure.Interfaces
 {
     public interface IUserRepository : IRepository<User>
     {
-        Task<string> GetPermissionsByEmailAsync(string Email);
-        Task<User> GetUserByEmailAsync(string Email);
-        Task<List<WorkSession>> GetWorkSessionsByIdAsync(Guid id);
+        Task<string> GetUserPermissionsByEmailAsync(string email);
+        Task<User> GetUserByEmailAsync(string email);
+        Task<WorkSession> GetUserLastWorkSessionAsync(Guid id);
+        Task<List<WorkSession>> GetUserWorkSessionsByIdAsync(Guid id);
         Task<IDictionary<Guid?, User>> GetUsersByIdAsync(IEnumerable<Guid?> ids);
     }
 }

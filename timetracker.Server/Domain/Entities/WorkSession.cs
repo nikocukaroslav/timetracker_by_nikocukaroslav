@@ -9,8 +9,7 @@ namespace timetracker.Server.Domain.Entities
         public long StartTime { get; set; }
         public long? EndTime { get; set; }
         public string SetBy { get; set; } 
-        public Guid? EditedById { get; set; } 
-        public User? EditedBy { get; set; }
+        public Guid? EditorId { get; set; } 
         public long? EditedAt { get; set; } 
         public Guid UserId { get; set; }
     }

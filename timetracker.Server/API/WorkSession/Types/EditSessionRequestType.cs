@@ -10,7 +10,7 @@ namespace timetracker.Server.API.WorkSession.Types
             Field<NonNullGraphType<LongGraphType>>("startTime");
             Field<NonNullGraphType<LongGraphType>>("endTime");
             Field<NonNullGraphType<LongGraphType>>("editedAt");
-            Field<NonNullGraphType<GuidGraphType>>("editedById");
+            Field<NonNullGraphType<GuidGraphType>>("editorId");
         }
     }
 }

@@ -3,19 +3,20 @@ using GraphQL.Types;
 using timetracker.Server.API.WorkSession.Types;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
-using timetracker.Server.Infrastructure.Repositories;
+using WorkSessionModel = timetracker.Server.Domain.Entities.WorkSession;
+
 
 namespace timetracker.Server.API.WorkSession
 {
     public class WorkSessionQuery : ObjectGraphType
     {
-        public WorkSessionQuery(IWorkSessionRepository workSessionRepository)
+        public WorkSessionQuery(IRepository<WorkSessionModel> workSessionRepository)
         {
             Field<WorkSessionResponseType>("GetWorkSession")
                 .Authorize()
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
-            .ResolveAsync(async context =>
-            {
+                .ResolveAsync(async context =>
+                {
                     var workSession = await workSessionRepository.GetByIdAsync(context.GetArgument<Guid>("id"));
 
                     if (workSession == null)

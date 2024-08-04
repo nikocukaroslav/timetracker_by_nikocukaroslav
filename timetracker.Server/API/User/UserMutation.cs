@@ -68,7 +68,7 @@ namespace timetracker.Server.API.User
                     return await userRepository.AddAsync(user);
                 });
 
-            Field<StringGraphType>("DeleteUser")
+            Field<BooleanGraphType>("DeleteUser")
                 .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                 .ResolveAsync(async context =>
@@ -83,7 +83,7 @@ namespace timetracker.Server.API.User
 
                     await userRepository.DeleteAsync(id);
 
-                    return "User deleted successfully";
+                    return true;
                 });
 
             Field<UserResponseType>("UpdateUser")

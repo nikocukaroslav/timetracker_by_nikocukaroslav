@@ -93,7 +93,7 @@ namespace timetracker.Server.API.User
                  {
                      var updateInput = context.GetArgument<UpdateUserRequest>("user");
 
-                     var user = await userRepository.GetByIdAsync(updateInput.UserId);
+                     var user = await userRepository.GetByIdAsync(updateInput.Id);
 
                      if (user is null)
                      {
@@ -101,8 +101,6 @@ namespace timetracker.Server.API.User
                          return null;
                      }
 
-                     user.Name = updateInput.Name ?? user.Name;
-                     user.Surname = updateInput.Surname ?? user.Surname;
                      user.Position = updateInput.Position ?? user.Position;
                      user.Timeload = updateInput.Timeload ?? user.Timeload;
                      user.Status = updateInput.Status ?? user.Status;

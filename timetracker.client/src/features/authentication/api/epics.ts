@@ -3,10 +3,10 @@ import {catchError, map, of, switchMap, tap} from "rxjs";
 import {graphQlQuery} from "../../../utils/graphQlQuery.ts";
 import {authorizeUser, logoutUser, setError, setLoading, silentTokenRefresh} from "../authenticationSlice.ts";
 import {AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN} from "../../../constants.ts";
-import {authorizeMutation, loginMutation, logoutMutation, refreshTokenMutation} from "./mutations.ts";
+import {authorizeMutation, loginMutation, logoutMutation, refreshTokenMutation} from "./requests.ts";
 import store from "../../../store.ts";
-import {MyAction} from "../../../interfaces/actions.ts";
-import {getCookie} from "../../../utils/cookieHandler.ts";
+import {getCookie} from "../../../utils/cookieHandlers.ts";
+import {MyAction} from "../../../interfaces/actions/globalActions.ts";
 
 
 export const loginEpic: Epic<MyAction> = (action$) =>

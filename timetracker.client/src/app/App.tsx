@@ -12,6 +12,7 @@ import AppLayout from "../components/layouts/AppLayout.tsx";
 import PermissionChecker from "../components/layouts/PermissionChecker.tsx";
 import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS} from "../constants.ts";
 import ProtectedRoute from "../components/layouts/ProtectedRoute.tsx";
+import Positions from "./pages/Positions.tsx";
 
 const router = createBrowserRouter([
     {
@@ -51,6 +52,11 @@ const router = createBrowserRouter([
                     <PermissionChecker redirectToNotFound permissions={[APPROVE_REQUESTS]}>
                         <Approves/>
                     </PermissionChecker>
+            },
+            {
+                path: "positions",
+                element:
+                    <Positions/>
             },
             {
                 path: "requests",

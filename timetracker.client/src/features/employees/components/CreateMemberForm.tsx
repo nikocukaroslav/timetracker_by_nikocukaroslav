@@ -21,34 +21,29 @@ import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {BiHide, BiShow} from "react-icons/bi";
 import {PiUser} from "react-icons/pi";
 import CustomInput from "../../../components/ui/CustomInput.tsx";
-import {permissionList} from "../../../constants.ts";
+import {MANAGE_OWN_TIME, permissionList, positionsList} from "../../../constants.ts";
 import {useDispatch} from "react-redux";
-import {createUser, updateUserPermissions} from "../employeesSlice.ts";
+import {createUser, updateUser} from "../employeesSlice.ts";
 import {generatePassword} from "../../../utils/generatePassword.ts";
 import PermissionItem from "./PermissionItem.tsx";
 import RandomPasswordButton from "./RandomPasswordButton.tsx";
 import {useAppSelector} from "../../../hooks/useAppSelector.ts";
-
-
-interface UserFormControls {
-    isOpen: boolean;
-    onClose: () => void;
-    isEditing?: boolean;
-}
+import CustomSlider from "../../../components/ui/CustomSlider.tsx";
+import {UserFormControls} from "../../../interfaces/components.ts";
 
 function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [employeeType, setEmployeeType] = useState("full-time");
+    const [position, setPosition] = useState("developer");
     const [permissions, setPermissions] = useState<string[]>([]);
+    const [timeload, setTimeload] = useState(100);
 
     const [showPassword, setShowPassword] = useState(false);
 
     const loading = useAppSelector(state => state.employees.loading)
     const user = useAppSelector(state => state.employees.user)
-
 
     const dispatch = useDispatch();
 
@@ -61,14 +56,23 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
             setName(user.name || "");
             setSurname(user.surname || "");
             setEmail(user.email || "");
-            setEmployeeType(user.employeeType || "full-time");
+            setPosition(user.position || "developer");
             setPermissions(user.permissions || []);
+            setTimeload(user.timeload || 100)
         }
     }, [user, isEditing]);
 
-    function updatePermissions(e: FormEvent<HTMLFormElement>) {
+    function handleUpdate(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        dispatch(updateUserPermissions({permissions, userId: user.id}))
+        const userToUpdate = {
+            id: user.id,
+            position,
+            permissions,
+            timeload,
+        };
+
+        console.log(userToUpdate)
+        dispatch(updateUser(userToUpdate))
 
         onClose()
     }
@@ -80,8 +84,9 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
             surname,
             email,
             password,
-            employeeType,
+            position,
             permissions,
+            timeload,
         };
 
         dispatch(createUser(newUser));
@@ -92,8 +97,9 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
         setSurname("")
         setEmail("")
         setPassword("")
-        setEmployeeType("full-time")
+        setPosition("developer")
         setPermissions([])
+        setTimeload(100)
     }
 
     function handlePermissions(
@@ -125,7 +131,7 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                 if (!isEditing)
                     return handleSubmit(e);
                 else
-                    return updatePermissions(e);
+                    return handleUpdate(e);
             }}>
                 <ModalHeader>
                     <Flex gap="2" align="center">
@@ -166,6 +172,21 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                                 required
                             />
                         </FormLabel>
+                        <FormLabel display="flex" flexDirection="column" gap="1">
+                            <Text>Position</Text>
+                            <Select
+                                variant="outline"
+                                borderColor="gray.300"
+                                focusBorderColor="gray.500"
+                                onChange={e => setPosition(e.target.value)}
+                            >
+                                {
+                                    positionsList.map(position =>
+                                        <option key={position.name}>{position.description}</option>
+                                    )
+                                }
+                            </Select>
+                        </FormLabel>
                         {!isEditing && <Box position="relative">
                             <FormLabel display="flex" flexDirection="column" gap="1">
                                 <Text>Password</Text>
@@ -189,14 +210,13 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                             </FormLabel>
                             <RandomPasswordButton setRandomPassword={setRandomPassword}/>
                         </Box>}
-                        <FormLabel display="flex" flexDirection="column" gap="1">
-                            <Text>Employee Type</Text>
-                            <Select value={employeeType} isDisabled={isEditing}
-                                    onChange={(e) => setEmployeeType(e.target.value)}>
-                                <option value="full-time">full-time</option>
-                                <option value="part-time">part-time</option>
-                            </Select>
-                        </FormLabel>
+                        {
+                            !permissions.includes(MANAGE_OWN_TIME) &&
+                            <FormLabel display="flex" flexDirection="column">
+                                <Text>Work time (%)</Text>
+                                <CustomSlider onChange={setTimeload} value={timeload}/>
+                            </FormLabel>
+                        }
 
                         <FormLabel m="0">
                             <Text>Permissions</Text>
@@ -212,9 +232,10 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                         >
                             {permissionList.map((permission) => {
                                 return (
-                                    <PermissionItem key={permission.name} permission={permission}
-                                                    permissions={permissions}
-                                                    handlePermissions={handlePermissions}/>
+                                    <PermissionItem
+                                        key={permission.name} permission={permission}
+                                        permissions={permissions}
+                                        handlePermissions={handlePermissions}/>
                                 );
                             })}
                         </List>

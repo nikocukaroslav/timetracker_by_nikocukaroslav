@@ -4,9 +4,9 @@ import {useEffect, useState} from "react";
 import CreateMemberForm from "../../features/employees/components/CreateMemberForm.tsx";
 import Employee from "../../features/employees/components/Employee.tsx";
 import {useAppSelector} from "../../hooks/useAppSelector.ts";
-import {User} from "../../interfaces/actions.ts";
 import {getUsers} from "../../features/employees/employeesSlice.ts";
 import {useDispatch} from "react-redux";
+import {User} from "../../interfaces/domain.ts";
 
 
 function Employees() {
@@ -43,11 +43,11 @@ function Employees() {
                             <Text ml="1"> Add member</Text>
                         </Button>
                     </Flex>
-                    <Divider borderColor="gray.300" borderWidth="1.5px"/>
+                    <Divider borderColor="gray.300" borderWidth="1px"/>
                     <List display="flex" flexDirection="column"
+                          max-h="90dvh"
                           overflowY="auto"
-                          max-h="90dvh" h="90dvh"
-                          flexGrow={1} overflowX="hidden"
+                          overflowX="hidden"
                     >
                         {
                             employees.map((employee: User) =>

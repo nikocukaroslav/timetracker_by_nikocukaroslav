@@ -1,17 +1,17 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN} from "../../constants.ts";
-import {deleteCookie, setCookie} from "../../utils/cookieHandler.ts";
+import {deleteCookie, setCookie} from "../../utils/cookieHandlers.ts";
 
 export const initialState = {
     userId: "",
     userName: "",
     userAvatar: "",
     userPermissions: [],
-    userType: "",
+    userPosition: "",
     loading: false,
     error: "",
     expiresAt: null,
-    loginStatus: false
+    loginStatus: false,
 }
 
 export const login = (email: string, password: string) => ({type: LOGIN, payload: {email, password}})
@@ -27,19 +27,23 @@ const authenticationSlice = createSlice({
             state.userId = payload.user.id;
             state.userName = payload.user.name;
             state.userPermissions = payload.user.permissions;
+            state.userPosition = payload.user.position;
             state.expiresAt = payload.accessToken.expiresAt;
             state.loginStatus = true;
             setCookie("refreshToken", payload.refreshToken.token, payload.refreshToken.expiresAt)
             localStorage.setItem("token", payload.accessToken.token)
         },
         silentTokenRefresh(state, {payload}) {
-            localStorage.setItem("token", payload.refreshToken.token)
-            state.expiresAt = payload.refreshToken.expiresAt;
+            console.log(payload)
+            localStorage.setItem("token", payload.refreshToken.accessToken.token)
+            setCookie("refreshToken", payload.refreshToken.refreshToken.token, payload.refreshToken.refreshToken.expiresAt)
+            state.expiresAt = payload.refreshToken.accessToken.expiresAt;
         },
         logoutUser(state) {
             state.userId = "";
             state.userName = "";
             state.userPermissions = [];
+            state.userPosition = "";
             state.loginStatus = false;
             deleteCookie("refreshToken")
             localStorage.removeItem("token");

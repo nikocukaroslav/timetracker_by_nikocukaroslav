@@ -1,4 +1,4 @@
-import {User} from "./actions.ts";
+import {User} from "./domain.ts";
 
 export interface State {
     employees: {

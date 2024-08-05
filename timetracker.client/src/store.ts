@@ -7,9 +7,11 @@ import {
     deleteUserEpic,
     getUserEpic,
     getUsersEpic,
-    updateUserPermissionsEpic
+    updateUserEpic
 } from "./features/employees/api/epics.ts";
 import employeesReducer from "./features/employees/employeesSlice.ts";
+import timeTrackerReducer from "./features/time-tracker/timeTrackerSlice.ts";
+import {startSessionEpic, stopSessionEpic} from "./features/time-tracker/api/epics.ts";
 
 const epics = [
     loginEpic,
@@ -20,7 +22,9 @@ const epics = [
     getUsersEpic,
     getUserEpic,
     deleteUserEpic,
-    updateUserPermissionsEpic
+    updateUserEpic,
+    startSessionEpic,
+    stopSessionEpic,
 ]
 
 const epicMiddleware = createEpicMiddleware();
@@ -29,14 +33,13 @@ const store = configureStore({
     reducer: {
         authentication: authenticationReducer,
         employees: employeesReducer,
+        timeTracker: timeTrackerReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(epicMiddleware),
 });
 
 const rootEpic = combineEpics(...epics);
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 epicMiddleware.run(rootEpic);
 
 export default store;

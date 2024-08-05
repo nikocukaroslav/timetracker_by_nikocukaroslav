@@ -1,12 +1,14 @@
 export const addUserMutation = `
-mutation addUser($user: UserInputType) {
+mutation addUser($user: AddUserRequestType) {
   users {
     addUser(user: $user) {
       id
       name
       surname
       email
-      employmentType
+      position
+      status
+      timeload
       permissions
     }
   }
@@ -19,9 +21,11 @@ export const getUsersQuery = `
     getUsers {
       id
       name
-      email
       surname
-      employmentType
+      email
+      position
+      status
+      timeload
       permissions
     }
   }
@@ -36,7 +40,9 @@ query GetUser($id: Guid!) {
       name
       surname
       email
-      employmentType
+      position
+      status
+      timeload
       permissions
     }
   }
@@ -51,15 +57,17 @@ mutation DeleteUser($userId: Guid!) {
 }
 `
 
-export const updateUserPermissionsMutation = `
-mutation UpdateUserPermissions($permissions: [String!], $id: Guid!) {
+export const updateUserMutation = `
+mutation UpdateUser($user: UpdateUserRequestType) {
   users {
-    updateUserPermissions(permissions: $permissions, id: $id) {
+    updateUser(user: $user) {
       id
       name
       surname
       email
-      employmentType
+      position
+      status
+      timeload
       permissions
     }
   }

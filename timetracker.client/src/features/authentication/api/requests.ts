@@ -5,7 +5,7 @@ mutation Login($email: String!, $password: String!) {
       user {
         id
         name
-        employmentType
+        position
         permissions
       }
       accessToken {
@@ -28,7 +28,7 @@ mutation Authorize($refreshToken: String!) {
       user {
         id
         name
-        employmentType
+        position
         permissions
       }
       accessToken {
@@ -53,12 +53,19 @@ mutation Logout($refreshToken: String!) {
 `
 
 export const refreshTokenMutation = `
-mutation {
+mutation RefreshToken($refreshToken: String!) {
   auth {
-    refreshToken {
-      token
-      expiresAt
+    refreshToken(refreshToken: $refreshToken) {
+      accessToken {
+        token
+        expiresAt
+      }
+      refreshToken {
+        token
+        expiresAt
+      }
     }
   }
 }
+
 `

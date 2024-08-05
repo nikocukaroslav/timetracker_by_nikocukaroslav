@@ -1,19 +1,12 @@
 import {Epic, ofType} from "redux-observable";
-import {CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER_PERMISSIONS} from "../../../constants.ts";
+import {CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER} from "../../../constants.ts";
 import {catchError, map, of, switchMap, tap} from "rxjs";
 import {graphQlQuery} from "../../../utils/graphQlQuery.ts";
-import {
-    addUserMutation,
-    deleteUserMutation,
-    getUserQuery,
-    getUsersQuery,
-    updateUserPermissionsMutation
-} from "./mutations.ts";
-import {addUser, removeUser, setLoading, setUser, setUsers, updateUser} from "../employeesSlice.ts";
+import {addUserMutation, deleteUserMutation, getUserQuery, getUsersQuery, updateUserMutation} from "./requests.ts";
+import {create, remove, setLoading, setUser, setUsers, update} from "../employeesSlice.ts";
 import store from "../../../store.ts";
 import {setError} from "../../authentication/authenticationSlice.ts";
-import {MyAction} from "../../../interfaces/actions.ts";
-
+import {MyAction} from "../../../interfaces/actions/globalActions.ts";
 
 export const createUserEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
@@ -28,7 +21,7 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
                 .pipe(
                     map(response => {
                             if (!response.errors)
-                                return addUser(response.data.users.addUser)
+                                return create(response.data.users.addUser)
                             return response.errors.forEach((message: string) => console.log(message))
                         }
                     ),
@@ -60,7 +53,7 @@ export const deleteUserEpic: Epic<MyAction> = (action$) =>
                 }
             )
                 .pipe(
-                    map(() => removeUser(action.payload))
+                    map(() => remove(action.payload))
                 )
         )
     );
@@ -76,19 +69,15 @@ export const getUserEpic: Epic<MyAction> = (action$) =>
         )
     )
 
-export const updateUserPermissionsEpic: Epic<MyAction> = (action$) =>
+export const updateUserEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
-        ofType(UPDATE_USER_PERMISSIONS),
+        ofType(UPDATE_USER),
         tap(() => store.dispatch(setLoading(true))),
         tap(() => store.dispatch(setError(""))),
         switchMap(action =>
-            graphQlQuery(updateUserPermissionsMutation,
-                {
-                    permissions: action.payload.permissions,
-                    id: action.payload.id
-                })
+            graphQlQuery(updateUserMutation, {user: action.payload})
                 .pipe(
-                    map(response => updateUser(response.data.users.updateUserPermissions)),
+                    map(response => update(response.data.users.updateUser)),
                     tap(() => store.dispatch(setLoading(false))),
                 )
         )

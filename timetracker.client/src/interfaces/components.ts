@@ -1,6 +1,6 @@
 import {ChangeEvent, ChangeEventHandler, ReactNode} from "react";
 import {IconType} from "react-icons";
-import {User} from "./actions.ts";
+import {User} from "./domain.ts";
 
 export interface CheckboxProps {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -52,6 +52,8 @@ export interface RandomPasswordButtonProps {
     setRandomPassword: () => void
 }
 
-export interface WorkingPartTimePermissionItemProps {
-    handlePermissions: (e: ChangeEvent<HTMLInputElement>, name: string) => void
+export interface UserFormControls {
+    isOpen: boolean;
+    onClose: () => void;
+    isEditing?: boolean;
 }

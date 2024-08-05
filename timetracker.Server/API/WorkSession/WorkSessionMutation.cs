@@ -14,7 +14,7 @@ namespace timetracker.Server.API.WorkSession
         public WorkSessionMutation(IRepository<WorkSessionModel> workSessionRepository)
         {
             this.Authorize();
-            Field<WorkSessionResponseType>("StartSession")
+            Field<StartSessionResponseType>("StartSession")
                 .AuthorizeWithPolicy(Permission.MANAGE_OWN_TIME.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<StartSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
@@ -24,7 +24,7 @@ namespace timetracker.Server.API.WorkSession
 
                     return await workSessionRepository.AddAsync(inputSession);
                 });
-            Field<WorkSessionResponseType>("StopSession")
+            Field<StopSessionResponseType>("StopSession")
                 .AuthorizeWithPolicy(Permission.MANAGE_OWN_TIME.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<StopSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
@@ -46,6 +46,11 @@ namespace timetracker.Server.API.WorkSession
                 {
                     var inputSession = context.GetArgument<WorkSessionModel>("session");
                     var session = await workSessionRepository.GetByIdAsync(inputSession.Id);
+                    if(session is null)
+                    {
+                        context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
+                        return null;
+                    }
                     session.StartTime = inputSession.StartTime;
                     session.EndTime = inputSession.EndTime;
                     session.EditorId = inputSession.EditorId;
@@ -53,7 +58,7 @@ namespace timetracker.Server.API.WorkSession
 
                     return await workSessionRepository.UpdateAsync(session);
                 });
-            Field<WorkSessionResponseType>("AddSession")
+            Field<AddSessionResponseType>("AddSession")
                 .Arguments(new QueryArguments(new QueryArgument<AddSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
                 {

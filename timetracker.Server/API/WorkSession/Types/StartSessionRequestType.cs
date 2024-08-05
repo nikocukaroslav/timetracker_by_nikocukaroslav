@@ -6,8 +6,8 @@ namespace timetracker.Server.API.WorkSession.Types
     {
         public StartSessionRequestType()
         {
-            Field<GuidGraphType>("userId");
-            Field<LongGraphType>("startTime");
+            Field<NonNullGraphType<GuidGraphType>>("userId");
+            Field<NonNullGraphType<LongGraphType>>("startTime");
         }
     }
 }

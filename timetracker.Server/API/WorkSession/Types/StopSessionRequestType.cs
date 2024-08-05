@@ -6,8 +6,8 @@ namespace timetracker.Server.API.WorkSession.Types
     {
         public StopSessionRequestType()
         {
-            Field<GuidGraphType>("id");
-            Field<LongGraphType>("endTime");
+            Field<NonNullGraphType<GuidGraphType>>("id");
+            Field<NonNullGraphType<LongGraphType>>("endTime");
         }
     }
 }

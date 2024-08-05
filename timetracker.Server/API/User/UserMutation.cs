@@ -47,10 +47,8 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-
                     var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
                     var hashPasswordResponce = passwordHasher.HashPassword(userInput.Password);
-
 
                     var user = new Entities.User()
                     {

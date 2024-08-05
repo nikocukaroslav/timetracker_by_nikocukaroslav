@@ -2,7 +2,7 @@
 {
     public enum UserStatus
     {
-        ACTIVE,
+        EMPLOYED,
         TERMINATED,
         ON_SICK_LEAVE,
         ON_VACATION

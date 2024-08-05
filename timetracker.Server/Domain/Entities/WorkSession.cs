@@ -6,11 +6,11 @@ namespace timetracker.Server.Domain.Entities
     public class WorkSession
     {
         public Guid Id { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public long StartTime { get; set; }
+        public long? EndTime { get; set; }
         public string SetBy { get; set; } 
-        public Guid? EditedBy { get; set; } 
-        public DateTime? EditedAt { get; set; } 
+        public Guid? EditorId { get; set; } 
+        public long? EditedAt { get; set; } 
         public Guid UserId { get; set; }
     }
 }

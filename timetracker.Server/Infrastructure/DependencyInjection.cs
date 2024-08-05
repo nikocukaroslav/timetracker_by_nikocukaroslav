@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Database;
 using timetracker.Server.Infrastructure.Interfaces;
@@ -19,6 +20,7 @@ namespace timetracker.Server.Infrastructure
             services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
 
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IRepository<WorkSession>, Repository<WorkSession>>();
 
             services.AddAuth(configuration);
 
@@ -47,7 +49,7 @@ namespace timetracker.Server.Infrastructure
 
             services.AddAuthorization(options =>
             {
-                foreach (var permission in Enum.GetValues(typeof(Permissions)).Cast<Permissions>())
+                foreach (var permission in Enum.GetValues(typeof(Permission)).Cast<Permission>())
                 {
                     options.AddPolicy(permission.ToString(), policy => policy
                     .RequireAssertion(async context =>
@@ -57,7 +59,7 @@ namespace timetracker.Server.Infrastructure
                         if (email == null) return false;
 
                         var userRepository = services.BuildServiceProvider().GetRequiredService<IUserRepository>();
-                        var permissions = await userRepository.GetPermissionsByEmailAsync(email);
+                        var permissions = await userRepository.GetUserPermissionsByEmailAsync(email);
 
                         if (permissions is null) return false;
 

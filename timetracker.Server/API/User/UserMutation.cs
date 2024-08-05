@@ -16,7 +16,7 @@ namespace timetracker.Server.API.User
         public UserMutation(IUserRepository userRepository)
         {
             Field<UserResponseType>("AddUser")
-                .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
+                .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<AddUserRequestType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {
@@ -62,14 +62,14 @@ namespace timetracker.Server.API.User
                         Timeload = userInput.Timeload,
                         Position = userInput.Position,
                         Permissions = string.Join(",", userInput.Permissions),
-                        Status = UserStatus.ACTIVE.ToString()
+                        Status = UserStatus.EMPLOYED.ToString()
                     };
 
                     return await userRepository.AddAsync(user);
                 });
 
-            Field<StringGraphType>("DeleteUser")
-                .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
+            Field<BooleanGraphType>("DeleteUser")
+                .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                 .ResolveAsync(async context =>
                 {
@@ -83,11 +83,11 @@ namespace timetracker.Server.API.User
 
                     await userRepository.DeleteAsync(id);
 
-                    return "User deleted successful";
+                    return true;
                 });
 
             Field<UserResponseType>("UpdateUser")
-                 .AuthorizeWithPolicy(Permissions.MANAGE_USERS.ToString())
+                 .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
                  .Arguments(new QueryArguments(
                     new QueryArgument<UpdateUserRequestType> { Name = "user" })
                  )

@@ -25,7 +25,6 @@ const dateFormatConverter = (date, format = null) => {
                 hour: date > 3599999 ? "2-digit" : undefined,
                 minute: "2-digit",
                 second: "2-digit",
-                timeZone: "UTC",
             };
             break;
         default:

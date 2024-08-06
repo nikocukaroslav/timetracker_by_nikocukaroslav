@@ -8,9 +8,8 @@ import {authorize, refreshToken} from "../../features/authentication/api/actions
 
 function ProtectedRoute({children}: LayoutProps) {
     const dispatch = useDispatch();
-    const loginStatus = useAppSelector(state => state.authentication.loginStatus);
+    const loginStatus = useAppSelector(state => state.authentication.user);
     const expiresAt = useAppSelector(state => state.authentication.expiresAt);
-    const isTokenExist = localStorage.getItem("token");
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -28,18 +27,12 @@ function ProtectedRoute({children}: LayoutProps) {
     }, [dispatch, expiresAt]);
 
     useEffect(() => {
-        if (!isTokenExist) {
-            setIsLoading(false)
-        }
-    }, [isTokenExist]);
-
-    useEffect(() => {
-        if (!loginStatus && isTokenExist) {
+        if (!loginStatus && isLoading) {
             dispatch(authorize());
         } else {
             setIsLoading(false);
         }
-    }, [loginStatus, dispatch, isTokenExist]);
+    }, [loginStatus, dispatch, isLoading]);
 
     if (isLoading)
         return <CustomSpinner/>;

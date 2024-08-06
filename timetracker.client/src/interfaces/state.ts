@@ -7,10 +7,9 @@ export interface State {
         users: [];
     };
     authentication: {
-        userId: string;
-        loginStatus: boolean;
+        user: UserModel;
+        accessToken: string;
         expiresAt: number;
-        userPermissions: string[];
         loading: boolean;
         error: string;
     }

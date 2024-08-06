@@ -10,7 +10,7 @@ import {getLastWorkSession} from "../../features/time-tracker/api/actions.ts";
 function AppLayout() {
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
 
-    const userId = useAppSelector(state => state.authentication.userId)
+    const userId = useAppSelector(state => state.authentication.user.id)
 
     const dispatch = useDispatch();
     const location = useLocation();

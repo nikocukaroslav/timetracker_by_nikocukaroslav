@@ -7,7 +7,7 @@ import {setIsTracking} from "../timeTrackerSlice.ts";
 import {startSession, stopSession} from "../api/actions.ts";
 
 function TimeTrackerHeader() {
-    const userId = useAppSelector(state => state.authentication.userId)
+    const userId = useAppSelector(state => state.authentication.user.id)
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
     const sessionId = useAppSelector(state => state.timeTracker.sessionId)
 

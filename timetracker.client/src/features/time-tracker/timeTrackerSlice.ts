@@ -21,6 +21,7 @@ const employeesSlice = createSlice({
             state.workSessions = action.payload
         },
         getLastWorkSessionSuccessful(state, action) {
+            if (!action.payload) return
             state.sessionId = action.payload.id;
             state.currentTime = Math.floor((Date.now() - action.payload.startTime) / 1000);
             state.isTracking = true;

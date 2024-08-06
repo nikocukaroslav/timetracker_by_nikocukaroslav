@@ -9,7 +9,7 @@ import WorkSessionsList from "../../features/time-tracker/components/WorkSession
 import {getWorkSessions} from "../../features/time-tracker/api/actions.ts";
 
 function TimeTracker() {
-    const userId = useAppSelector(state => state.authentication.userId)
+    const userId = useAppSelector(state => state.authentication.user.id)
     const dispatch = useDispatch();
 
     useEffect(() => {

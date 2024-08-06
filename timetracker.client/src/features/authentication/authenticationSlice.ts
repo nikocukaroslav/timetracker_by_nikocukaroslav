@@ -2,15 +2,11 @@ import {createSlice} from "@reduxjs/toolkit";
 import {deleteCookie, setCookie} from "../../utils/cookieHandlers.ts";
 
 export const initialState = {
-    userId: "",
-    userName: "",
-    userAvatar: "",
-    userPermissions: [],
-    userPosition: "",
-    loading: false,
-    error: "",
+    user: null,
+    accessToken: null,
     expiresAt: null,
-    loginStatus: false,
+    error: null,
+    loading: false,
 }
 
 const authenticationSlice = createSlice({
@@ -18,29 +14,20 @@ const authenticationSlice = createSlice({
     initialState,
     reducers: {
         authorizeSuccessful(state, {payload}) {
-            state.userId = payload.user.id;
-            state.userName = payload.user.name;
-            state.userPermissions = payload.user.permissions;
-            state.userPosition = payload.user.position;
+            state.user = payload.user;
             state.expiresAt = payload.accessToken.expiresAt;
-            state.loginStatus = true;
+            state.accessToken = payload.accessToken.token
             setCookie("refreshToken", payload.refreshToken.token, payload.refreshToken.expiresAt)
-            localStorage.setItem("token", payload.accessToken.token)
         },
         refreshTokenSuccessful(state, {payload}) {
-            console.log(payload)
-            localStorage.setItem("token", payload.refreshToken.accessToken.token)
-            setCookie("refreshToken", payload.refreshToken.refreshToken.token, payload.refreshToken.refreshToken.expiresAt)
+            state.accessToken = payload.refreshToken.accessToken.token;
             state.expiresAt = payload.refreshToken.accessToken.expiresAt;
+            setCookie("refreshToken", payload.refreshToken.refreshToken.token, payload.refreshToken.refreshToken.expiresAt)
         },
         logoutSuccessful(state) {
-            state.userId = "";
-            state.userName = "";
-            state.userPermissions = [];
-            state.userPosition = "";
-            state.loginStatus = false;
+            state.user = null
+            state.accessToken = null
             deleteCookie("refreshToken")
-            localStorage.removeItem("token");
         },
         setLoading(state, action) {
             state.loading = action.payload

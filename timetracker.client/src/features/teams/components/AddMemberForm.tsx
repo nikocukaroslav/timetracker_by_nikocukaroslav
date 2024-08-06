@@ -49,36 +49,6 @@ export const users: User[] = [
     },
     {
         id: 13213112312,
-        name: "yarek",
-        surname: "nikonchyk",
-        email: "nikoc@gmail.com",
-    },
-    {
-        id: 13213112312,
-        name: "yarek",
-        surname: "nikonchyk",
-        email: "nikoc@gmail.com",
-    },
-    {
-        id: 13213112312,
-        name: "yarek",
-        surname: "nikonchyk",
-        email: "nikoc@gmail.com",
-    },
-    {
-        id: 13213112312,
-        name: "yarek",
-        surname: "nikonchyk",
-        email: "nikoc@gmail.com",
-    },
-    {
-        id: 13213112312,
-        name: "yarek",
-        surname: "nikonchyk",
-        email: "nikoc@gmail.com",
-    },
-    {
-        id: 13213112312,
         name: "petro",
         surname: "grib",
         email: "nikoc@gmail.com",

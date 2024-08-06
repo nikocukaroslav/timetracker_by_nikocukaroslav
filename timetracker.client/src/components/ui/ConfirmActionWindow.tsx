@@ -1,6 +1,6 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text} from "@chakra-ui/react";
 
-function ConfirmActionWindow({onClose, isOpen, onDelete, employee}) {
+function ConfirmActionWindow({onClose, isOpen, onDelete, text}) {
     return (
         <Modal
             isCentered
@@ -11,7 +11,7 @@ function ConfirmActionWindow({onClose, isOpen, onDelete, employee}) {
             <ModalContent>
                 <ModalHeader>Confirm action</ModalHeader>
                 <ModalBody>
-                    <Text>Delete {employee.name} {employee.surname} from company history</Text>
+                    <Text>{text}</Text>
                 </ModalBody>
                 <ModalFooter gap="2">
                     <Button onClick={onClose} variant="ghost">Cancel</Button>

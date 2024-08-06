@@ -3,7 +3,6 @@ import {
     Divider,
     Flex,
     Icon,
-    IconButton,
     Img,
     ListItem,
     Menu,
@@ -13,7 +12,7 @@ import {
     Spacer,
     Text
 } from "@chakra-ui/react";
-import {PiCaretDown, PiClockUser, PiCode, PiNotePencil, PiTrash} from "react-icons/pi";
+import {PiCaretDown, PiClockUser, PiCode} from "react-icons/pi";
 import {useDispatch} from "react-redux";
 import {MANAGE_USERS, permissionList} from "../../../constants.ts";
 import CreateMemberForm from "./CreateMemberForm.tsx";
@@ -22,19 +21,15 @@ import {useAppSelector} from "../../../hooks/useAppSelector.ts";
 import {EmployeeProps} from "../../../interfaces/components.ts";
 import CustomVerticalDivider from "../../../components/ui/CustomVerticalDivider.tsx";
 import {GrMoney, GrUserManager} from "react-icons/gr";
-import {FiMenu} from "react-icons/fi";
-import ConfirmActionWindow from "./ConfirmActionWindow.tsx";
+import ConfirmActionWindow from "../../../components/ui/ConfirmActionWindow.tsx";
 import {deleteUser, getUser} from "../api/actions.ts";
+import CustomHamburgerMenu from "../../../components/ui/CustomHamburgerMenu.tsx";
 
 
 function Employee({employee}: EmployeeProps) {
     const [active, setActive] = useState(false);
     const [activeDeleting, setActiveDeleting] = useState(false);
-    const userId = useAppSelector(state => state.authentication.userId);
-
-    const dispatch = useDispatch();
-
-    const itsYou = employee.id === userId;
+    const userId = useAppSelector(state => state.authentication.user.id);
 
     function handleActiveDeleting() {
         setActiveDeleting(!activeDeleting);
@@ -43,6 +38,10 @@ function Employee({employee}: EmployeeProps) {
     function handleActive() {
         setActive(!active);
     }
+
+    const dispatch = useDispatch();
+
+    const itsYou = employee.id === userId;
 
     function handleColor(timeload) {
         if (timeload >= 100)
@@ -61,6 +60,11 @@ function Employee({employee}: EmployeeProps) {
             return PiCode
         else if (position === "accountant")
             return GrMoney
+    }
+
+    function getData() {
+        handleActive();
+        dispatch(getUser(employee.id))
     }
 
     return (
@@ -121,38 +125,14 @@ function Employee({employee}: EmployeeProps) {
                 <Spacer/>
 
                 {!itsYou && (!employee.permissions.includes(MANAGE_USERS)) &&
-                    <Menu>
-                        <MenuButton
-                            borderColor="gray.300"
-                            as={IconButton}
-                            aria-label='Options'
-                            icon={<FiMenu size="24px"/>}
-                            variant='outline'
-                        />
-                        <MenuList>
-                            <MenuItem
-                                icon={<PiNotePencil size="24px"/>} onClick={() => {
-                                handleActive();
-                                dispatch(getUser(employee.id))
-                            }}>
-                                Edit
-                            </MenuItem>
-                            <Divider/>
-                            <MenuItem
-                                color="red.600"
-                                icon={<Icon as={PiTrash} h="24px" w="24px" color="red.600"/>}
-                                onClick={handleActiveDeleting}
-                            >
-                                Delete
-                            </MenuItem>
-                        </MenuList>
-                    </Menu>
+                    <CustomHamburgerMenu getData={getData} confirmAction={handleActiveDeleting}/>
                 }
             </ListItem>
             <Divider borderColor="gray.300" borderWidth="1.5px"/>
             <CreateMemberForm isOpen={active} onClose={handleActive} isEditing/>
-            <ConfirmActionWindow onDelete={() => dispatch(deleteUser(employee.id))} employee={employee}
+            <ConfirmActionWindow onDelete={() => dispatch(deleteUser(employee.id))}
                                  isOpen={activeDeleting}
+                                 text={`Delete ${employee.name} ${employee.surname} from company history`}
                                  onClose={handleActiveDeleting}/>
         </>
     );

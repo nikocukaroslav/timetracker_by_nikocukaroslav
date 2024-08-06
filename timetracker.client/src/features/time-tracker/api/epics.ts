@@ -58,7 +58,7 @@ export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
                     id: action.payload
                 }
             ).pipe(
-                map(response => getLastWorkSessionSuccessful(response.data.users.getLastWorkSession)),
+                map(response => getLastWorkSessionSuccessful(response.data.users.getLastWorkSession))
             )
         )
     );

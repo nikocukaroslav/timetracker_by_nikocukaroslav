@@ -25,7 +25,7 @@ function SignIn() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
-    const loginStatus = useAppSelector(state => state.authentication.loginStatus);
+    const loginStatus = useAppSelector(state => state.authentication.user);
     const loading = useAppSelector(state => state.authentication.loading);
     const error = useAppSelector(state => state.authentication.error);
 

@@ -19,6 +19,7 @@ namespace timetracker.Server.API.User
                    var users = await userRepository.GetAllAsync();
                    return users;
                });
+
             Field<UserResponseType>("GetUser")
                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                .ResolveAsync(async context =>
@@ -27,6 +28,7 @@ namespace timetracker.Server.API.User
                    if (user == null) context.Errors.Add(ErrorCode.USER_NOT_FOUND);
                    return user;
                });
+
             Field<ListGraphType<WorkSessionResponseType>>("GetWorkSessions")
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                 .ResolveAsync(async context =>
@@ -34,6 +36,7 @@ namespace timetracker.Server.API.User
                     var workSessions = await userRepository.GetUserWorkSessionsByIdAsync(context.GetArgument<Guid>("id"));
                     return workSessions;
                 });
+
             Field<WorkSessionResponseType>("GetLastWorkSession")
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                 .ResolveAsync(async context =>

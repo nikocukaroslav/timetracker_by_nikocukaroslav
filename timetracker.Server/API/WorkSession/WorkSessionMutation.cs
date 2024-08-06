@@ -14,6 +14,7 @@ namespace timetracker.Server.API.WorkSession
         public WorkSessionMutation(IRepository<WorkSessionModel> workSessionRepository)
         {
             this.Authorize();
+
             Field<StartSessionResponseType>("StartSession")
                 .AuthorizeWithPolicy(Permission.MANAGE_OWN_TIME.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<StartSessionRequestType> { Name = "session" }))
@@ -24,6 +25,7 @@ namespace timetracker.Server.API.WorkSession
 
                     return await workSessionRepository.AddAsync(inputSession);
                 });
+
             Field<StopSessionResponseType>("StopSession")
                 .AuthorizeWithPolicy(Permission.MANAGE_OWN_TIME.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<StopSessionRequestType> { Name = "session" }))
@@ -40,6 +42,7 @@ namespace timetracker.Server.API.WorkSession
 
                     return await workSessionRepository.UpdateAsync(session);
                 });
+
             Field<WorkSessionResponseType>("EditSession")
                 .Arguments(new QueryArguments(new QueryArgument<EditSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
@@ -58,6 +61,7 @@ namespace timetracker.Server.API.WorkSession
 
                     return await workSessionRepository.UpdateAsync(session);
                 });
+
             Field<AddSessionResponseType>("AddSession")
                 .Arguments(new QueryArguments(new QueryArgument<AddSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
@@ -67,6 +71,7 @@ namespace timetracker.Server.API.WorkSession
 
                     return await workSessionRepository.AddAsync(inputSession);
                 });
+
             Field<BooleanGraphType>("DeleteSession")
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                 .ResolveAsync(async context =>

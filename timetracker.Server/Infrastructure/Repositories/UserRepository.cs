@@ -50,7 +50,7 @@ namespace timetracker.Server.Infrastructure.Repositories
         public async Task<List<WorkSession>> GetUserWorkSessionsByIdAsync(Guid id)
         {
             using var connection = _connectionFactory.Create();
-            var query = "SELECT * FROM WorkSessions WHERE UserId = @UserId";
+            var query = "SELECT * FROM WorkSessions WHERE UserId = @UserId ORDER BY StartTime DESC";
             var workSessions = await connection.QueryAsync<WorkSession>(query, new { UserId = id });
 
             return workSessions.ToList();

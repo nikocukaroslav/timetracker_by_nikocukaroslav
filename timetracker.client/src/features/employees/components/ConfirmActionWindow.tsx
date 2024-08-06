@@ -14,7 +14,7 @@ function ConfirmActionWindow({onClose, isOpen, onDelete, employee}) {
                     <Text>Delete {employee.name} {employee.surname} from company history</Text>
                 </ModalBody>
                 <ModalFooter gap="2">
-                    <Button onClick={onClose}>Cancel</Button>
+                    <Button onClick={onClose} variant="ghost">Cancel</Button>
                     <Button onClick={onDelete} colorScheme="red">Delete</Button>
                 </ModalFooter>
             </ModalContent>

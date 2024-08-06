@@ -1,9 +1,9 @@
-import {User} from "./domain.ts";
+import {UserModel} from "./domain.ts";
 
 export interface State {
     employees: {
         loading: boolean;
-        user: User;
+        user: UserModel;
         users: [];
     };
     authentication: {
@@ -13,5 +13,11 @@ export interface State {
         userPermissions: string[];
         loading: boolean;
         error: string;
+    }
+    timeTracker: {
+        workSessions: [];
+        sessionId: string;
+        isTracking: boolean;
+        currentTime: number;
     }
 }

@@ -1,12 +1,11 @@
-import {Box, Button, Divider, Flex, List, Text} from "@chakra-ui/react";
+import {Button, Divider, Flex, Text} from "@chakra-ui/react";
 import {PiPlus} from "react-icons/pi";
 import {useEffect, useState} from "react";
 import CreateMemberForm from "../../features/employees/components/CreateMemberForm.tsx";
-import Employee from "../../features/employees/components/Employee.tsx";
 import {useAppSelector} from "../../hooks/useAppSelector.ts";
-import {getUsers} from "../../features/employees/employeesSlice.ts";
 import {useDispatch} from "react-redux";
-import {User} from "../../interfaces/domain.ts";
+import {getUsers} from "../../features/employees/api/actions.ts";
+import EmployeesList from "../../features/employees/components/EmployeesList.tsx";
 
 
 function Employees() {
@@ -24,39 +23,28 @@ function Employees() {
 
     return (
         <>
-            <Box m="3">
+
+            <Flex
+                bg="gray.50"
+                flexDirection="column"
+                rounded="md"
+                boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
+            >
                 <Flex
-                    bg="gray.50"
-                    flexDirection="column"
-                    rounded="md"
-                    boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
+                    justify="space-between"
+                    w="full"
+                    p="5"
+                    align="center"
                 >
-                    <Flex
-                        justify="space-between"
-                        w="full"
-                        p="5"
-                        align="center"
-                    >
-                        <Text fontSize="2xl">Company ({employees.length} members)</Text>
-                        <Button onClick={handleActive} variant="ghost">
-                            <PiPlus/>
-                            <Text ml="1"> Add member</Text>
-                        </Button>
-                    </Flex>
-                    <Divider borderColor="gray.300" borderWidth="1px"/>
-                    <List display="flex" flexDirection="column"
-                          max-h="90dvh"
-                          overflowY="auto"
-                          overflowX="hidden"
-                    >
-                        {
-                            employees.map((employee: User) =>
-                                <Employee employee={employee} key={employee.id}/>
-                            )
-                        }
-                    </List>
+                    <Text fontSize="2xl">Company ({employees.length} members)</Text>
+                    <Button onClick={handleActive} variant="ghost">
+                        <PiPlus/>
+                        <Text ml="1"> Add member</Text>
+                    </Button>
                 </Flex>
-            </Box>
+                <Divider borderColor="gray.300" borderWidth="1px"/>
+                <EmployeesList/>
+            </Flex>
             <CreateMemberForm isOpen={active} onClose={handleActive}/>
         </>
     );

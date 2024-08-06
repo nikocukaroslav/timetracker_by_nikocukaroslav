@@ -1,6 +1,6 @@
 import {ChangeEvent, ChangeEventHandler, ReactNode} from "react";
 import {IconType} from "react-icons";
-import {User} from "./domain.ts";
+import {UserModel} from "./domain.ts";
 
 export interface CheckboxProps {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -34,7 +34,7 @@ export interface LayoutProps {
 }
 
 export interface EmployeeProps {
-    employee: User
+    employee: UserModel
 }
 
 interface Permission {

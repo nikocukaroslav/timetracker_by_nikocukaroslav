@@ -1,13 +1,15 @@
-import {Divider, Flex, ListItem, Text} from "@chakra-ui/react";
-import {formatDate, formatTime} from "../../../utils/formatters.ts";
+import {Flex, ListItem, Text} from "@chakra-ui/react";
+import dateFormatConverter, {formatTime} from "../../../utils/formatters.ts";
 import {PiTimer} from "react-icons/pi";
-import {calculateTotalTime} from "../../../utils/calculateTotalTime.ts";
+import CustomVerticalDivider from "../../../components/ui/CustomVerticalDivider.tsx";
 
-function WorkSession({workDay}) {
+function WorkSession({workSession}) {
+    const totalTime: number = Math.floor((workSession.endTime - workSession.startTime) / 1000)
+
     return (
         <ListItem>
             <Text color="gray.500" fontSize="sm" mb="1">
-                {formatDate(new Date(workDay.startTime))}
+                {dateFormatConverter(workSession.startTime, "full")}
             </Text>
             <Flex
                 p="5"
@@ -17,26 +19,18 @@ function WorkSession({workDay}) {
                 boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
                 justify="space-between"
             >
-                <Flex gap="12" align="center">
-                    <Flex gap="2" align="center">
+                <Flex align="center">
+                    <Flex gap="2" align="center" w="96">
                         <PiTimer size="28"/>
                         <Text>
                             Working time:{" "}
-                            {formatTime(new Date(workDay.startTime))}-
-                            {formatTime(new Date(workDay.endTime))}
+                            {dateFormatConverter(workSession.startTime, "long-time")} - {dateFormatConverter(workSession.endTime, "long-time")}
                         </Text>
                     </Flex>
-                    <Divider
-                        orientation="vertical"
-                        h="32px"
-                        borderColor="gray.500"
-                    />
-                    <Text>
+                    <CustomVerticalDivider/>
+                    <Text w="36">
                         Total:{" "}
-                        {calculateTotalTime(
-                            new Date(workDay.startTime),
-                            new Date(workDay.endTime)
-                        )}
+                        {formatTime(totalTime)}
                     </Text>
                 </Flex>
             </Flex>

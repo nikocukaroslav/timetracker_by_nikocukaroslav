@@ -1,27 +1,46 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {START_SESSION} from "../../constants.ts";
-
 
 export const initialState = {
+    workSessions: [],
     sessionId: "",
+    isTracking: false,
+    currentTime: 0,
 }
-
-export const startSession = ({userId, startTime}) => ({type: START_SESSION, payload: {userId, startTime}})
-export const stopSession = ({sessionId, endTime}) => ({type: START_SESSION, payload: {sessionId, endTime}})
 
 const employeesSlice = createSlice({
     name: "timeTracker",
     initialState,
     reducers: {
-        start(state, action) {
-            state.sessionId = action.payload
+        startSuccessful(state, action) {
+            state.sessionId = action.payload.id
         },
-        stop(state, action) {
-            state.sessionId = action.payload
-        }
+        stopSuccessful(state, action) {
+            state.workSessions.push(action.payload)
+        },
+        getWorkSessionsSuccessful(state, action) {
+            state.workSessions = action.payload
+        },
+        getLastWorkSessionSuccessful(state, action) {
+            state.sessionId = action.payload.id;
+            state.currentTime = Math.floor((Date.now() - action.payload.startTime) / 1000);
+            state.isTracking = true;
+        },
+        setTime(state, action) {
+            state.currentTime = action.payload;
+        },
+        setIsTracking(state, action) {
+            state.isTracking = action.payload
+        },
     },
 })
 
-export const {start, stop} = employeesSlice.actions;
+export const {
+    startSuccessful,
+    stopSuccessful,
+    getWorkSessionsSuccessful,
+    getLastWorkSessionSuccessful,
+    setIsTracking,
+    setTime
+} = employeesSlice.actions;
 
 export default employeesSlice.reducer;

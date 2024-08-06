@@ -22,9 +22,9 @@ import {useAppSelector} from "../../../hooks/useAppSelector.ts";
 import {EmployeeProps} from "../../../interfaces/components.ts";
 import CustomVerticalDivider from "../../../components/ui/CustomVerticalDivider.tsx";
 import {GrMoney, GrUserManager} from "react-icons/gr";
-import {deleteUser, getUser} from "../employeesSlice.ts";
 import {FiMenu} from "react-icons/fi";
 import ConfirmActionWindow from "./ConfirmActionWindow.tsx";
+import {deleteUser, getUser} from "../api/actions.ts";
 
 
 function Employee({employee}: EmployeeProps) {

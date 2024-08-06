@@ -1,10 +1,10 @@
 import {LayoutProps} from "../../interfaces/components.ts";
 import {Navigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {authorize, refreshToken} from "../../features/authentication/authenticationSlice.ts";
 import {useDispatch} from "react-redux";
 import {useAppSelector} from "../../hooks/useAppSelector.ts";
 import CustomSpinner from "../ui/CustomSpinner.tsx";
+import {authorize, refreshToken} from "../../features/authentication/api/actions.ts";
 
 function ProtectedRoute({children}: LayoutProps) {
     const dispatch = useDispatch();

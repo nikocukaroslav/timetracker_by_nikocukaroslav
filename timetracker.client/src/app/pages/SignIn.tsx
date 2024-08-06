@@ -16,9 +16,9 @@ import CustomInput from "../../components/ui/CustomInput.tsx";
 import {BiHide, BiShow} from "react-icons/bi";
 import {useEffect, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
-import {login} from "../../features/authentication/authenticationSlice.ts";
 import {useDispatch} from "react-redux";
 import {useAppSelector} from "../../hooks/useAppSelector.ts";
+import {login} from "../../features/authentication/api/actions.ts";
 
 function SignIn() {
     const [email, setEmail] = useState("");

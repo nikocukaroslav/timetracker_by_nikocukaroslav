@@ -1,7 +1,13 @@
 import {Epic, ofType} from "redux-observable";
 import {catchError, map, of, switchMap, tap} from "rxjs";
 import {graphQlQuery} from "../../../utils/graphQlQuery.ts";
-import {authorizeUser, logoutUser, setError, setLoading, silentTokenRefresh} from "../authenticationSlice.ts";
+import {
+    authorizeSuccessful,
+    logoutSuccessful,
+    refreshTokenSuccessful,
+    setError,
+    setLoading
+} from "../authenticationSlice.ts";
 import {AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN} from "../../../constants.ts";
 import {authorizeMutation, loginMutation, logoutMutation, refreshTokenMutation} from "./requests.ts";
 import store from "../../../store.ts";
@@ -22,7 +28,7 @@ export const loginEpic: Epic<MyAction> = (action$) =>
                 .pipe(
                     map(response => {
                         if (!response.errors)
-                            return authorizeUser(response.data.auth.login)
+                            return authorizeSuccessful(response.data.auth.login)
                         return setError(response.errors[0].message)
                     }),
                     catchError((error) =>
@@ -40,7 +46,7 @@ export const authorizeEpic: Epic<MyAction> = (action$) =>
         switchMap(() =>
             graphQlQuery(authorizeMutation, {refreshToken: getCookie("refreshToken")})
                 .pipe(
-                    map(response => authorizeUser(response.data.auth.authorize)),
+                    map(response => authorizeSuccessful(response.data.auth.authorize)),
                     catchError((error) =>
                         of(setError(error.message))
                     ),
@@ -56,7 +62,7 @@ export const logoutEpic: Epic<MyAction> = (action$) =>
         switchMap(() =>
             graphQlQuery(logoutMutation, {refreshToken: getCookie("refreshToken")})
                 .pipe(
-                    map(() => logoutUser()),
+                    map(() => logoutSuccessful()),
                 )
         )
     )
@@ -67,7 +73,7 @@ export const refreshTokenEpic: Epic<MyAction> = (action$) =>
         switchMap(() =>
             graphQlQuery(refreshTokenMutation, {refreshToken: getCookie("refreshToken")})
                 .pipe(
-                    map((response) => silentTokenRefresh(response.data.auth)),
+                    map((response) => refreshTokenSuccessful(response.data.auth)),
                 )
         )
     )

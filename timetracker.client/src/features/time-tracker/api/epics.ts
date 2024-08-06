@@ -1,11 +1,15 @@
 import {Epic, ofType} from "redux-observable";
-import {START_SESSION, STOP_SESSION} from "../../../constants.ts";
+import {GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION} from "../../../constants.ts";
 import {map, switchMap} from "rxjs";
 import {graphQlQuery} from "../../../utils/graphQlQuery.ts";
-import {start, stop} from "../timeTrackerSlice.ts";
+import {
+    getLastWorkSessionSuccessful,
+    getWorkSessionsSuccessful,
+    startSuccessful,
+    stopSuccessful
+} from "../timeTrackerSlice.ts";
 import {MyAction} from "../../../interfaces/actions/globalActions.ts";
-import {startSessionMutation, stopSessionMutation} from "./requests.ts";
-
+import {getLastWorkSessionQuery, getSessionsQuery, startSessionMutation, stopSessionMutation} from "./requests.ts";
 
 export const startSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
@@ -15,7 +19,7 @@ export const startSessionEpic: Epic<MyAction> = (action$) =>
                     session: action.payload
                 }
             ).pipe(
-                map(response => start(response.data)),
+                map(response => startSuccessful(response.data.workSessions.startSession)),
             )
         )
     );
@@ -28,7 +32,33 @@ export const stopSessionEpic: Epic<MyAction> = (action$) =>
                     session: action.payload
                 }
             ).pipe(
-                map(response => stop(response.data)),
+                map(response => stopSuccessful(response.data.workSessions.stopSession)),
+            )
+        )
+    );
+
+export const getSessionsEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(GET_SESSIONS),
+        switchMap(action =>
+            graphQlQuery(getSessionsQuery, {
+                    id: action.payload
+                }
+            ).pipe(
+                map(response => getWorkSessionsSuccessful(response.data.users.getWorkSessions)),
+            )
+        )
+    );
+
+export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(GET_LAST_WORK_SESSION),
+        switchMap(action =>
+            graphQlQuery(getLastWorkSessionQuery, {
+                    id: action.payload
+                }
+            ).pipe(
+                map(response => getLastWorkSessionSuccessful(response.data.users.getLastWorkSession)),
             )
         )
     );

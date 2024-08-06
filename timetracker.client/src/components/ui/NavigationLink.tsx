@@ -11,7 +11,6 @@ function NavigationLink({icon: Icon, label, to}: NavigationLinkProps) {
                     gap="2"
                     py="2"
                     px="4"
-
                     bg={isActive ? "gray.700" : "transparent"}
                     borderRadius="md"
                     _hover={{bg: "gray.700"}}

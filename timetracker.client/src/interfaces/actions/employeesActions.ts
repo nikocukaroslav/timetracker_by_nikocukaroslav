@@ -1,32 +1,37 @@
 import {CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER} from "../../constants.ts";
-import {remove, setUser, setUsers, update} from "../../features/employees/employeesSlice.ts";
-import {User} from "../domain.ts";
+import {
+    deleteSuccessful,
+    getUsersSuccessful,
+    getUserSuccessful,
+    updateSuccessful
+} from "../../features/employees/employeesSlice.ts";
+import {UserModel} from "../domain.ts";
 
-export interface CreateUserAction {
+interface CreateUserAction {
     type: typeof CREATE_USER;
-    payload: User;
+    payload: UserModel;
 }
 
-export interface GetUsersAction {
+interface GetUsersAction {
     type: typeof GET_USERS;
 }
 
-export interface GetUserAction {
+interface GetUserAction {
     type: typeof GET_USER;
     payload: string;
 }
 
-export interface DeleteUserAction {
+interface DeleteUserAction {
     type: typeof DELETE_USER;
     payload: string;
 }
 
-export interface RemoveAction {
-    type: typeof remove.type;
+interface DeleteSuccessfulAction {
+    type: typeof deleteSuccessful.type;
     payload: string
 }
 
-export interface UpdateUserAction {
+interface UpdateUserAction {
     type: typeof UPDATE_USER;
     payload: {
         permissions: [];
@@ -35,18 +40,18 @@ export interface UpdateUserAction {
     };
 }
 
-export interface UpdateAction {
-    type: typeof update.type;
+interface UpdateSuccessfulAction {
+    type: typeof updateSuccessful.type;
     payload: object
 }
 
-export interface SetUsersAction {
-    type: typeof setUsers.type;
+interface GetUsersSuccessfulAction {
+    type: typeof getUsersSuccessful.type;
     payload: []
 }
 
-export interface SetUserAction {
-    type: typeof setUser.type;
+interface GetUserSuccessfulAction {
+    type: typeof getUserSuccessful.type;
     payload: object;
 }
 
@@ -54,9 +59,9 @@ export type EmployeesActions =
     CreateUserAction
     | GetUsersAction
     | GetUserAction
-    | SetUsersAction
-    | SetUserAction
+    | GetUsersSuccessfulAction
+    | GetUserSuccessfulAction
     | DeleteUserAction
-    | RemoveAction
+    | DeleteSuccessfulAction
     | UpdateUserAction
-    | UpdateAction
+    | UpdateSuccessfulAction

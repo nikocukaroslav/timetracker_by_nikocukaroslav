@@ -3,7 +3,14 @@ import {CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER} from "../../
 import {catchError, map, of, switchMap, tap} from "rxjs";
 import {graphQlQuery} from "../../../utils/graphQlQuery.ts";
 import {addUserMutation, deleteUserMutation, getUserQuery, getUsersQuery, updateUserMutation} from "./requests.ts";
-import {create, remove, setLoading, setUser, setUsers, update} from "../employeesSlice.ts";
+import {
+    createSuccessful,
+    deleteSuccessful,
+    getUsersSuccessful,
+    getUserSuccessful,
+    setLoading,
+    updateSuccessful
+} from "../employeesSlice.ts";
 import store from "../../../store.ts";
 import {setError} from "../../authentication/authenticationSlice.ts";
 import {MyAction} from "../../../interfaces/actions/globalActions.ts";
@@ -21,7 +28,7 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
                 .pipe(
                     map(response => {
                             if (!response.errors)
-                                return create(response.data.users.addUser)
+                                return createSuccessful(response.data.users.addUser)
                             return response.errors.forEach((message: string) => console.log(message))
                         }
                     ),
@@ -39,7 +46,7 @@ export const getUsersEpic: Epic<MyAction> = (action$) =>
         switchMap(() =>
             graphQlQuery(getUsersQuery, {})
                 .pipe(
-                    map(response => setUsers(response.data.users.getUsers))
+                    map(response => getUsersSuccessful(response.data.users.getUsers))
                 )
         )
     );
@@ -53,7 +60,7 @@ export const deleteUserEpic: Epic<MyAction> = (action$) =>
                 }
             )
                 .pipe(
-                    map(() => remove(action.payload))
+                    map(() => deleteSuccessful(action.payload))
                 )
         )
     );
@@ -64,7 +71,7 @@ export const getUserEpic: Epic<MyAction> = (action$) =>
         switchMap(action =>
             graphQlQuery(getUserQuery, {id: action.payload})
                 .pipe(
-                    map(response => setUser(response.data.users.getUser))
+                    map(response => getUserSuccessful(response.data.users.getUser))
                 )
         )
     )
@@ -77,7 +84,7 @@ export const updateUserEpic: Epic<MyAction> = (action$) =>
         switchMap(action =>
             graphQlQuery(updateUserMutation, {user: action.payload})
                 .pipe(
-                    map(response => update(response.data.users.updateUser)),
+                    map(response => updateSuccessful(response.data.users.updateUser)),
                     tap(() => store.dispatch(setLoading(false))),
                 )
         )

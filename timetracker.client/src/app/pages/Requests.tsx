@@ -1,4 +1,4 @@
-import {Box, Button, Divider, Flex, Text} from "@chakra-ui/react";
+import {Button, Divider, Flex, Text} from "@chakra-ui/react";
 import {PiPencilSimple} from "react-icons/pi";
 import {useState} from "react";
 import NewRequestForm from "../../features/requests/components/NewRequestForm.tsx";
@@ -12,29 +12,27 @@ function Requests() {
 
     return (
         <>
-            <Box m="3">
+            <Flex
+                bg="gray.50"
+                flexDirection="column"
+                rounded="md"
+                boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
+            >
                 <Flex
-                    bg="gray.50"
-                    flexDirection="column"
-                    rounded="md"
-                    boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
+                    justify="space-between"
+                    w="full"
+                    p="5"
+                    align="center"
                 >
-                    <Flex
-                        justify="space-between"
-                        w="full"
-                        p="5"
-                        align="center"
-                    >
-                        <Text fontSize="2xl">Your requests</Text>
-                        <Button onClick={handleActive} variant="ghost">
-                            <PiPencilSimple size="18"/>
-                            <Text ml="1">New request</Text>
-                        </Button>
-                    </Flex>
-                    <Divider borderColor="gray.300" borderWidth="1.5px"/>
-                    <Flex py="4" align="center" gap="5" px="5"></Flex>
+                    <Text fontSize="2xl">Your requests</Text>
+                    <Button onClick={handleActive} variant="ghost">
+                        <PiPencilSimple size="18"/>
+                        <Text ml="1">New request</Text>
+                    </Button>
                 </Flex>
-            </Box>
+                <Divider borderColor="gray.300" borderWidth="1.5px"/>
+                <Flex py="4" align="center" gap="5" px="5"></Flex>
+            </Flex>
             <NewRequestForm isOpen={active} onClose={handleActive}/>
         </>
     );

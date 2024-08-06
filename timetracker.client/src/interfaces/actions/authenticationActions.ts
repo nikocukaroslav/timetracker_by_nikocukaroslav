@@ -1,12 +1,12 @@
 import {AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN} from "../../constants.ts";
 import {
-    authorizeUser,
-    logoutUser,
-    setError,
-    silentTokenRefresh
+    authorizeSuccessful,
+    logoutSuccessful,
+    refreshTokenSuccessful,
+    setError
 } from "../../features/authentication/authenticationSlice.ts";
 
-export interface LoginAction {
+interface LoginAction {
     type: typeof LOGIN;
     payload: {
         email: string,
@@ -14,42 +14,42 @@ export interface LoginAction {
     }
 }
 
-export interface SetErrorAction {
+interface SetErrorAction {
     type: typeof setError.type;
     payload: string
 }
 
-export interface AuthorizeAction {
+interface AuthorizeAction {
     type: typeof AUTHORIZE;
 }
 
-export interface AuthorizeUserAction {
-    type: typeof authorizeUser.type;
+interface AuthorizeSuccessfulAction {
+    type: typeof authorizeSuccessful.type;
     payload: object;
 }
 
-export interface LogoutAction {
+interface LogoutAction {
     type: typeof LOGOUT,
 }
 
-export interface LogoutUserAction {
-    type: typeof logoutUser.type,
+interface LogoutSuccessfulAction {
+    type: typeof logoutSuccessful.type,
 }
 
-export interface RefreshTokenAction {
+interface RefreshTokenAction {
     type: typeof REFRESH_TOKEN,
 }
 
-export interface SilentRefreshToken {
-    type: typeof silentTokenRefresh.type,
+interface RefreshTokenSuccessfulAction {
+    type: typeof refreshTokenSuccessful.type,
 }
 
 export type AuthenticationActions =
     | LoginAction
     | SetErrorAction
     | AuthorizeAction
-    | AuthorizeUserAction
+    | AuthorizeSuccessfulAction
     | LogoutAction
-    | LogoutUserAction
+    | LogoutSuccessfulAction
     | RefreshTokenAction
-    | SilentRefreshToken
+    | RefreshTokenSuccessfulAction

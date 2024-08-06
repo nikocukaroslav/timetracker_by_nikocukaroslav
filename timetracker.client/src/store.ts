@@ -11,7 +11,12 @@ import {
 } from "./features/employees/api/epics.ts";
 import employeesReducer from "./features/employees/employeesSlice.ts";
 import timeTrackerReducer from "./features/time-tracker/timeTrackerSlice.ts";
-import {startSessionEpic, stopSessionEpic} from "./features/time-tracker/api/epics.ts";
+import {
+    getLastWorkSessionEpic,
+    getSessionsEpic,
+    startSessionEpic,
+    stopSessionEpic
+} from "./features/time-tracker/api/epics.ts";
 
 const epics = [
     loginEpic,
@@ -25,6 +30,8 @@ const epics = [
     updateUserEpic,
     startSessionEpic,
     stopSessionEpic,
+    getSessionsEpic,
+    getLastWorkSessionEpic,
 ]
 
 const epicMiddleware = createEpicMiddleware();

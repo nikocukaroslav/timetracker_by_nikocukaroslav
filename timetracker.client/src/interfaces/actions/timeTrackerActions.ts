@@ -1,26 +1,54 @@
-import {start, stop} from "../../features/time-tracker/timeTrackerSlice.ts";
-import {START_SESSION, STOP_SESSION} from "../../constants.ts";
+import {
+    getLastWorkSessionSuccessful,
+    getWorkSessionsSuccessful,
+    startSuccessful,
+    stopSuccessful
+} from "../../features/time-tracker/timeTrackerSlice.ts";
+import {GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION} from "../../constants.ts";
 
-export interface StartSession {
+interface StartSessionAction {
     type: typeof START_SESSION,
     payload: object,
 }
 
-export interface StopSession {
+interface StopSessionAction {
     type: typeof STOP_SESSION,
     payload: string,
 }
 
-export interface Start {
-    type: typeof start.type,
+interface StartSuccessfulAction {
+    type: typeof startSuccessful.type,
 }
 
-export interface Stop {
-    type: typeof stop.type,
+interface StopSuccessfulAction {
+    type: typeof stopSuccessful.type,
 }
+
+interface GetWorkSessionsAction {
+    type: typeof GET_SESSIONS,
+    payload: string,
+}
+
+interface GetWorkSessionsSuccessfulAction {
+    type: typeof getWorkSessionsSuccessful.type,
+}
+
+interface GetLastWorkSessionAction {
+    type: typeof GET_LAST_WORK_SESSION,
+    payload: string,
+}
+
+interface GetLastWorkSessionSuccessfulAction {
+    type: typeof getLastWorkSessionSuccessful.type,
+}
+
 
 export type TimeTrackerActions =
-    StartSession
-    | StopSession
-    | Start
-    | Stop
+    StartSessionAction
+    | StopSessionAction
+    | StartSuccessfulAction
+    | StopSuccessfulAction
+    | GetWorkSessionsAction
+    | GetWorkSessionsSuccessfulAction
+    | GetLastWorkSessionAction
+    | GetLastWorkSessionSuccessfulAction

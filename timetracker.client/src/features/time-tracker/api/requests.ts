@@ -20,7 +20,6 @@ export const stopSessionMutation = `
     }
   }
 `
-
 export const editSessionMutation = `
   mutation editSession($session: EditSessionRequestType) {
     workSessions {
@@ -73,9 +72,42 @@ export const addSessionMutation = `
 `
 
 export const deleteSessionMutation = `
-  mutation deleteSession($id: Guid) {
+ mutation deleteSession($id: Guid) {
   workSessions {
     deleteSession(id: $id)
+  }
+}
+`
+
+export const getSessionsQuery = `
+query GetWorkSessions($id: Guid) {
+  users {
+    getWorkSessions(id: $id) {
+      id
+      startTime
+      endTime
+      setBy
+      editedAt
+      userId
+      editor {
+        id
+        name
+        surname
+        email
+        position
+      }
+    }
+  }
+}
+`
+
+export const getLastWorkSessionQuery = `
+query GetLastWorkWorkSessions($id: Guid) {
+  users {
+    getLastWorkSession(id: $id) {
+      id
+      startTime
+    }
   }
 }
 `

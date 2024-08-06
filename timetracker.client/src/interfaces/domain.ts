@@ -1,4 +1,4 @@
-export interface User {
+export interface UserModel {
     id?: string,
     name?: string,
     surname?: string,
@@ -6,4 +6,11 @@ export interface User {
     position?: string,
     permissions?: string[],
     timeload?: number,
+}
+
+export interface WorkSessionModel {
+    id?: string,
+    startTime: number,
+    endTime: number,
+    userId: string,
 }

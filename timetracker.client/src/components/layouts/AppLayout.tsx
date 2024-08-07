@@ -1,11 +1,13 @@
-import {Outlet, useLocation} from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Grid, GridItem } from "@chakra-ui/react";
+
+import GlobalTimer from "@features/time-tracker/components/GlobalTimer.tsx";
 import Navbar from "./Navbar.tsx";
-import {Grid, GridItem} from "@chakra-ui/react";
-import GlobalTimer from "../../features/time-tracker/components/GlobalTimer.tsx";
-import {useAppSelector} from "../../hooks/useAppSelector.ts";
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {getLastWorkSession} from "../../features/time-tracker/api/actions.ts";
+
+import { getLastWorkSession } from "@features/time-tracker/api/actions.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function AppLayout() {
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
@@ -22,7 +24,7 @@ function AppLayout() {
     return (
         <>
             {isTracking && location.pathname !== "/time-tracker" && <GlobalTimer/>}
-            <Grid templateColumns="1fr 6fr" overflow="hidden" height="100dvh" bg="gray.100" textColor="gray.700">
+            <Grid templateColumns="250px 1fr" overflow="hidden" height="100dvh" bg="gray.100" textColor="gray.700">
                 <GridItem>
                     <Navbar/>
                 </GridItem>

@@ -1,4 +1,4 @@
-import {AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN} from "../../../constants.ts";
+import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN } from "@constants";
 
 export const login = (email: string, password: string) => ({type: LOGIN, payload: {email, password}})
 export const authorize = () => ({type: AUTHORIZE})

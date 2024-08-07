@@ -1,4 +1,4 @@
-import {GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION} from "../../../constants.ts";
+import { GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION } from "@constants";
 
 export const startSession = (session) => ({type: START_SESSION, payload: session})
 export const stopSession = (session) => ({type: STOP_SESSION, payload: session})

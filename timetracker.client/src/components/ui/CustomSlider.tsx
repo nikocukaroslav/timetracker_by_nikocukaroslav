@@ -1,4 +1,4 @@
-import {Box, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack} from "@chakra-ui/react";
+import { Box, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack } from "@chakra-ui/react";
 
 function CustomSlider({onChange, value}) {
     const marks = [];

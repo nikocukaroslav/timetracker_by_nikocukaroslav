@@ -1,8 +1,8 @@
-import {Epic, ofType} from "redux-observable";
-import {CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER} from "../../../constants.ts";
-import {catchError, map, of, switchMap, tap} from "rxjs";
-import {graphQlQuery} from "../../../utils/graphQlQuery.ts";
-import {addUserMutation, deleteUserMutation, getUserQuery, getUsersQuery, updateUserMutation} from "./requests.ts";
+import { catchError, map, of, switchMap, tap } from "rxjs";
+import { Epic, ofType } from "redux-observable";
+
+import store from "@store";
+import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
 import {
     createSuccessful,
     deleteSuccessful,
@@ -11,9 +11,10 @@ import {
     setLoading,
     updateSuccessful
 } from "../employeesSlice.ts";
-import store from "../../../store.ts";
-import {setError} from "../../authentication/authenticationSlice.ts";
-import {MyAction} from "../../../interfaces/actions/globalActions.ts";
+import { setError } from "@features/authentication/authenticationSlice.ts";
+import { addUserMutation, deleteUserMutation, getUserQuery, getUsersQuery, updateUserMutation } from "./requests.ts";
+import { MyAction } from "@interfaces/actions/globalActions.ts";
+import { graphQlQuery } from "@utils/graphQlQuery.ts";
 
 export const createUserEpic: Epic<MyAction> = (action$) =>
     action$.pipe(

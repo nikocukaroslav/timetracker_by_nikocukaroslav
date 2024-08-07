@@ -1,6 +1,7 @@
-import {ChangeEvent, ChangeEventHandler, ReactNode} from "react";
-import {IconType} from "react-icons";
-import {UserModel} from "./domain.ts";
+import { ChangeEvent, ChangeEventHandler, ReactNode } from "react";
+import { IconType } from "react-icons";
+
+import { UserModel } from "./domain.ts";
 
 export interface CheckboxProps {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;

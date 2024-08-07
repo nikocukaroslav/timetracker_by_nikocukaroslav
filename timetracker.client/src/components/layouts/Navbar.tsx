@@ -1,4 +1,3 @@
-import {AbsoluteCenter, Box, Divider, Flex, Img, Stack} from "@chakra-ui/react";
 import {
     PiCalendarBlank,
     PiClock,
@@ -9,10 +8,13 @@ import {
     PiUserPlus,
     PiUsersThree,
 } from "react-icons/pi";
-import NavigationLink from "../ui/NavigationLink.tsx";
-import CustomNavbarDivider from "../ui/CustomNavbarDivider.tsx";
+import { AbsoluteCenter, Box, Divider, Flex, Img, Stack } from "@chakra-ui/react";
+
+import NavigationLink from "@components/ui/NavigationLink.tsx";
+import CustomNavbarDivider from "@components/ui/CustomNavbarDivider.tsx";
 import PermissionChecker from "./PermissionChecker.tsx";
-import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS} from "../../constants.ts";
+
+import { APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS } from "@constants";
 
 function Navbar() {
     return (

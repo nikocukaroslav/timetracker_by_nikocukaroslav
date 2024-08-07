@@ -1,5 +1,6 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {deleteCookie, setCookie} from "../../utils/cookieHandlers.ts";
+import { createSlice } from "@reduxjs/toolkit";
+
+import { deleteCookie, setCookie } from "@utils/cookieHandlers.ts";
 
 export const initialState = {
     user: null,

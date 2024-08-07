@@ -1,5 +1,5 @@
 export const addUserMutation = `
-mutation addUser($user: AddUserRequestType) {
+mutation AddUser($user: AddUserRequestType) {
   users {
     addUser(user: $user) {
       id

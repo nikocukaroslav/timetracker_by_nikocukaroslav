@@ -1,9 +1,10 @@
-import {useEffect} from "react";
-import {Box} from "@chakra-ui/react";
-import {useAppSelector} from "../../../hooks/useAppSelector.ts";
-import {useDispatch} from "react-redux";
-import {setTime} from "../timeTrackerSlice.ts";
-import {formatTime} from "../../../utils/formatters.ts";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Box } from "@chakra-ui/react";
+
+import { setTime } from "../timeTrackerSlice.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { formatTime } from "@utils/formatters.ts";
 
 interface TimerProps {
     color?: string;

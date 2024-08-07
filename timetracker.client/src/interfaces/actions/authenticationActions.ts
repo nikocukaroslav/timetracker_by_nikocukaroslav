@@ -1,10 +1,10 @@
-import {AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN} from "../../constants.ts";
 import {
     authorizeSuccessful,
     logoutSuccessful,
     refreshTokenSuccessful,
     setError
-} from "../../features/authentication/authenticationSlice.ts";
+} from "@features/authentication/authenticationSlice.ts";
+import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN } from "@constants";
 
 interface LoginAction {
     type: typeof LOGIN;

@@ -1,4 +1,4 @@
-import {Divider} from "@chakra-ui/react";
+import { Divider } from "@chakra-ui/react";
 
 function CustomVerticalDivider() {
     return (

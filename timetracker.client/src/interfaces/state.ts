@@ -1,4 +1,4 @@
-import {UserModel} from "./domain.ts";
+import { UserModel } from "./domain.ts";
 
 export interface State {
     employees: {

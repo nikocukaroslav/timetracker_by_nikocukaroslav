@@ -1,4 +1,4 @@
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text} from "@chakra-ui/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 
 function ConfirmActionWindow({onClose, isOpen, onDelete, text}) {
     return (

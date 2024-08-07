@@ -1,6 +1,7 @@
-import {Button, Flex, Text} from "@chakra-ui/react";
-import {PiDiceThree} from "react-icons/pi";
-import {RandomPasswordButtonProps} from "../../../interfaces/components.ts";
+import { PiDiceThree } from "react-icons/pi";
+import { Button, Flex, Text } from "@chakra-ui/react";
+
+import { RandomPasswordButtonProps } from "@interfaces/components.ts";
 
 function RandomPasswordButton({setRandomPassword}: RandomPasswordButtonProps) {
     return (

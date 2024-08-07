@@ -3,8 +3,8 @@ import {
     getWorkSessionsSuccessful,
     startSuccessful,
     stopSuccessful
-} from "../../features/time-tracker/timeTrackerSlice.ts";
-import {GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION} from "../../constants.ts";
+} from "@features/time-tracker/timeTrackerSlice.ts";
+import { GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION } from "@constants";
 
 interface StartSessionAction {
     type: typeof START_SESSION,

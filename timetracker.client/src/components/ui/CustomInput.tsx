@@ -1,5 +1,6 @@
-import {Input} from "@chakra-ui/react";
-import {InputProps} from "../../interfaces/components.ts";
+import { Input } from "@chakra-ui/react";
+
+import { InputProps } from "@interfaces/components.ts";
 
 function CustomInput({type, required, onChange, value, readOnly}: InputProps) {
     return (

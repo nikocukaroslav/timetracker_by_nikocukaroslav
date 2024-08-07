@@ -1,6 +1,7 @@
-import {from, switchMap} from "rxjs";
-import {BASE_URL} from "../constants.ts";
-import store from "../store.ts";
+import { from, switchMap } from "rxjs";
+
+import store from "@store";
+import { BASE_URL } from "@constants";
 
 export const graphQlQuery = (query: string, variables: object) => {
     return from(fetch(BASE_URL, {

@@ -1,6 +1,6 @@
-import {Divider, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList} from "@chakra-ui/react";
-import {FiMenu} from "react-icons/fi";
-import {PiNotePencil, PiTrash} from "react-icons/pi";
+import { FiMenu } from "react-icons/fi";
+import { PiNotePencil, PiTrash } from "react-icons/pi";
+import { Divider, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
 interface HamburgerProps {
     getData: () => void;

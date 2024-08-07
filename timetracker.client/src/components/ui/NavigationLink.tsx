@@ -1,6 +1,7 @@
-import {NavLink} from "react-router-dom";
-import {Flex, Text} from "@chakra-ui/react";
-import {NavigationLinkProps} from "../../interfaces/components.ts";
+import { NavLink } from "react-router-dom";
+import { Flex, Text } from "@chakra-ui/react";
+
+import { NavigationLinkProps } from "@interfaces/components.ts";
 
 function NavigationLink({icon: Icon, label, to}: NavigationLinkProps) {
     return (

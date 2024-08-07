@@ -1,8 +1,9 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+
 import App from "./app/App.tsx";
-import {ChakraProvider, extendTheme} from "@chakra-ui/react";
-import {Provider} from "react-redux";
+
 import store from "./store.ts";
 
 const customTheme = extendTheme({

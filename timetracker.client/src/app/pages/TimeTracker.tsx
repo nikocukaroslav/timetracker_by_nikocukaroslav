@@ -1,12 +1,14 @@
-import {Flex,} from "@chakra-ui/react";
-import TimeTrackerHeader from "../../features/time-tracker/components/TimeTrackerHeader.tsx";
-import PermissionChecker from "../../components/layouts/PermissionChecker.tsx";
-import {MANAGE_OWN_TIME} from "../../constants.ts";
-import {useAppSelector} from "../../hooks/useAppSelector.ts";
-import {useEffect} from "react";
-import {useDispatch} from "react-redux";
-import WorkSessionsList from "../../features/time-tracker/components/WorkSessionsList.tsx";
-import {getWorkSessions} from "../../features/time-tracker/api/actions.ts";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Flex } from "@chakra-ui/react";
+
+import TimeTrackerHeader from "@features/time-tracker/components/TimeTrackerHeader.tsx";
+import WorkSessionsList from "@features/time-tracker/components/WorkSessionsList.tsx";
+import PermissionChecker from "@components/layouts/PermissionChecker.tsx";
+import { getWorkSessions } from "@features/time-tracker/api/actions.ts";
+
+import { MANAGE_OWN_TIME } from "@constants";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function TimeTracker() {
     const userId = useAppSelector(state => state.authentication.user.id)

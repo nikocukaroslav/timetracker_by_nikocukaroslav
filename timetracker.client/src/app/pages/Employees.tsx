@@ -1,12 +1,13 @@
-import {Button, Divider, Flex, Text} from "@chakra-ui/react";
-import {PiPlus} from "react-icons/pi";
-import {useEffect, useState} from "react";
-import CreateMemberForm from "../../features/employees/components/CreateMemberForm.tsx";
-import {useAppSelector} from "../../hooks/useAppSelector.ts";
-import {useDispatch} from "react-redux";
-import {getUsers} from "../../features/employees/api/actions.ts";
-import EmployeesList from "../../features/employees/components/EmployeesList.tsx";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { PiPlus } from "react-icons/pi";
+import { Button, Divider, Flex, Text } from "@chakra-ui/react";
 
+import CreateMemberForm from "@features/employees/components/CreateMemberForm.tsx";
+import EmployeesList from "@features/employees/components/EmployeesList.tsx";
+
+import { getUsers } from "@features/employees/api/actions.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function Employees() {
     const [active, setActive] = useState(false);

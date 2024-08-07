@@ -1,7 +1,8 @@
-import {FormLabel, ListItem, Text} from "@chakra-ui/react";
-import CustomCheckbox from "../../../components/ui/CustomCheckbox.tsx";
-import {PermissionItemProps} from "../../../interfaces/components.ts";
+import { FormLabel, ListItem, Text } from "@chakra-ui/react";
 
+import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
+
+import { PermissionItemProps } from "@interfaces/components.ts";
 
 function PermissionItem({permission, permissions, handlePermissions}: PermissionItemProps) {
     return (

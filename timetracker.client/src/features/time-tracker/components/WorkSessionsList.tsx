@@ -1,7 +1,9 @@
-import {List} from "@chakra-ui/react";
-import {WorkSessionModel} from "../../../interfaces/domain.ts";
+import { List } from "@chakra-ui/react";
+
 import WorkSession from "./WorkSession.tsx";
-import {useAppSelector} from "../../../hooks/useAppSelector.ts";
+
+import { WorkSessionModel } from "@interfaces/domain.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function WorkSessionsList() {
     const workSessions = useAppSelector(state => state.timeTracker.workSessions)

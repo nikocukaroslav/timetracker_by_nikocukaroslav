@@ -1,3 +1,7 @@
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { BiHide, BiShow } from "react-icons/bi";
+import { PiUser } from "react-icons/pi";
 import {
     Box,
     Button,
@@ -17,19 +21,17 @@ import {
     Spinner,
     Text,
 } from "@chakra-ui/react";
-import {ChangeEvent, FormEvent, useEffect, useState} from "react";
-import {BiHide, BiShow} from "react-icons/bi";
-import {PiUser} from "react-icons/pi";
-import CustomInput from "../../../components/ui/CustomInput.tsx";
-import {MANAGE_OWN_TIME, permissionList, positionsList} from "../../../constants.ts";
-import {useDispatch} from "react-redux";
-import {generatePassword} from "../../../utils/generatePassword.ts";
+
+import CustomInput from "@components/ui/CustomInput.tsx";
+import CustomSlider from "@components/ui/CustomSlider.tsx";
 import PermissionItem from "./PermissionItem.tsx";
 import RandomPasswordButton from "./RandomPasswordButton.tsx";
-import {useAppSelector} from "../../../hooks/useAppSelector.ts";
-import CustomSlider from "../../../components/ui/CustomSlider.tsx";
-import {UserFormControls} from "../../../interfaces/components.ts";
-import {createUser, updateUser} from "../api/actions.ts";
+
+import { createUser, updateUser } from "../api/actions.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { UserFormControls } from "@interfaces/components.ts";
+import { generatePassword } from "@utils/generatePassword.ts";
+import { MANAGE_OWN_TIME, permissionList, positionsList } from "@constants";
 
 function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
     const [name, setName] = useState("");

@@ -1,11 +1,11 @@
-import {CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER} from "../../constants.ts";
 import {
     deleteSuccessful,
     getUsersSuccessful,
     getUserSuccessful,
     updateSuccessful
-} from "../../features/employees/employeesSlice.ts";
-import {UserModel} from "../domain.ts";
+} from "@features/employees/employeesSlice.ts";
+import { UserModel } from "../domain.ts";
+import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
 
 interface CreateUserAction {
     type: typeof CREATE_USER;

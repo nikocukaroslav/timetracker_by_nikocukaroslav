@@ -1,5 +1,6 @@
-import {Divider, Stack, Text} from "@chakra-ui/react";
-import {StackProps} from "../../interfaces/components.ts";
+import { Divider, Stack, Text } from "@chakra-ui/react";
+
+import { StackProps } from "@interfaces/components.ts";
 
 function CustomNavbarDivider({label}: StackProps) {
     return (

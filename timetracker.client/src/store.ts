@@ -1,7 +1,7 @@
-import {configureStore} from "@reduxjs/toolkit";
-import {combineEpics, createEpicMiddleware} from "redux-observable";
-import authenticationReducer from "./features/authentication/authenticationSlice.ts";
-import {authorizeEpic, loginEpic, logoutEpic, refreshTokenEpic} from "./features/authentication/api/epics.ts";
+import { configureStore } from "@reduxjs/toolkit";
+import { combineEpics, createEpicMiddleware } from "redux-observable";
+
+import { authorizeEpic, loginEpic, logoutEpic, refreshTokenEpic } from "./features/authentication/api/epics.ts";
 import {
     createUserEpic,
     deleteUserEpic,
@@ -9,14 +9,16 @@ import {
     getUsersEpic,
     updateUserEpic
 } from "./features/employees/api/epics.ts";
-import employeesReducer from "./features/employees/employeesSlice.ts";
-import timeTrackerReducer from "./features/time-tracker/timeTrackerSlice.ts";
 import {
     getLastWorkSessionEpic,
     getSessionsEpic,
     startSessionEpic,
     stopSessionEpic
 } from "./features/time-tracker/api/epics.ts";
+
+import authenticationReducer from "./features/authentication/authenticationSlice.ts";
+import employeesReducer from "./features/employees/employeesSlice.ts";
+import timeTrackerReducer from "./features/time-tracker/timeTrackerSlice.ts";
 
 const epics = [
     loginEpic,

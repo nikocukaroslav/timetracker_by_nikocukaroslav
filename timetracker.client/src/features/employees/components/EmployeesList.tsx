@@ -1,7 +1,9 @@
-import {List} from "@chakra-ui/react";
-import {UserModel} from "../../../interfaces/domain.ts";
+import { List } from "@chakra-ui/react";
+
 import Employee from "./Employee.tsx";
-import {useAppSelector} from "../../../hooks/useAppSelector.ts";
+
+import { UserModel } from "@interfaces/domain.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function EmployeesList() {
     const employees = useAppSelector(state => state.employees.users)

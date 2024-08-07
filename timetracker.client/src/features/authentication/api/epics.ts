@@ -1,6 +1,7 @@
-import {Epic, ofType} from "redux-observable";
-import {catchError, map, of, switchMap, tap} from "rxjs";
-import {graphQlQuery} from "../../../utils/graphQlQuery.ts";
+import { catchError, map, of, switchMap, tap } from "rxjs";
+import { Epic, ofType } from "redux-observable";
+
+import store from "@store";
 import {
     authorizeSuccessful,
     logoutSuccessful,
@@ -8,12 +9,11 @@ import {
     setError,
     setLoading
 } from "../authenticationSlice.ts";
-import {AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN} from "../../../constants.ts";
-import {authorizeMutation, loginMutation, logoutMutation, refreshTokenMutation} from "./requests.ts";
-import store from "../../../store.ts";
-import {getCookie} from "../../../utils/cookieHandlers.ts";
-import {MyAction} from "../../../interfaces/actions/globalActions.ts";
-
+import { authorizeMutation, loginMutation, logoutMutation, refreshTokenMutation } from "./requests.ts";
+import { MyAction } from "@interfaces/actions/globalActions.ts";
+import { graphQlQuery } from "@utils/graphQlQuery.ts";
+import { getCookie } from "@utils/cookieHandlers.ts";
+import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN } from "@constants";
 
 export const loginEpic: Epic<MyAction> = (action$) =>
     action$.pipe(

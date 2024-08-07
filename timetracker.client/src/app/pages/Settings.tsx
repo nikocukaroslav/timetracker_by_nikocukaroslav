@@ -1,7 +1,8 @@
-import {PiSignOut} from "react-icons/pi";
-import {Button} from "@chakra-ui/react";
-import {useDispatch} from "react-redux";
-import {logout} from "../../features/authentication/api/actions.ts";
+import { useDispatch } from "react-redux";
+import { PiSignOut } from "react-icons/pi";
+import { Button } from "@chakra-ui/react";
+
+import { logout } from "@features/authentication/api/actions.ts";
 
 function Settings() {
     const dispatch = useDispatch()

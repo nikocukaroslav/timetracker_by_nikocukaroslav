@@ -1,5 +1,5 @@
-import {UserModel} from "../../../interfaces/domain.ts";
-import {CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER} from "../../../constants.ts";
+import { UserModel } from "@interfaces/domain.ts";
+import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
 
 export const createUser = (newUser: UserModel) => ({type: CREATE_USER, payload: newUser})
 export const getUsers = () => ({type: GET_USERS})

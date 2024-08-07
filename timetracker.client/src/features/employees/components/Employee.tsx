@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { PiCaretDown, PiClockUser, PiCode } from "react-icons/pi";
+import { GrMoney, GrUserManager } from "react-icons/gr";
 import {
     Button,
     Divider,
@@ -12,18 +16,16 @@ import {
     Spacer,
     Text
 } from "@chakra-ui/react";
-import {PiCaretDown, PiClockUser, PiCode} from "react-icons/pi";
-import {useDispatch} from "react-redux";
-import {MANAGE_USERS, permissionList} from "../../../constants.ts";
+
+import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
+import ConfirmActionWindow from "@components/ui/ConfirmActionWindow.tsx";
+import CustomHamburgerMenu from "@components/ui/CustomHamburgerMenu.tsx";
 import CreateMemberForm from "./CreateMemberForm.tsx";
-import {useState} from "react";
-import {useAppSelector} from "../../../hooks/useAppSelector.ts";
-import {EmployeeProps} from "../../../interfaces/components.ts";
-import CustomVerticalDivider from "../../../components/ui/CustomVerticalDivider.tsx";
-import {GrMoney, GrUserManager} from "react-icons/gr";
-import ConfirmActionWindow from "../../../components/ui/ConfirmActionWindow.tsx";
-import {deleteUser, getUser} from "../api/actions.ts";
-import CustomHamburgerMenu from "../../../components/ui/CustomHamburgerMenu.tsx";
+
+import { deleteUser, getUser } from "../api/actions.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { EmployeeProps } from "@interfaces/components.ts";
+import { MANAGE_USERS, permissionList } from "@constants";
 
 
 function Employee({employee}: EmployeeProps) {

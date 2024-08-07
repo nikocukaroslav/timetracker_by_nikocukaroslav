@@ -1,10 +1,12 @@
-import {Box, Button, Divider, Flex, Icon, Text} from "@chakra-ui/react";
-import {PiPlayFill, PiSquareFill} from "react-icons/pi";
+import { useDispatch } from "react-redux";
+import { PiPlayFill, PiSquareFill } from "react-icons/pi";
+import { Box, Button, Divider, Flex, Icon, Text } from "@chakra-ui/react";
+
 import Timer from "./Timer.tsx";
-import {useDispatch} from "react-redux";
-import {useAppSelector} from "../../../hooks/useAppSelector.ts";
-import {setIsTracking} from "../timeTrackerSlice.ts";
-import {startSession, stopSession} from "../api/actions.ts";
+
+import { setIsTracking } from "../timeTrackerSlice.ts";
+import { startSession, stopSession } from "../api/actions.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function TimeTrackerHeader() {
     const userId = useAppSelector(state => state.authentication.user.id)

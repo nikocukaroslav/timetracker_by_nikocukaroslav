@@ -1,18 +1,20 @@
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import Teams from "./pages/Teams.tsx";
-import Settings from "./pages/Settings.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import Employees from "./pages/Employees.tsx";
-import Requests from "./pages/Requests.tsx";
-import TimeTracker from "./pages/TimeTracker.tsx";
-import Calendar from "./pages/Calendar.tsx";
-import SignIn from "./pages/SignIn.tsx";
-import Approves from "./pages/Approves.tsx";
-import AppLayout from "../components/layouts/AppLayout.tsx";
-import PermissionChecker from "../components/layouts/PermissionChecker.tsx";
-import {APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS} from "../constants.ts";
-import ProtectedRoute from "../components/layouts/ProtectedRoute.tsx";
-import Positions from "./pages/Positions.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import Approves from "@pages/Approves";
+import Calendar from "@pages/Calendar.tsx";
+import Employees from "@pages/Employees.tsx";
+import NotFound from "@pages/NotFound.tsx";
+import Positions from "@pages/Positions.tsx";
+import Requests from "@pages/Requests.tsx";
+import Settings from "@pages/Settings.tsx";
+import SignIn from "@pages/SignIn.tsx";
+import Teams from "@pages/Teams.tsx";
+import TimeTracker from "@pages/TimeTracker.tsx";
+import AppLayout from "@components/layouts/AppLayout.tsx";
+import PermissionChecker from "@components/layouts/PermissionChecker.tsx";
+import ProtectedRoute from "@components/layouts/ProtectedRoute.tsx";
+
+import { APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS } from "@constants";
 
 const router = createBrowserRouter([
     {

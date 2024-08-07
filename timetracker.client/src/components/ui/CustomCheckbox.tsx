@@ -1,5 +1,6 @@
-import {Checkbox} from "@chakra-ui/react";
-import {CheckboxProps} from "../../interfaces/components.ts";
+import { Checkbox } from "@chakra-ui/react";
+
+import { CheckboxProps } from "@interfaces/components.ts";
 
 function CustomCheckbox({onChange, disabled, checked, readOnly}: CheckboxProps) {
     return (

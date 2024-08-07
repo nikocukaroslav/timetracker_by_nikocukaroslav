@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
     Box,
     Button,
@@ -11,14 +14,13 @@ import {
     Spinner,
     Text
 } from "@chakra-ui/react";
-import {PiKey, PiSignIn, PiUser} from "react-icons/pi";
-import CustomInput from "../../components/ui/CustomInput.tsx";
-import {BiHide, BiShow} from "react-icons/bi";
-import {useEffect, useState} from "react";
-import {NavLink, useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {useAppSelector} from "../../hooks/useAppSelector.ts";
-import {login} from "../../features/authentication/api/actions.ts";
+import { PiKey, PiSignIn, PiUser } from "react-icons/pi";
+import { BiHide, BiShow } from "react-icons/bi";
+
+import { login } from "@features/authentication/api/actions.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
+
+import CustomInput from "@components/ui/CustomInput";
 
 function SignIn() {
     const [email, setEmail] = useState("");

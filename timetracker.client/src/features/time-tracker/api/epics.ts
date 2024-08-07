@@ -1,15 +1,16 @@
-import {Epic, ofType} from "redux-observable";
-import {GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION} from "../../../constants.ts";
-import {map, switchMap} from "rxjs";
-import {graphQlQuery} from "../../../utils/graphQlQuery.ts";
+import { map, switchMap } from "rxjs";
+import { Epic, ofType } from "redux-observable";
+
 import {
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
     startSuccessful,
     stopSuccessful
 } from "../timeTrackerSlice.ts";
-import {MyAction} from "../../../interfaces/actions/globalActions.ts";
-import {getLastWorkSessionQuery, getSessionsQuery, startSessionMutation, stopSessionMutation} from "./requests.ts";
+import { getLastWorkSessionQuery, getSessionsQuery, startSessionMutation, stopSessionMutation } from "./requests.ts";
+import { MyAction } from "@interfaces/actions/globalActions.ts";
+import { graphQlQuery } from "@utils/graphQlQuery.ts";
+import { GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION } from "@constants";
 
 export const startSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(

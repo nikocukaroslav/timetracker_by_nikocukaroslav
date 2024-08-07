@@ -1,10 +1,12 @@
-import {Flex, ListItem, Text} from "@chakra-ui/react";
-import dateFormatConverter, {formatTime} from "../../../utils/formatters.ts";
-import {PiTimer} from "react-icons/pi";
-import CustomVerticalDivider from "../../../components/ui/CustomVerticalDivider.tsx";
-import ConfirmActionWindow from "../../../components/ui/ConfirmActionWindow.tsx";
-import {useState} from "react";
-import CustomHamburgerMenu from "../../../components/ui/CustomHamburgerMenu.tsx";
+import { useState } from "react";
+import { PiTimer } from "react-icons/pi";
+import { Flex, ListItem, Text } from "@chakra-ui/react";
+
+import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
+import ConfirmActionWindow from "@components/ui/ConfirmActionWindow.tsx";
+import CustomHamburgerMenu from "@components/ui/CustomHamburgerMenu.tsx";
+
+import dateFormatConverter, { formatTime } from "@utils/formatters.ts";
 
 function WorkSession({workSession}) {
     const totalTime: number = Math.floor((workSession.endTime - workSession.startTime) / 1000)

@@ -5,12 +5,19 @@ import {
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
     startSuccessful,
-    stopSuccessful
+    stopSuccessful,
+    deleteWorkSessionSuccessful
 } from "../timeTrackerSlice.ts";
-import { getLastWorkSessionQuery, getSessionsQuery, startSessionMutation, stopSessionMutation } from "./requests.ts";
+import {
+    deleteSessionMutation,
+    getLastWorkSessionQuery,
+    getSessionsQuery,
+    startSessionMutation,
+    stopSessionMutation
+} from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
-import { GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION } from "@constants";
+import { DELETE_WORK_SESSION, GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION } from "@constants";
 
 export const startSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
@@ -60,6 +67,19 @@ export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
                 }
             ).pipe(
                 map(response => getLastWorkSessionSuccessful(response.data.users.getLastWorkSession))
+            )
+        )
+    );
+
+export const deleteWorkSessionEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(DELETE_WORK_SESSION),
+        switchMap(action =>
+            graphQlQuery(deleteSessionMutation, {
+                    id: action.payload
+                }
+            ).pipe(
+                map(response => deleteWorkSessionSuccessful(action.payload))
             )
         )
     );

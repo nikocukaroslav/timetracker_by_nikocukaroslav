@@ -16,6 +16,7 @@ export interface InputProps {
     onChange?: ChangeEventHandler<HTMLInputElement>,
     value?: string;
     readOnly?: boolean;
+    isDisabled?: boolean;
 }
 
 export interface StackProps {

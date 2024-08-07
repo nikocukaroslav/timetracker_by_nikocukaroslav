@@ -147,30 +147,30 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Name</Text>
                             <CustomInput
-                                readOnly={isEditing}
                                 type="text"
                                 onChange={(e) => setName(e.target.value)}
                                 value={name}
+                                isDisabled={isEditing}
                                 required
                             />
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Surname</Text>
                             <CustomInput
-                                readOnly={isEditing}
                                 type="text"
                                 onChange={(e) => setSurname(e.target.value)}
                                 value={surname}
+                                isDisabled={isEditing}
                                 required
                             />
                         </FormLabel>
                         <FormLabel display="flex" flexDirection="column" gap="1">
                             <Text>Email</Text>
                             <CustomInput
-                                readOnly={isEditing}
-                                type="text"
+                                type="email"
                                 onChange={(e) => setEmail(e.target.value)}
                                 value={email}
+                                isDisabled={isEditing}
                                 required
                             />
                         </FormLabel>

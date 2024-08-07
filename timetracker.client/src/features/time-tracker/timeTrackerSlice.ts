@@ -15,7 +15,7 @@ const employeesSlice = createSlice({
             state.sessionId = action.payload.id
         },
         stopSuccessful(state, action) {
-            state.workSessions.push(action.payload)
+            state.workSessions.unshift(action.payload)
         },
         getWorkSessionsSuccessful(state, action) {
             state.workSessions = action.payload

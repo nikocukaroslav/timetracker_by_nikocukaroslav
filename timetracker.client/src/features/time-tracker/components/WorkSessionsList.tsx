@@ -11,11 +11,8 @@ function WorkSessionsList() {
     return (
         <List display="flex" flexDirection="column" gap="3" overflow="auto">
             {workSessions.filter((workSession: WorkSessionModel) => workSession.endTime !== null)
-                .map((workSession: WorkSessionModel) => {
-                    return (
-                        <WorkSession key={workSession.id} workSession={workSession}/>
-                    );
-                })}
+                .map((workSession: WorkSessionModel) =>
+                    <WorkSession key={workSession.id} workSession={workSession}/>)}
         </List>
     );
 }

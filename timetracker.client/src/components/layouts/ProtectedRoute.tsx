@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import CustomSpinner from "@components/ui/CustomSpinner.tsx";
+import Spinner from "@components/ui/Spinner.tsx";
 
 import { authorize, refreshToken } from "@features/authentication/api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { LayoutProps } from "@interfaces/components.ts";
+import { getCookie } from "@utils/cookieHandlers.ts";
 
 function ProtectedRoute({children}: LayoutProps) {
     const dispatch = useDispatch();
     const loginStatus = useAppSelector(state => state.authentication.user);
     const expiresAt = useAppSelector(state => state.authentication.expiresAt);
+
+    const refreshTokenCookie = getCookie("refreshToken");
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -26,20 +29,23 @@ function ProtectedRoute({children}: LayoutProps) {
 
             return () => clearTimeout(timeoutId);
         }
-    }, [dispatch, expiresAt]);
+    }, [expiresAt]);
 
     useEffect(() => {
-        if (!loginStatus && isLoading) {
+        if (refreshTokenCookie && !loginStatus && isLoading) {
             dispatch(authorize());
         } else {
             setIsLoading(false);
         }
-    }, [loginStatus, dispatch, isLoading]);
+    }, [loginStatus]);
 
     if (isLoading)
-        return <CustomSpinner/>;
+        return <Spinner/>;
 
-    return loginStatus ? children : <Navigate to="/sign-in"/>;
+    if (!loginStatus)
+        return <Navigate to="/sign-in"/>;
+
+    return children;
 }
 
 export default ProtectedRoute;

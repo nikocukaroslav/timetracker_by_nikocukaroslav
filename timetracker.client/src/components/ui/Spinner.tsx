@@ -1,6 +1,6 @@
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, Spinner as ChakraSpinner } from "@chakra-ui/react";
 
-function CustomSpinner() {
+function Spinner() {
     return (
         <Box
             position="fixed"
@@ -14,9 +14,9 @@ function CustomSpinner() {
             backdropFilter="blur(5px)"
             zIndex="9999"
         >
-            <Spinner size="xl"/>
+            <ChakraSpinner size="xl"/>
         </Box>
     );
 }
 
-export default CustomSpinner;
+export default Spinner;

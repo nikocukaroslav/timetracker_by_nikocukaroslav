@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Navigate, NavLink } from "react-router-dom";
 import {
     Box,
     Button,
@@ -17,10 +17,10 @@ import {
 import { PiKey, PiSignIn, PiUser } from "react-icons/pi";
 import { BiHide, BiShow } from "react-icons/bi";
 
+import CustomInput from "@components/ui/CustomInput";
+
 import { login } from "@features/authentication/api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
-
-import CustomInput from "@components/ui/CustomInput";
 
 function SignIn() {
     const [email, setEmail] = useState("");
@@ -31,7 +31,6 @@ function SignIn() {
     const loading = useAppSelector(state => state.authentication.loading);
     const error = useAppSelector(state => state.authentication.error);
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     function handleClick() {
@@ -42,10 +41,8 @@ function SignIn() {
         dispatch(login(email, password))
     }
 
-    useEffect(() => {
-        if (loginStatus)
-            navigate("/");
-    }, [loginStatus, navigate]);
+    if (loginStatus)
+        return <Navigate to="/"/>;
 
     return (
         <Flex as="main" align="center" justify="center" bg="gray.100" overflow="hidden" h="100dvh" color="gray.700">

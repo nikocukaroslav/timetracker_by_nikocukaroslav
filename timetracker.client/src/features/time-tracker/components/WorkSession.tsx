@@ -7,11 +7,15 @@ import ConfirmActionWindow from "@components/ui/ConfirmActionWindow.tsx";
 import CustomHamburgerMenu from "@components/ui/CustomHamburgerMenu.tsx";
 
 import dateFormatConverter, { formatTime } from "@utils/formatters.ts";
+import { useDispatch } from "react-redux";
+import { deleteWorkSession } from "@features/time-tracker/api/actions.ts";
 
 function WorkSession({workSession}) {
     const totalTime: number = Math.floor((workSession.endTime - workSession.startTime) / 1000)
 
     const [activeDeleting, setActiveDeleting] = useState(false);
+
+    const dispatch = useDispatch();
 
     function handleActiveDeleting() {
         setActiveDeleting(!activeDeleting);
@@ -54,8 +58,7 @@ function WorkSession({workSession}) {
                 </Flex>
             </ListItem>
             <ConfirmActionWindow
-                onDelete={() => {
-                }}
+                onDelete={() => dispatch(deleteWorkSession(workSession.id))}
                 isOpen={activeDeleting}
                 text={`Delete this work session`}
                 onClose={handleActiveDeleting}/>

@@ -26,6 +26,9 @@ const employeesSlice = createSlice({
             state.currentTime = Math.floor((Date.now() - action.payload.startTime) / 1000);
             state.isTracking = true;
         },
+        deleteWorkSessionSuccessful(state, action) {
+            state.workSessions = state.workSessions.filter(workSession => workSession.id !== action.payload)
+        },
         setTime(state, action) {
             state.currentTime = action.payload;
         },
@@ -40,6 +43,7 @@ export const {
     stopSuccessful,
     getWorkSessionsSuccessful,
     getLastWorkSessionSuccessful,
+    deleteWorkSessionSuccessful,
     setIsTracking,
     setTime
 } = employeesSlice.actions;

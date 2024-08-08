@@ -37,7 +37,6 @@ function TimeTrackerHeader() {
         dispatch(stopSession(workSession));
     }
 
-
     return (
         <Flex
             p="5"

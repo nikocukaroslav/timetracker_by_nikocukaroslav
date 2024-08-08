@@ -31,7 +31,7 @@ import { createUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { UserFormControls } from "@interfaces/components.ts";
 import { generatePassword } from "@utils/generatePassword.ts";
-import { MANAGE_OWN_TIME, permissionList, positionsList } from "@constants";
+import { permissionList, positionsList } from "@constants";
 
 function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
     const [name, setName] = useState("");
@@ -181,6 +181,7 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                                 borderColor="gray.300"
                                 focusBorderColor="gray.500"
                                 onChange={e => setPosition(e.target.value)}
+                                value={position}
                             >
                                 {
                                     positionsList.map(position =>
@@ -212,14 +213,10 @@ function CreateMemberForm({isOpen, onClose, isEditing}: UserFormControls) {
                             </FormLabel>
                             <RandomPasswordButton setRandomPassword={setRandomPassword}/>
                         </Box>}
-                        {
-                            !permissions.includes(MANAGE_OWN_TIME) &&
-                            <FormLabel display="flex" flexDirection="column">
-                                <Text>Work time (%)</Text>
-                                <CustomSlider onChange={setTimeload} value={timeload}/>
-                            </FormLabel>
-                        }
-
+                        <FormLabel display="flex" flexDirection="column">
+                            <Text>Work time (%)</Text>
+                            <CustomSlider onChange={setTimeload} value={timeload}/>
+                        </FormLabel>
                         <FormLabel m="0">
                             <Text>Permissions</Text>
                         </FormLabel>

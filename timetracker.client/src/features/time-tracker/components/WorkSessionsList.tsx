@@ -1,20 +1,30 @@
-import { List } from "@chakra-ui/react";
+import { Accordion, Stack, } from "@chakra-ui/react";
 
-import WorkSession from "./WorkSession.tsx";
+import WorkSessionGroup from "@features/time-tracker/components/WorkSessionGroup.tsx";
 
-import { WorkSessionModel } from "@interfaces/domain.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
+import dateFormatConverter from "@utils/formatters.ts";
+import { WorkSessionModel } from "@interfaces/domain.ts";
 
 function WorkSessionsList() {
     const workSessions = useAppSelector(state => state.timeTracker.workSessions)
 
+    const workSessionGroups = Object.groupBy(workSessions, ({startTime}: {
+        startTime: number
+    }) => dateFormatConverter(startTime));
+    const daysGroup: [string, WorkSessionModel[]][] = Object.entries(workSessionGroups);
+
     return (
-        <List display="flex" flexDirection="column" gap="3" overflow="auto">
-            {workSessions.filter((workSession: WorkSessionModel) => workSession.endTime !== null)
-                .map((workSession: WorkSessionModel) =>
-                    <WorkSession key={workSession.id} workSession={workSession}/>)}
-        </List>
-    );
+        <Accordion as={Stack} allowMultiple reduceMotion sx={{
+            ".chakra-collapse": {
+                overflow: "initial !important"
+            }
+        }}>
+            {daysGroup.map(([day, sessions]) => {
+                return <WorkSessionGroup key={day} day={day} workSessions={sessions}/>
+            })}
+        </Accordion>
+    )
 }
 
 export default WorkSessionsList;

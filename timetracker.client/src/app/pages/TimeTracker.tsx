@@ -19,7 +19,7 @@ function TimeTracker() {
     }, [dispatch, userId]);
 
     return (
-        <Flex direction="column" gap="4" h="100dvh">
+        <Flex direction="column" gap="4">
             <PermissionChecker permissions={[MANAGE_OWN_TIME]}>
                 <TimeTrackerHeader/>
             </PermissionChecker>

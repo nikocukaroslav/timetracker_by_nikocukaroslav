@@ -42,7 +42,7 @@ function SignIn() {
     }
 
     if (loginStatus)
-        return <Navigate to="/"/>;
+        return <Navigate to="/time-tracker"/>;
 
     return (
         <Flex as="main" align="center" justify="center" bg="gray.100" overflow="hidden" h="100dvh" color="gray.700">

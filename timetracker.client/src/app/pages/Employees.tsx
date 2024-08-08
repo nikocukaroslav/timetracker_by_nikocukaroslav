@@ -24,7 +24,6 @@ function Employees() {
 
     return (
         <>
-
             <Flex
                 bg="gray.50"
                 flexDirection="column"

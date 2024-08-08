@@ -6,7 +6,7 @@ export function formatTime(seconds: number): string {
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-const dateFormatConverter = (date, format = null) => {
+const dateFormatConverter = (date: number | string, format?: string) => {
     const dateValue = new Date(date);
 
     let options;
@@ -25,6 +25,12 @@ const dateFormatConverter = (date, format = null) => {
                 hour: date > 3599999 ? "2-digit" : undefined,
                 minute: "2-digit",
                 second: "2-digit",
+            };
+            break;
+        case "full-day":
+            options = {
+                month: "long",
+                day: "2-digit",
             };
             break;
         default:

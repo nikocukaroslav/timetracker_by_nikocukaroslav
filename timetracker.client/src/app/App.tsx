@@ -18,7 +18,6 @@ import { APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS } from "@constants";
 
 const router = createBrowserRouter([
     {
-        path: "/",
         element:
             <ProtectedRoute>
                 <AppLayout/>

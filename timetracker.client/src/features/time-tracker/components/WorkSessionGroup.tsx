@@ -34,6 +34,7 @@ function WorkSessionGroup({day, workSessions}: { day: string, workSessions: Work
             <AccordionPanel
                 as={Stack}
                 p={0}
+                gap={0}
                 bg="gray.50"
                 roundedBottom="md"
                 boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"

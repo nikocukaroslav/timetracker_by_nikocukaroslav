@@ -5,6 +5,7 @@ export interface UserModel {
     email?: string,
     position?: string,
     permissions?: string[],
+    password?: string,
     timeload?: number,
 }
 

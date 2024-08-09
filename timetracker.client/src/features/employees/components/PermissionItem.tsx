@@ -15,7 +15,7 @@ function PermissionItem({permission, permissions, handlePermissions}: Permission
                 alignContent="center"
             >
                 <CustomCheckbox
-                    checked={permissions.includes(permission.name)}
+                    checked={permissions?.includes(permission.name)}
                     onChange={(e) =>
                         handlePermissions(e, permission.name)
                     }

@@ -1,3 +1,6 @@
+import { GrMoney, GrUserManager } from "react-icons/gr";
+import { PiCode, PiUserCircleGearLight } from "react-icons/pi";
+
 export const BASE_URL = "https://localhost:7023/graphql";
 
 export const APPROVE_REQUESTS = "APPROVE_REQUESTS"
@@ -24,18 +27,35 @@ export const permissionList = [
     }
 ];
 
+export const DEVELOPER = "DEVELOPER"
+export const MANAGER = "MANAGER"
+export const ACCOUNTANT = "ACCOUNTANT"
+export const ACCOUNT_MANAGER = "ACCOUNT_MANAGER"
+
 export const positionsList = [
     {
-        name: "DEVELOPER",
-        description: "developer",
+        name: DEVELOPER,
+        icon: PiCode,
+        description: "Developer",
+        defaultPermissions: [MANAGE_OWN_TIME]
     },
     {
-        name: "MANAGER",
-        description: "manager",
+        name: MANAGER,
+        icon: GrUserManager,
+        description: "Manager",
+        defaultPermissions: [MANAGE_USERS]
     },
     {
-        name: "ACCOUNTANT",
-        description: "accountant"
+        name: ACCOUNTANT,
+        icon: GrMoney,
+        description: "Accountant",
+        defaultPermissions: [APPROVE_REQUESTS]
+    },
+    {
+        name: ACCOUNT_MANAGER,
+        icon: PiUserCircleGearLight,
+        description: "Account manager",
+        defaultPermissions: [APPROVE_REQUESTS, MANAGE_USERS]
     },
 ];
 

@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { PiCaretDown, PiClockUser, PiCode } from "react-icons/pi";
-import { GrMoney, GrUserManager } from "react-icons/gr";
+import { PiCaretDown, PiClockUser } from "react-icons/pi";
 import {
     Button,
     Divider,
@@ -14,65 +12,53 @@ import {
     MenuItem,
     MenuList,
     Spacer,
-    Text
+    Text,
+    useDisclosure
 } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import ConfirmActionWindow from "@components/ui/ConfirmActionWindow.tsx";
-import CustomHamburgerMenu from "@components/ui/CustomHamburgerMenu.tsx";
-import CreateMemberForm from "./CreateMemberForm.tsx";
+import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/ActionMenu";
+import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
 
-import { deleteUser, getUser } from "../api/actions.ts";
+import { deleteUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
-import { MANAGE_USERS, permissionList } from "@constants";
-
+import { permissionList, positionsList } from "@constants";
 
 function Employee({employee}: EmployeeProps) {
-    const [active, setActive] = useState(false);
-    const [activeDeleting, setActiveDeleting] = useState(false);
+    const {isOpen: isOpenForm, onOpen: openForm, onClose: closeForm} = useDisclosure();
     const userId = useAppSelector(state => state.authentication.user.id);
-
-    function handleActiveDeleting() {
-        setActiveDeleting(!activeDeleting);
-    }
-
-    function handleActive() {
-        setActive(!active);
-    }
+    const {
+        description: positionName,
+        icon: positionIcon
+    } = positionsList.find(pos => pos.name === employee.position) || {};
 
     const dispatch = useDispatch();
 
     const itsYou = employee.id === userId;
 
-    function handleColor(timeload) {
+    function handleColor(timeload: number) {
         if (timeload >= 100)
             return "green.500";
         else if (timeload >= 50 && timeload < 100)
             return "orange.500";
         else if (timeload < 50)
             return "red.500";
-
     }
 
-    function handleIcon(position) {
-        if (position === "manager")
-            return GrUserManager
-        else if (position === "developer")
-            return PiCode
-        else if (position === "accountant")
-            return GrMoney
-    }
-
-    function getData() {
-        handleActive();
-        dispatch(getUser(employee.id))
+    function handleDelete() {
+        dispatch(deleteUser(employee.id))
     }
 
     return (
         <>
-            <ListItem rounded="md" py="4" display="flex" alignItems="center"
-                      gap="5" px="5"
+            <ListItem
+                display="flex"
+                alignItems="center"
+                gap="5"
+                px="5"
+                py="4"
+                rounded="md"
             >
                 <Img
                     alt="user-img"
@@ -88,12 +74,9 @@ function Employee({employee}: EmployeeProps) {
                         </Text>
                     </Flex>
                     <CustomVerticalDivider/>
-                    <Flex py="2" gap="2" w="28" align="center" lineHeight="1.1">
-                        <Icon
-                            h="24px" w="24px"
-                            as={handleIcon(employee.position)}
-                        />
-                        <Text>{employee.position}</Text>
+                    <Flex py="2" w={32} gap="2" align="center" lineHeight="1.1">
+                        <Icon boxSize={6} as={positionIcon}/>
+                        <Text>{positionName}</Text>
                     </Flex>
                     <CustomVerticalDivider/>
                     <Menu variant="ghost">
@@ -126,16 +109,24 @@ function Employee({employee}: EmployeeProps) {
                 </Flex>
                 <Spacer/>
 
-                {!itsYou && (!employee.permissions.includes(MANAGE_USERS)) &&
-                    <CustomHamburgerMenu getData={getData} confirmAction={handleActiveDeleting}/>
+                {!itsYou &&
+                    <ActionMenu>
+                        <ActionMenuEditBtn onClick={openForm}/>
+                        <CreateEditMemberForm
+                            isOpen={isOpenForm}
+                            onClose={closeForm}
+                            formData={employee}
+                            isEditing
+                        />
+                        <Divider/>
+                        <ActionMenuDeleteBtn
+                            confirmText={`Delete ${employee.name} ${employee.surname} from company history`}
+                            onClick={handleDelete}
+                        />
+                    </ActionMenu>
                 }
             </ListItem>
             <Divider borderColor="gray.300" borderWidth="1.5px"/>
-            <CreateMemberForm isOpen={active} onClose={handleActive} isEditing/>
-            <ConfirmActionWindow onDelete={() => dispatch(deleteUser(employee.id))}
-                                 isOpen={activeDeleting}
-                                 text={`Delete ${employee.name} ${employee.surname} from company history`}
-                                 onClose={handleActiveDeleting}/>
         </>
     );
 }

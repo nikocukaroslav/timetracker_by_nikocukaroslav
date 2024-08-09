@@ -1,30 +1,23 @@
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiTimer } from "react-icons/pi";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import ConfirmActionWindow from "@components/ui/ConfirmActionWindow.tsx";
-import CustomHamburgerMenu from "@components/ui/CustomHamburgerMenu.tsx";
+import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/ActionMenu";
 
 import dateFormatConverter, { formatTime } from "@utils/formatters.ts";
 import { deleteWorkSession } from "@features/time-tracker/api/actions.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
 
 function WorkSession({data}: { data: WorkSessionModel }) {
-    const totalTime: number = Math.floor((data.endTime - data.startTime) / 1000);
-    const workingTime = `${dateFormatConverter(data.startTime, "long-time")} - ${dateFormatConverter(data.endTime, "long-time")}`;
-
-    const [activeDeleting, setActiveDeleting] = useState(false);
-
     const dispatch = useDispatch();
+    const {isOpen: isOpenConfirmWindow, onOpen: onOpenConfirmWindow, onClose: onCloseConfirmWindow} = useDisclosure();
 
-    function handleActiveDeleting() {
-        setActiveDeleting(!activeDeleting);
-    }
+    const totalTime: number = Math.floor((data.endTime - data.startTime) / 1000);
+    const workingTime = `${dateFormatConverter(data.startTime, "time")} - ${dateFormatConverter(data.endTime, "time")}`;
 
-    function confirmDeleting() {
-        setActiveDeleting(true);
+    function handleDelete() {
+        dispatch(deleteWorkSession(data.id));
     }
 
     return (
@@ -46,14 +39,16 @@ function WorkSession({data}: { data: WorkSessionModel }) {
                             {`Total: ${formatTime(totalTime)}`}
                         </Text>
                     </Flex>
-                    <CustomHamburgerMenu getData confirmAction={confirmDeleting}/>
+                    <ActionMenu>
+                        <ActionMenuEditBtn onClick={() => {
+                        }}/>
+                        <Divider/>
+                        <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={() => {
+                        }}/>
+                    </ActionMenu>
                 </Flex>
             </Box>
-            <ConfirmActionWindow
-                onDelete={() => dispatch(deleteWorkSession(data.id))}
-                isOpen={activeDeleting}
-                text={`Delete this work session`}
-                onClose={handleActiveDeleting}/>
+
         </>
     );
 }

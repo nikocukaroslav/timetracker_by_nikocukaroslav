@@ -101,6 +101,8 @@ namespace timetracker.Server.API.User
                          return null;
                      }
 
+                     user.Name = updateInput.Name ?? user.Name;
+                     user.Surname = updateInput.Surname ?? user.Surname;
                      user.Position = updateInput.Position ?? user.Position;
                      user.Timeload = updateInput.Timeload ?? user.Timeload;
                      user.Status = updateInput.Status ?? user.Status;

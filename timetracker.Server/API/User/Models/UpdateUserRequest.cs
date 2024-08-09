@@ -3,6 +3,8 @@
     public class UpdateUserRequest
     {
         public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
         public int? Timeload { get; set; }
         public string Position { get; set; }
         public string Status { get; set; }

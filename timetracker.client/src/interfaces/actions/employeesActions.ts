@@ -34,9 +34,12 @@ interface DeleteSuccessfulAction {
 interface UpdateUserAction {
     type: typeof UPDATE_USER;
     payload: {
+        id: string;
+        name: string;
+        surname: string;
+        position: string;
         permissions: [];
         timeload: number;
-        id: string;
     };
 }
 

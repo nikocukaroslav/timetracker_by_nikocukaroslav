@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { PiPlus } from "react-icons/pi";
 import { Button, Divider, Flex, Text } from "@chakra-ui/react";
 
-import CreateMemberForm from "@features/employees/components/CreateMemberForm.tsx";
+import CreateEditMemberForm from "@features/employees/components/CreateEditMemberForm.tsx";
 import EmployeesList from "@features/employees/components/EmployeesList.tsx";
 
 import { getUsers } from "@features/employees/api/actions.ts";
@@ -45,7 +45,7 @@ function Employees() {
                 <Divider borderColor="gray.300" borderWidth="1px"/>
                 <EmployeesList/>
             </Flex>
-            <CreateMemberForm isOpen={active} onClose={handleActive}/>
+            <CreateEditMemberForm isOpen={active} onClose={handleActive}/>
         </>
     );
 }

@@ -9,7 +9,7 @@ export function formatTime(seconds: number): string {
 const dateFormatConverter = (date: number | string, format?: string) => {
     const dateValue = new Date(date);
 
-    let options;
+    let options: Intl.DateTimeFormatOptions;
 
     switch (format) {
         case "full":
@@ -20,9 +20,9 @@ const dateFormatConverter = (date: number | string, format?: string) => {
                 minute: "2-digit",
             };
             break;
-        case "long-time":
+        case "time":
             options = {
-                hour: date > 3599999 ? "2-digit" : undefined,
+                hour: "2-digit",
                 minute: "2-digit",
                 second: "2-digit",
             };
@@ -41,9 +41,7 @@ const dateFormatConverter = (date: number | string, format?: string) => {
             };
     }
 
-    const formatted = new Intl.DateTimeFormat("en-US", options).format(dateValue);
-
-    return formatted;
+    return new Intl.DateTimeFormat("en-US", options).format(dateValue);
 };
 
 export default dateFormatConverter;

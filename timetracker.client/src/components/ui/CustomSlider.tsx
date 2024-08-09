@@ -1,6 +1,8 @@
 import { Box, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack } from "@chakra-ui/react";
 
-function CustomSlider({onChange, value}) {
+import { CustomSliderProps } from "@interfaces/components.ts";
+
+function CustomSlider({onChange, value}: CustomSliderProps) {
     const marks = [];
     for (let i = 10; i <= 150; i += 10) {
         marks.push(
@@ -12,8 +14,13 @@ function CustomSlider({onChange, value}) {
 
     return (
         <Box p="2">
-            <Slider onChange={onChange} value={value} aria-label="slider-ex" defaultValue={0} min={0} max={150}
-                    step={10}>
+            <Slider
+                onChange={onChange}
+                value={value}
+                aria-label="slider-ex"
+                defaultValue={0} min={0} max={150}
+                step={10}
+            >
                 {marks}
                 <SliderTrack bg="gray.200">
                     <SliderFilledTrack bg="gray.400"/>

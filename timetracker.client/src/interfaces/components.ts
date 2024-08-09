@@ -46,7 +46,7 @@ interface Permission {
 
 export interface PermissionItemProps {
     permission: Permission;
-    permissions: string[];
+    permissions?: string[];
     handlePermissions: (e: ChangeEvent<HTMLInputElement>, name: string) => void
 }
 
@@ -54,8 +54,42 @@ export interface RandomPasswordButtonProps {
     setRandomPassword: () => void
 }
 
-export interface UserFormControls {
+export interface ModalFormProps {
+    title: string;
+    titleIcon?: ReactNode;
+    isOpen: boolean;
+    onClose: () => void;
+    onSubmit: () => void;
+    submitBtnLoading: boolean;
+    submitBtnText: string;
+    children: ReactNode;
+}
+
+export interface FormProps {
     isOpen: boolean;
     onClose: () => void;
     isEditing?: boolean;
+}
+
+export interface CreateEditMemberFormProps extends FormProps {
+    formData?: UserModel
+}
+
+export interface ActionMenuBtnProps {
+    onClick: () => void;
+}
+
+export interface ActionMenuBtnWithConfirmProps extends ActionMenuBtnProps {
+    confirmText: string;
+}
+
+export interface ConfirmWindowProps {
+    onConfirm: () => void;
+    text: string;
+    children: ReactNode;
+}
+
+export interface CustomSliderProps {
+    onChange: (value: number) => void,
+    value?: number
 }

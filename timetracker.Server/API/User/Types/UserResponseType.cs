@@ -13,8 +13,10 @@ namespace timetracker.Server.API.User.Types
             Field(t => t.Name);
             Field(t => t.Surname);
             Field(t => t.Email);
+            Field(t => t.Status, true);
             Field(t => t.Position);
-            Field(t => t.Status);
+            Field(t => t.IsEmployed)
+                .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString());
             Field(t => t.Timeload)
                 .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString());
             Field<ListGraphType<StringGraphType>>("permissions")

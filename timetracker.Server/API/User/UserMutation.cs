@@ -59,8 +59,8 @@ namespace timetracker.Server.API.User
                         Salt = hashPasswordResponce.Salt,
                         Timeload = userInput.Timeload,
                         Position = userInput.Position,
-                        Permissions = string.Join(",", userInput.Permissions),
-                        Status = UserStatus.EMPLOYED.ToString()
+                        IsEmployed = true,
+                        Permissions = string.Join(",", userInput.Permissions)
                     };
 
                     return await userRepository.AddAsync(user);
@@ -106,6 +106,7 @@ namespace timetracker.Server.API.User
                      user.Position = updateInput.Position ?? user.Position;
                      user.Timeload = updateInput.Timeload ?? user.Timeload;
                      user.Status = updateInput.Status ?? user.Status;
+                     user.IsEmployed = updateInput.IsEmployed ?? user.IsEmployed;
                      if (updateInput.Permissions != null)
                      {
                          user.Permissions = string.Join(",", updateInput.Permissions);

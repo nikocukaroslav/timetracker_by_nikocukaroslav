@@ -10,8 +10,7 @@ import { WorkSessionModel } from "@interfaces/domain.ts";
 
 function WorkSessionsList() {
     const workSessions = useAppSelector(state => state.timeTracker.workSessions);
-    const workSessionsData: WorkSessionModel[] = JSON.parse(JSON.stringify(workSessions));
-    
+    const workSessionsData: WorkSessionModel[] = workSessions.filter(({endTime}) => endTime);
     const workSessionsSorted = workSessionsData.sort((a, b) => b.startTime - a.startTime);
     const workSessionGroups = Object.groupBy(workSessionsSorted, ({startTime}: {
         startTime: number

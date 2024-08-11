@@ -8,8 +8,6 @@ import dateFormatConverter, { formatTime } from "@utils/formatters.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
 
 function WorkSessionGroup({day, workSessions}: { day: string, workSessions: WorkSessionModel[] }) {
-    workSessions = workSessions.filter(({endTime}) => endTime);
-
     const totalTime: number = workSessions.reduce((accumulator, {startTime, endTime}) => {
         return accumulator + Math.floor((endTime - startTime) / 1000);
     }, 0)
@@ -41,6 +39,8 @@ function WorkSessionGroup({day, workSessions}: { day: string, workSessions: Work
                 bg="gray.50"
                 roundedBottom="md"
                 boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
+                overflow="hidden"
+                overflowX="auto"
             >
                 {workSessions.map((workSession: WorkSessionModel, i: number) => (
                     <Fragment key={workSession.id}>

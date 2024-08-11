@@ -1,4 +1,5 @@
 import {
+    authorizeError,
     authorizeSuccessful,
     logoutSuccessful,
     refreshTokenSuccessful,
@@ -21,6 +22,10 @@ interface SetErrorAction {
 
 interface AuthorizeAction {
     type: typeof AUTHORIZE;
+}
+
+interface AuthorizeErrorAction {
+    type: typeof authorizeError.type;
 }
 
 interface AuthorizeSuccessfulAction {
@@ -49,6 +54,7 @@ export type AuthenticationActions =
     | SetErrorAction
     | AuthorizeAction
     | AuthorizeSuccessfulAction
+    | AuthorizeErrorAction
     | LogoutAction
     | LogoutSuccessfulAction
     | RefreshTokenAction

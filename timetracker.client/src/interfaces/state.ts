@@ -11,6 +11,7 @@ export interface AuthenticationState {
     accessToken: string | null;
     expiresAt: number | null;
     loading: boolean;
+    authenticating: boolean;
     error: string | null;
 }
 

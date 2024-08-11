@@ -1,13 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const initialState = {
+import { WorkSessionModel } from "@interfaces/domain.ts";
+import { TimeTrackerState } from "@interfaces/state.ts";
+
+const initialState: TimeTrackerState = {
     workSessions: [],
-    sessionId: "",
+    sessionId: null,
     isTracking: false,
     currentTime: 0,
 }
 
-const employeesSlice = createSlice({
+const timeTrackerSlice = createSlice({
     name: "timeTracker",
     initialState,
     reducers: {
@@ -26,6 +29,21 @@ const employeesSlice = createSlice({
             state.currentTime = Math.floor((Date.now() - action.payload.startTime) / 1000);
             state.isTracking = true;
         },
+        addWorkSessionSuccessful(state, action) {
+            state.workSessions.unshift(action.payload);
+        },
+        editWorkSessionSuccessful(state, {payload}) {
+            const {id, startTime, endTime, editedAt, editor} = payload;
+
+            const session: WorkSessionModel | undefined = state.workSessions.find((session) => session.id === id);
+
+            if (!session) return
+
+            session.startTime = startTime;
+            session.endTime = endTime;
+            session.editedAt = editedAt;
+            session.editor = editor;
+        },
         deleteWorkSessionSuccessful(state, action) {
             state.workSessions = state.workSessions.filter(workSession => workSession.id !== action.payload)
         },
@@ -43,9 +61,11 @@ export const {
     stopSuccessful,
     getWorkSessionsSuccessful,
     getLastWorkSessionSuccessful,
+    addWorkSessionSuccessful,
+    editWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
     setIsTracking,
     setTime
-} = employeesSlice.actions;
+} = timeTrackerSlice.actions;
 
-export default employeesSlice.reducer;
+export default timeTrackerSlice.reducer;

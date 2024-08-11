@@ -30,16 +30,10 @@ export const editSessionMutation = `
         endTime
         setBy
         editedAt
-        userId
         editor {
           id
           name
           surname
-          email
-          position
-          status
-          timeload
-          permissions
         }
       }
     }
@@ -49,25 +43,12 @@ export const editSessionMutation = `
 export const addSessionMutation = `
   mutation AddSession($session: AddSessionRequestType) {
     workSessions {
-        addSession(session: $session) {
-          id
-          startTime
-          endTime
-          setBy
-          editedAt
-          userId
-          editor{
-            id
-            name
-            surname
-            email
-            position
-            status
-            timeload
-            permissions
-          }
-        }
-      }
+      addSession(session: $session) {
+        id
+        startTime
+        endTime
+        setBy
+      } 
     }
   }
 `
@@ -89,7 +70,6 @@ query GetWorkSessions($id: Guid) {
       endTime
       setBy
       editedAt
-      userId
       editor {
         id
         name

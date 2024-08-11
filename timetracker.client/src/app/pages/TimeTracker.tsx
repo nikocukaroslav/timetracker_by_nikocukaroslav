@@ -5,8 +5,8 @@ import { Flex } from "@chakra-ui/react";
 import TimeTrackerHeader from "@features/time-tracker/components/TimeTrackerHeader.tsx";
 import WorkSessionsList from "@features/time-tracker/components/WorkSessionsList.tsx";
 import PermissionChecker from "@components/layouts/PermissionChecker.tsx";
-import { getWorkSessions } from "@features/time-tracker/api/actions.ts";
 
+import { getWorkSessions } from "@features/time-tracker/api/actions.ts";
 import { MANAGE_OWN_TIME } from "@constants";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 

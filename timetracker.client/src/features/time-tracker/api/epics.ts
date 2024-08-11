@@ -2,14 +2,18 @@ import { map, switchMap } from "rxjs";
 import { Epic, ofType } from "redux-observable";
 
 import {
+    addWorkSessionSuccessful,
+    deleteWorkSessionSuccessful,
+    editWorkSessionSuccessful,
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
     startSuccessful,
-    stopSuccessful,
-    deleteWorkSessionSuccessful
+    stopSuccessful
 } from "../timeTrackerSlice.ts";
 import {
+    addSessionMutation,
     deleteSessionMutation,
+    editSessionMutation,
     getLastWorkSessionQuery,
     getSessionsQuery,
     startSessionMutation,
@@ -17,7 +21,15 @@ import {
 } from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
-import { DELETE_WORK_SESSION, GET_LAST_WORK_SESSION, GET_SESSIONS, START_SESSION, STOP_SESSION } from "@constants";
+import {
+    ADD_WORK_SESSION,
+    DELETE_WORK_SESSION,
+    EDIT_WORK_SESSION,
+    GET_LAST_WORK_SESSION,
+    GET_SESSIONS,
+    START_SESSION,
+    STOP_SESSION
+} from "@constants";
 
 export const startSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
@@ -71,6 +83,32 @@ export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
         )
     );
 
+export const addWorkSessionEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(ADD_WORK_SESSION),
+        switchMap(action =>
+            graphQlQuery(addSessionMutation, {
+                    session: action.payload
+                }
+            ).pipe(
+                map(response => addWorkSessionSuccessful(response.data.workSessions.addSession)),
+            )
+        )
+    );
+
+export const editWorkSessionEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(EDIT_WORK_SESSION),
+        switchMap(action =>
+            graphQlQuery(editSessionMutation, {
+                    session: action.payload
+                }
+            ).pipe(
+                map(response => editWorkSessionSuccessful(response.data.workSessions.editSession)),
+            )
+        )
+    );
+
 export const deleteWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(DELETE_WORK_SESSION),
@@ -79,7 +117,8 @@ export const deleteWorkSessionEpic: Epic<MyAction> = (action$) =>
                     id: action.payload
                 }
             ).pipe(
-                map(response => deleteWorkSessionSuccessful(action.payload))
+                map(() => deleteWorkSessionSuccessful(action.payload))
             )
         )
     );
+

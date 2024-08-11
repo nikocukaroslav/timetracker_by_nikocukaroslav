@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { EmployeesState } from "@interfaces/state.ts";
 
-export const initialState = {
+export const initialState: EmployeesState = {
     user: {},
     users: [],
     loading: false,
-    status: ""
 }
 
 const employeesSlice = createSlice({
@@ -14,11 +14,17 @@ const employeesSlice = createSlice({
         createSuccessful(state, action) {
             state.users.push(action.payload)
         },
-        updateSuccessful(state, action) {
-            const userToUpdate = state.users.find(user => user.id === action.payload.id)
-            userToUpdate.permissions = action.payload.permissions
-            userToUpdate.timeload = action.payload.timeload
-            userToUpdate.position = action.payload.position
+        updateSuccessful(state, {payload}) {
+            const {id, name, surname, permissions, timeload, position} = payload;
+            const userToUpdate = state.users.find(user => user.id === id)
+
+            if (!userToUpdate) return
+
+            userToUpdate.name = name;
+            userToUpdate.surname = surname;
+            userToUpdate.permissions = permissions;
+            userToUpdate.timeload = timeload;
+            userToUpdate.position = position;
         },
         deleteSuccessful(state, action) {
             state.users = state.users.filter(user => user.id !== action.payload)

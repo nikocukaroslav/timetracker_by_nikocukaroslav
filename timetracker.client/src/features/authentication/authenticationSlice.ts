@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { deleteCookie, setCookie } from "@utils/cookieHandlers.ts";
+import { AuthenticationState } from "@interfaces/state.ts";
 
-export const initialState = {
+export const initialState: AuthenticationState = {
     user: null,
     accessToken: null,
     expiresAt: null,

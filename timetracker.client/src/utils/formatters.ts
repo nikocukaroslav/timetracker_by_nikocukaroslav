@@ -6,6 +6,15 @@ export function formatTime(seconds: number): string {
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
+export function convertToLocalISO(timestamp: number): string {
+    const date = new Date(timestamp);
+    date.setMinutes(date.getMinutes() - new Date().getTimezoneOffset());
+
+    const ISO = date.toISOString().slice(0, -5);
+
+    return ISO;
+}
+
 const dateFormatConverter = (date: number | string, format?: string) => {
     const dateValue = new Date(date);
 

@@ -28,7 +28,7 @@ function AppLayout() {
                 <GridItem>
                     <Navbar/>
                 </GridItem>
-                <GridItem overflow="auto" p={4}>
+                <GridItem position="relative" overflow="auto" p={4}>
                     <Outlet/>
                 </GridItem>
             </Grid>

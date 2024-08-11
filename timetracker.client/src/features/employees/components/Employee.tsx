@@ -12,12 +12,11 @@ import {
     MenuItem,
     MenuList,
     Spacer,
-    Text,
-    useDisclosure
+    Text
 } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/ActionMenu";
+import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/action-menu";
 import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
 
 import { deleteUser } from "../api/actions.ts";
@@ -26,8 +25,7 @@ import { EmployeeProps } from "@interfaces/components.ts";
 import { permissionList, positionsList } from "@constants";
 
 function Employee({employee}: EmployeeProps) {
-    const {isOpen: isOpenForm, onOpen: openForm, onClose: closeForm} = useDisclosure();
-    const userId = useAppSelector(state => state.authentication.user.id);
+    const userId = useAppSelector(state => state.authentication.user?.id);
     const {
         description: positionName,
         icon: positionIcon
@@ -37,7 +35,9 @@ function Employee({employee}: EmployeeProps) {
 
     const itsYou = employee.id === userId;
 
-    function handleColor(timeload: number) {
+    function handleColor(timeload?: number) {
+        if (!timeload) return "gray.300";
+
         if (timeload >= 100)
             return "green.500";
         else if (timeload >= 50 && timeload < 100)
@@ -47,7 +47,7 @@ function Employee({employee}: EmployeeProps) {
     }
 
     function handleDelete() {
-        dispatch(deleteUser(employee.id))
+        dispatch(deleteUser(employee.id as string))
     }
 
     return (
@@ -85,9 +85,9 @@ function Employee({employee}: EmployeeProps) {
                         </MenuButton>
                         <MenuList>
                             {
-                                employee.permissions.length > 0 ?
+                                employee.permissions && employee.permissions.length > 0 ?
                                     permissionList
-                                        .filter(permission => employee.permissions.includes(permission.name))
+                                        .filter(permission => employee.permissions?.includes(permission.name))
                                         .map((permission, index) => (
                                             <MenuItem key={index}>{permission.description}</MenuItem>
                                         )) :
@@ -97,13 +97,19 @@ function Employee({employee}: EmployeeProps) {
                     </Menu>
                     <CustomVerticalDivider/>
                     <Flex
-                        w="28" align="center" gap="2" py="2" fontWeight="bolder"
+                        align="center"
+                        w="28"
+                        gap="2"
+                        px="5"
+                        py="2"
+                        fontWeight="bolder"
                         opacity="80%"
-                        bg={handleColor(employee.timeload)}
+                        bg={handleColor(employee?.timeload)}
                         color="gray.50"
                         rounded="md"
-                        px="5"
-                    ><PiClockUser size="24px"/> <Text>{employee.timeload}%</Text>
+                    >
+                        <PiClockUser size="24px"/>
+                        <Text>{employee.timeload}%</Text>
                     </Flex>
 
                 </Flex>
@@ -111,13 +117,9 @@ function Employee({employee}: EmployeeProps) {
 
                 {!itsYou &&
                     <ActionMenu>
-                        <ActionMenuEditBtn onClick={openForm}/>
-                        <CreateEditMemberForm
-                            isOpen={isOpenForm}
-                            onClose={closeForm}
-                            formData={employee}
-                            isEditing
-                        />
+                        <CreateEditMemberForm formData={employee} isEditing>
+                            <ActionMenuEditBtn/>
+                        </CreateEditMemberForm>
                         <Divider/>
                         <ActionMenuDeleteBtn
                             confirmText={`Delete ${employee.name} ${employee.surname} from company history`}

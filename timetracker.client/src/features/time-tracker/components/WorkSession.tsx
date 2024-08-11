@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { PiTimer } from "react-icons/pi";
-import { Box, Divider, Flex, Text } from "@chakra-ui/react";
+import { PiNotePencil, PiTimer } from "react-icons/pi";
+import { Box, Divider, Flex, Icon, Text } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/action-menu";
@@ -20,6 +20,8 @@ function WorkSession({data}: { data: WorkSessionModel }) {
     const totalTime: number = Math.floor((endTime - startTime) / 1000);
     const workingTime = `${dateFormatConverter(startTime, "time")} - ${dateFormatConverter(endTime, "time")}`;
 
+    const editMessage = `Edited by ${editor?.id == userId ? "you" : `${editor?.name} ${editor?.surname}`}, ${dateFormatConverter(editedAt, "full")}`;
+
     const formData = {
         id,
         startTime: convertToLocalISO(startTime),
@@ -31,45 +33,49 @@ function WorkSession({data}: { data: WorkSessionModel }) {
     }
 
     return (
-        <>
-            <Box>
+        <Box position="relative">
+            {editedAt &&
                 <Flex
-                    position="relative"
+                    title={editMessage}
+                    position="absolute"
                     align="center"
-                    justify="space-between"
-                    p="5"
-                    bg="gray.50"
+                    top={0}
+                    left={0}
+                    h="full"
+                    p="1"
+                    roundedLeft="2px"
+                    bg="gray.400"
+                    zIndex={1}
                 >
-                    <Flex align="center">
-                        <Flex gap="2" align="center" w="96">
-                            <PiTimer size="28"/>
-                            <Text>{`Working time: ${workingTime}`}</Text>
-                        </Flex>
-                        <CustomVerticalDivider/>
-                        <Text w="36">
-                            {`Total: ${formatTime(totalTime)}`}
-                        </Text>
-                    </Flex>
-                    {editedAt &&
-                        <Text position="absolute" bottom={1} left={6} fontSize={10} color="gray.400">
-                            {`edited by `}
-                            <Text as="span" fontWeight="800">
-                                {editor?.id == userId ? "you" : `${editor?.name} ${editor?.surname}`}
-                            </Text>
-                            {`, ${dateFormatConverter(editedAt, "full")}`}
-                        </Text>
-                    }
-                    <ActionMenu>
-                        <CreateEditWorkSessionForm formData={formData} isEditing>
-                            <ActionMenuEditBtn/>
-                        </CreateEditWorkSessionForm>
-                        <Divider/>
-                        <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={handleDelete}/>
-                    </ActionMenu>
+                    <Icon as={PiNotePencil} boxSize="4" color="gray.50"></Icon>
                 </Flex>
-            </Box>
-
-        </>
+            }
+            <Flex
+                position="relative"
+                align="center"
+                justify="space-between"
+                p="1rem 1rem 1rem 2rem"
+                bg="gray.50"
+            >
+                <Flex align="center">
+                    <Flex gap="2" align="center" w="96">
+                        <PiTimer size="28"/>
+                        <Text>{`Working time: ${workingTime}`}</Text>
+                    </Flex>
+                    <CustomVerticalDivider/>
+                    <Text w="36">
+                        {`Total: ${formatTime(totalTime)}`}
+                    </Text>
+                </Flex>
+                <ActionMenu>
+                    <CreateEditWorkSessionForm formData={formData} isEditing>
+                        <ActionMenuEditBtn/>
+                    </CreateEditWorkSessionForm>
+                    <Divider/>
+                    <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={handleDelete}/>
+                </ActionMenu>
+            </Flex>
+        </Box>
     );
 }
 

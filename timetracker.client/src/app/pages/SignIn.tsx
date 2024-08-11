@@ -53,7 +53,7 @@ function SignIn() {
                 <Flex p="5" direction="column" gap="5" h="full">
                     <Box>
                         <Flex align="center" gap="3" justify="center" mb="2">
-                            <Img src="../../../public/favicon-by-cake.ico" w="44px" h="44px"/>
+                            <Img src="/favicon-by-cake.ico" w="44px" h="44px"/>
                             <Text fontSize="xl" letterSpacing="0.5px">Time Tracker</Text>
                         </Flex>
                         <Text align="center" fontSize="sm" color="gray.500" letterSpacing="1px">Time manager for your

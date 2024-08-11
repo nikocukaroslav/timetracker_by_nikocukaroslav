@@ -8,6 +8,7 @@ export const initialState: AuthenticationState = {
     accessToken: null,
     expiresAt: null,
     error: null,
+    authenticating: true,
     loading: false,
 }
 
@@ -16,35 +17,53 @@ const authenticationSlice = createSlice({
     initialState,
     reducers: {
         authorizeSuccessful(state, {payload}) {
-            state.user = payload.user;
-            state.expiresAt = payload.accessToken.expiresAt;
-            state.accessToken = payload.accessToken.token
-            setCookie("refreshToken", payload.refreshToken.token, payload.refreshToken.expiresAt)
+            const {user, accessToken, refreshToken} = payload;
+
+            state.authenticating = false;
+            state.user = user;
+            state.expiresAt = accessToken.expiresAt;
+            state.accessToken = accessToken.token
+            setCookie("refreshToken", refreshToken.token, refreshToken.expiresAt)
+        },
+        authorizeError(state) {
+            state.authenticating = false;
+            state.user = null;
+            state.accessToken = null;
+            state.expiresAt = null;
+            deleteCookie("refreshToken");
         },
         refreshTokenSuccessful(state, {payload}) {
-            state.accessToken = payload.refreshToken.accessToken.token;
-            state.expiresAt = payload.refreshToken.accessToken.expiresAt;
-            setCookie("refreshToken", payload.refreshToken.refreshToken.token, payload.refreshToken.refreshToken.expiresAt)
+            const {accessToken, refreshToken} = payload.refreshToken;
+
+            state.accessToken = accessToken.token;
+            state.expiresAt = accessToken.expiresAt;
+            setCookie("refreshToken", refreshToken.token, refreshToken.expiresAt)
         },
         logoutSuccessful(state) {
-            state.user = null
-            state.accessToken = null
-            deleteCookie("refreshToken")
+            state.user = null;
+            state.accessToken = null;
+            state.expiresAt = null;
+            deleteCookie("refreshToken");
         },
-        setLoading(state, action) {
-            state.loading = action.payload
+        setAuthenticating(state, {payload}) {
+            state.authenticating = payload;
         },
-        setError(state, action) {
-            state.error = action.payload;
+        setLoading(state, {payload}) {
+            state.loading = payload;
+        },
+        setError(state, {payload}) {
+            state.error = payload;
         },
     },
 })
 
 export const {
     logoutSuccessful,
+    setAuthenticating,
     setLoading,
     setError,
     authorizeSuccessful,
+    authorizeError,
     refreshTokenSuccessful
 } = authenticationSlice.actions;
 

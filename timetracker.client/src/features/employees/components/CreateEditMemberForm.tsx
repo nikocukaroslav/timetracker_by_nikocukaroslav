@@ -1,19 +1,16 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { useDispatch } from "react-redux";
-import { BiHide, BiShow } from "react-icons/bi";
 import { PiUser } from "react-icons/pi";
-import { Box, FormLabel, InputGroup, InputRightElement, List, Select, Text, } from "@chakra-ui/react";
+import { FormLabel, List, Select, Text, } from "@chakra-ui/react";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 import CustomSlider from "@components/ui/CustomSlider.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import PermissionItem from "./PermissionItem.tsx";
-import RandomPasswordButton from "./RandomPasswordButton.tsx";
 
 import { createUser, updateUser } from "../api/actions.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
-import { generatePassword } from "@utils/generatePassword.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
 import { permissionList, positionsList } from "@constants";
 
@@ -21,7 +18,6 @@ const defaultFormData = {
     name: "",
     surname: "",
     email: "",
-    password: "",
     position: positionsList[0].name,
     permissions: positionsList[0].defaultPermissions,
     timeload: 100
@@ -37,15 +33,10 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
         handleChangeInput,
         handleChangeValue
     } = useForm<typeof defaultFormData, typeof formData>(defaultFormData, formData);
-    const {name, surname, email, password, position, permissions, timeload} = data;
-    const [showPassword, setShowPassword] = useState(false);
+    const {name, surname, email, position, permissions, timeload} = data;
 
     const loading = useAppSelector(state => state.employees.loading)
     const dispatch = useDispatch();
-
-    function handleShowPassword() {
-        setShowPassword(isShow => !isShow);
-    }
 
     function handleUpdate() {
         const newUserData = {
@@ -65,7 +56,6 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
             name,
             surname,
             email,
-            password,
             position,
             permissions,
             timeload,
@@ -94,10 +84,6 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
             position,
             permissions: defaultPermissions
         }));
-    }
-
-    function setRandomPassword() {
-        setData(prevState => ({...prevState, password: generatePassword()}));
     }
 
     return (
@@ -156,29 +142,6 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
                     }
                 </Select>
             </FormLabel>
-            {!isEditing && <Box position="relative">
-                <FormLabel display="flex" flexDirection="column" gap="1">
-                    <Text>Password</Text>
-                    <InputGroup>
-                        <CustomInput
-                            type={showPassword ? "text" : "password"}
-                            onChange={(e) => handleChangeInput(e, "password")}
-                            value={password}
-                            required
-                        />
-                        <InputRightElement>
-                            <Box w="24px" onClick={handleShowPassword}>
-                                {showPassword ? (
-                                    <BiHide size="24"/>
-                                ) : (
-                                    <BiShow size="24"/>
-                                )}
-                            </Box>
-                        </InputRightElement>
-                    </InputGroup>
-                </FormLabel>
-                <RandomPasswordButton setRandomPassword={setRandomPassword}/>
-            </Box>}
             <FormLabel display="flex" flexDirection="column">
                 <Text>Work time (%)</Text>
                 <CustomSlider onChange={(value) => handleChangeValue(value, "timeload")} value={timeload}/>

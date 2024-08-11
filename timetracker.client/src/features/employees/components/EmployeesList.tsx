@@ -6,13 +6,17 @@ import { UserModel } from "@interfaces/domain.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function EmployeesList() {
-    const employees = useAppSelector(state => state.employees.users)
+    const employees: UserModel[] = useAppSelector(state => state.employees.users)
+
+    const sortedEmployees: UserModel[] = [...employees].sort((a: UserModel, b: UserModel) => {
+        return a.name?.localeCompare(b.name as string) || 0;
+    });
 
     return (
         <List display="flex" flexDirection="column"
         >
             {
-                employees.map((employee: UserModel) =>
+                sortedEmployees.map((employee: UserModel) =>
                     <Employee employee={employee} key={employee.id}/>
                 )
             }

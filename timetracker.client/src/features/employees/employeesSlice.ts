@@ -15,7 +15,7 @@ const employeesSlice = createSlice({
             state.users.push(action.payload)
         },
         updateSuccessful(state, {payload}) {
-            const {id, name, surname, permissions, timeload, position} = payload;
+            const {id, name, surname, permissions, timeload, position, isEmployed} = payload;
             const userToUpdate = state.users.find(user => user.id === id)
 
             if (!userToUpdate) return
@@ -25,6 +25,7 @@ const employeesSlice = createSlice({
             userToUpdate.permissions = permissions;
             userToUpdate.timeload = timeload;
             userToUpdate.position = position;
+            userToUpdate.isEmployed = isEmployed;
         },
         deleteSuccessful(state, action) {
             state.users = state.users.filter(user => user.id !== action.payload)

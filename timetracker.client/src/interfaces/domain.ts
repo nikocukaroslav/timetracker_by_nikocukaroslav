@@ -7,6 +7,8 @@ export interface UserModel {
     permissions?: string[],
     password?: string,
     timeload?: number,
+    status?: string,
+    isEmployed?: boolean,
 }
 
 export interface WorkSessionModel {

@@ -16,13 +16,14 @@ import {
 } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/action-menu";
+import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuTerminateBtn } from "@components/ui/action-menu";
 import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
 
-import { deleteUser } from "../api/actions.ts";
+import { deleteUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
 import { permissionList, positionsList } from "@constants";
+import { UserModel } from "@interfaces/domain.ts";
 
 function Employee({employee}: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
@@ -50,6 +51,11 @@ function Employee({employee}: EmployeeProps) {
         dispatch(deleteUser(employee.id as string))
     }
 
+    function handleTerminate() {
+        const newEmployee: UserModel = { id: employee.id, isEmployed: false };
+        dispatch(updateUser(newEmployee))
+    }
+
     return (
         <>
             <ListItem
@@ -59,6 +65,7 @@ function Employee({employee}: EmployeeProps) {
                 px="5"
                 py="4"
                 rounded="md"
+                bg = {`${employee.isEmployed ? "" : "gray.200"}`}
             >
                 <Img
                     alt="user-img"
@@ -124,6 +131,11 @@ function Employee({employee}: EmployeeProps) {
                         <ActionMenuDeleteBtn
                             confirmText={`Delete ${employee.name} ${employee.surname} from company history`}
                             onClick={handleDelete}
+                        />
+                        <Divider/>
+                        <ActionMenuTerminateBtn
+                            confirmText={`Terminate ${employee.name} ${employee.surname} from company`}
+                            onClick={handleTerminate}
                         />
                     </ActionMenu>
                 }

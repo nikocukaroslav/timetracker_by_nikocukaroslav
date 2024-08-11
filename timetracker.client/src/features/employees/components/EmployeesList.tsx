@@ -9,7 +9,13 @@ function EmployeesList() {
     const employees: UserModel[] = useAppSelector(state => state.employees.users)
 
     const sortedEmployees: UserModel[] = [...employees].sort((a: UserModel, b: UserModel) => {
-        return a.name?.localeCompare(b.name as string) || 0;
+        if (a.isEmployed === b.isEmployed) {
+            // Якщо isEmployed однакове, сортуємо за ім'ям
+            return a.name?.localeCompare(b.name ?? '') || 0;
+        } else {
+            // Спершу відображаємо тих, у кого isEmployed true
+            return a.isEmployed ? -1 : 1;
+        }
     });
 
     return (

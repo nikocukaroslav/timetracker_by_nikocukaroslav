@@ -10,6 +10,7 @@ mutation AddUser($user: AddUserRequestType) {
       status
       timeload
       permissions
+      isEmployed
     }
   }
 }
@@ -27,6 +28,7 @@ export const getUsersQuery = `
       status
       timeload
       permissions
+      isEmployed
     }
   }
 }
@@ -44,6 +46,7 @@ query GetUser($id: Guid!) {
       status
       timeload
       permissions
+      isEmployed
     }
   }
 }
@@ -69,6 +72,7 @@ mutation UpdateUser($user: UpdateUserRequestType) {
       status
       timeload
       permissions
+      isEmployed
     }
   }
 }

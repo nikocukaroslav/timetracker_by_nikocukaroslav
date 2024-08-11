@@ -7,13 +7,14 @@ using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Interfaces;
 using timetracker.Server.Application.Interfaces;
 using timetracker.Server.API.User.Models;
+using timetracker.Server.Application.Services;
 
 namespace timetracker.Server.API.User
 {
     public class UserMutation : ObjectGraphType
     {
 
-        public UserMutation(IUserRepository userRepository)
+        public UserMutation(IUserRepository userRepository, IEmailSender emailSender)
         {
             Field<UserResponseType>("AddUser")
                 .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
@@ -35,20 +36,18 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    if (userInput.Password is null || userInput.Password.Length < 8 || userInput.Password.Length > 20)
-                    {
-                        context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
-                        return null;
-                    }
-
                     if (await userRepository.GetUserByEmailAsync(userInput.Email) != null)
                     {
                         context.Errors.Add(ErrorCode.EMAIL_EXIST);
                         return null;
                     }
 
+                    var emailSender = new EmailSender();
+
+                    var password = PasswordGenerator.GeneratePassword();
+
                     var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
-                    var hashPasswordResponce = passwordHasher.HashPassword(userInput.Password);
+                    var hashPasswordResponce = passwordHasher.HashPassword(password);
 
                     var user = new Entities.User()
                     {
@@ -62,6 +61,10 @@ namespace timetracker.Server.API.User
                         IsEmployed = true,
                         Permissions = string.Join(",", userInput.Permissions)
                     };
+
+                    await emailSender.SendEmailAsync(user.Email,
+                    $"Welcome to the company, {user.Name}",
+                    $"Your password: {password}");
 
                     return await userRepository.AddAsync(user);
                 });

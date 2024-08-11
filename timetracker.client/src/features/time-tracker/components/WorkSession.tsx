@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { PiTimer } from "react-icons/pi";
-import { Box, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import {PiNotePencil, PiPencil, PiTimer} from "react-icons/pi";
+import {Box, Divider, Flex, Icon, Text, useDisclosure} from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/ActionMenu";
@@ -19,16 +19,25 @@ function WorkSession({data}: { data: WorkSessionModel }) {
     function handleDelete() {
         dispatch(deleteWorkSession(data.id));
     }
-
     return (
-        <>
-            <Box>
+        <Box position="relative">
+            {formatTime(totalTime) == "00:00:01" &&
+            <Flex  fontSize="xs" borderColor="gray.200"
+                   borderRightWidth="2px" borderBottomWidth="2px"
+                   px="1" gap="1" position="absolute" left="0" top="0"
+                   roundedBottomRight="md"  title="edited by ...">
+                <Icon as={PiNotePencil} boxSize="4"></Icon>
+                <Text>Edited</Text>
+            </Flex>
+            }
                 <Flex
                     p="5"
                     bg="gray.50"
                     align="center"
                     justify="space-between"
+                    w="full"
                 >
+
                     <Flex align="center">
                         <Flex gap="2" align="center" w="96">
                             <PiTimer size="28"/>
@@ -47,9 +56,7 @@ function WorkSession({data}: { data: WorkSessionModel }) {
                         }}/>
                     </ActionMenu>
                 </Flex>
-            </Box>
-
-        </>
+        </Box>
     );
 }
 

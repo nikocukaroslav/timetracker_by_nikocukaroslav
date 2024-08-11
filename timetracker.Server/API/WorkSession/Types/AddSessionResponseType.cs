@@ -11,6 +11,8 @@ namespace timetracker.Server.API.WorkSession.Types
             Field(t => t.StartTime);
             Field(t => t.EndTime, true);
             Field(t => t.SetBy);
+            Field(t => t.EditedAt, true);
+            Field(t => t.EditorId, true);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using timetracker.Server.Application.Interfaces;
+using timetracker.Server.Application.Services;
 using timetracker.Server.Application.Services.Authentication;
 
 namespace timetracker.Server.Application
@@ -14,6 +15,8 @@ namespace timetracker.Server.Application
 
             services.AddSingleton<IJwtTokenUtils, JwtTokenUtils>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
 
             return services;
         }

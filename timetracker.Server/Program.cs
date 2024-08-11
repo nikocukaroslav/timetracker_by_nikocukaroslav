@@ -16,7 +16,7 @@ builder.Services.AddGraphQL(options => options
     .AddSchema<APIScheme>()
     .AddSystemTextJson()
     .AddValidationRule<AuthorizationRule>()
-    //.AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+    .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
     .AddGraphTypes(typeof(APIScheme).Assembly)
     .AddDataLoader());
 

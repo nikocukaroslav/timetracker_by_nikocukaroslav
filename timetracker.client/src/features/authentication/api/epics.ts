@@ -3,6 +3,7 @@ import { Epic, ofType } from "redux-observable";
 
 import store from "@store";
 import {
+    authorizeError,
     authorizeSuccessful,
     logoutSuccessful,
     refreshTokenSuccessful,
@@ -31,9 +32,7 @@ export const loginEpic: Epic<MyAction> = (action$) =>
                             return authorizeSuccessful(response.data.auth.login)
                         return setError(response.errors[0].message)
                     }),
-                    catchError((error) =>
-                        of(setError(error.message))
-                    ),
+                    catchError((error) => of(setError(error.message))),
                     tap(() => store.dispatch(setLoading(false))),
                 )
         )
@@ -42,15 +41,17 @@ export const loginEpic: Epic<MyAction> = (action$) =>
 export const authorizeEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(AUTHORIZE),
-        tap(() => store.dispatch(setLoading(true))),
+        tap(() => store.dispatch(setError(""))),
         switchMap(() =>
             graphQlQuery(authorizeMutation, {refreshToken: getCookie("refreshToken")})
                 .pipe(
-                    map(response => authorizeSuccessful(response.data.auth.authorize)),
-                    catchError((error) =>
-                        of(setError(error.message))
-                    ),
-                    tap(() => store.dispatch(setLoading(false))),
+                    map(response => {
+                        if (response.errors)
+                            return authorizeError();
+
+                        return authorizeSuccessful(response.data.auth.authorize);
+                    }),
+                    catchError((error) => of(setError(error.message))),
                 )
         )
     );
@@ -59,10 +60,14 @@ export const authorizeEpic: Epic<MyAction> = (action$) =>
 export const logoutEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(LOGOUT),
+        tap(() => store.dispatch(setLoading(true))),
+        tap(() => store.dispatch(setError(""))),
         switchMap(() =>
             graphQlQuery(logoutMutation, {refreshToken: getCookie("refreshToken")})
                 .pipe(
                     map(() => logoutSuccessful()),
+                    catchError((error) => of(setError(error.message))),
+                    tap(() => store.dispatch(setLoading(false))),
                 )
         )
     )
@@ -70,10 +75,17 @@ export const logoutEpic: Epic<MyAction> = (action$) =>
 export const refreshTokenEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(REFRESH_TOKEN),
+        tap(() => store.dispatch(setError(""))),
         switchMap(() =>
             graphQlQuery(refreshTokenMutation, {refreshToken: getCookie("refreshToken")})
                 .pipe(
-                    map((response) => refreshTokenSuccessful(response.data.auth)),
+                    map((response) => {
+                        if (response.errors)
+                            return authorizeError();
+
+                        return refreshTokenSuccessful(response.data.auth);
+                    }),
+                    catchError((error) => of(setError(error.message))),
                 )
         )
     )

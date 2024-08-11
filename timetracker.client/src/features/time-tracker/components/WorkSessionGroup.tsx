@@ -8,8 +8,6 @@ import dateFormatConverter, { formatTime } from "@utils/formatters.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
 
 function WorkSessionGroup({day, workSessions}: { day: string, workSessions: WorkSessionModel[] }) {
-    workSessions = workSessions.filter(({endTime}) => endTime);
-
     const totalTime: number = workSessions.reduce((accumulator, {startTime, endTime}) => {
         return accumulator + Math.floor((endTime - startTime) / 1000);
     }, 0)
@@ -27,9 +25,12 @@ function WorkSessionGroup({day, workSessions}: { day: string, workSessions: Work
             >
                 <Flex alignItems="center" gap={2}>
                     <PiCalendar size={25}/>
-                    <Text>{dateFormatConverter(day, "full-day")}</Text>
+                    <Text fontWeight={500}>{dateFormatConverter(day, "full-day")}</Text>
                 </Flex>
-                <Text w="36">{`Total: ${formatTime(totalTime)}`}</Text>
+                <Flex gap={1}>
+                    <Text fontWeight={500}>Total:</Text>
+                    <Text>{formatTime(totalTime)}</Text>
+                </Flex>
             </AccordionButton>
             <AccordionPanel
                 as={Stack}

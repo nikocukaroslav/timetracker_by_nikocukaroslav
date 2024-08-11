@@ -10,11 +10,13 @@ import {
     updateUserEpic
 } from "./features/employees/api/epics.ts";
 import {
+    addWorkSessionEpic,
+    deleteWorkSessionEpic,
+    editWorkSessionEpic,
     getLastWorkSessionEpic,
     getSessionsEpic,
     startSessionEpic,
     stopSessionEpic,
-    deleteWorkSessionEpic,
 } from "./features/time-tracker/api/epics.ts";
 
 import authenticationReducer from "./features/authentication/authenticationSlice.ts";
@@ -35,6 +37,8 @@ const epics = [
     stopSessionEpic,
     getSessionsEpic,
     getLastWorkSessionEpic,
+    addWorkSessionEpic,
+    editWorkSessionEpic,
     deleteWorkSessionEpic,
 ]
 

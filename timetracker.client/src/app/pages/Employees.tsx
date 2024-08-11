@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { PiPlus } from "react-icons/pi";
 import { Button, Divider, Flex, Text } from "@chakra-ui/react";
@@ -10,13 +10,8 @@ import { getUsers } from "@features/employees/api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function Employees() {
-    const [active, setActive] = useState(false);
     const dispatch = useDispatch()
     const employees = useAppSelector(state => state.employees.users)
-
-    function handleActive() {
-        setActive(!active);
-    }
 
     useEffect(() => {
         dispatch(getUsers());
@@ -32,20 +27,18 @@ function Employees() {
             >
                 <Flex
                     justify="space-between"
+                    align="center"
                     w="full"
                     p="5"
-                    align="center"
                 >
                     <Text fontSize="2xl">Company ({employees.length} members)</Text>
-                    <Button onClick={handleActive} variant="ghost">
-                        <PiPlus/>
-                        <Text ml="1"> Add member</Text>
-                    </Button>
+                    <CreateEditMemberForm>
+                        <Button leftIcon={<PiPlus/>} variant="ghost">Add member</Button>
+                    </CreateEditMemberForm>
                 </Flex>
                 <Divider borderColor="gray.300" borderWidth="1px"/>
                 <EmployeesList/>
             </Flex>
-            <CreateEditMemberForm isOpen={active} onClose={handleActive}/>
         </>
     );
 }

@@ -12,6 +12,7 @@ export interface CheckboxProps {
 
 export interface InputProps {
     type: string;
+    step?: number;
     required?: boolean;
     onChange?: ChangeEventHandler<HTMLInputElement>,
     value?: string;
@@ -55,28 +56,37 @@ export interface RandomPasswordButtonProps {
 }
 
 export interface ModalFormProps {
-    title: string;
+    title?: string;
     titleIcon?: ReactNode;
     isOpen: boolean;
+    onOpen: () => void;
     onClose: () => void;
     onSubmit: () => void;
+    triggerBtn: ReactNode;
     submitBtnLoading: boolean;
     submitBtnText: string;
     children: ReactNode;
 }
 
-export interface FormProps {
-    isOpen: boolean;
-    onClose: () => void;
+export interface CreateEditFormProps {
     isEditing?: boolean;
+    children: ReactNode;
 }
 
-export interface CreateEditMemberFormProps extends FormProps {
+export interface CreateEditMemberFormProps extends CreateEditFormProps {
     formData?: UserModel
 }
 
+export interface CreateEditWorkSessionFormProps extends CreateEditFormProps {
+    formData?: {
+        id?: string,
+        startTime: string,
+        endTime: string,
+    },
+}
+
 export interface ActionMenuBtnProps {
-    onClick: () => void;
+    onClick?: () => void;
 }
 
 export interface ActionMenuBtnWithConfirmProps extends ActionMenuBtnProps {

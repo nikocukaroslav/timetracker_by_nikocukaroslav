@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BiHide, BiShow } from "react-icons/bi";
 import { PiUser } from "react-icons/pi";
@@ -6,15 +6,15 @@ import { Box, FormLabel, InputGroup, InputRightElement, List, Select, Text, } fr
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 import CustomSlider from "@components/ui/CustomSlider.tsx";
+import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import PermissionItem from "./PermissionItem.tsx";
 import RandomPasswordButton from "./RandomPasswordButton.tsx";
-import ModalForm from "@components/ui/ModalForm.tsx";
 
 import { createUser, updateUser } from "../api/actions.ts";
+import { useForm } from "@hooks/useForm.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { generatePassword } from "@utils/generatePassword.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
-import { UserModel } from "@interfaces/domain.ts";
 import { permissionList, positionsList } from "@constants";
 
 const defaultFormData = {
@@ -22,25 +22,23 @@ const defaultFormData = {
     surname: "",
     email: "",
     password: "",
-    position: positionsList[0].description,
+    position: positionsList[0].name,
     permissions: positionsList[0].defaultPermissions,
     timeload: 100
 }
 
-function CreateEditMemberForm({isOpen, onClose, formData, isEditing}: CreateEditMemberFormProps) {
-    const [currentFormData, setCurrentFormData] = useState<UserModel>(defaultFormData);
-    const {id, name, surname, email, password, position, permissions, timeload} = currentFormData;
-
+function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberFormProps) {
+    const {
+        data,
+        isOpen,
+        onOpen,
+        onClose,
+        setData,
+        handleChangeInput,
+        handleChangeValue
+    } = useForm<typeof defaultFormData, typeof formData>(defaultFormData, formData);
+    const {name, surname, email, password, position, permissions, timeload} = data;
     const [showPassword, setShowPassword] = useState(false);
-
-    useEffect(() => {
-        if (isOpen && formData) {
-            setCurrentFormData({
-                ...defaultFormData,
-                ...formData
-            });
-        }
-    }, [isOpen])
 
     const loading = useAppSelector(state => state.employees.loading)
     const dispatch = useDispatch();
@@ -49,13 +47,9 @@ function CreateEditMemberForm({isOpen, onClose, formData, isEditing}: CreateEdit
         setShowPassword(isShow => !isShow);
     }
 
-    function handleChangeInput(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>, field: string) {
-        setCurrentFormData(prevState => ({...prevState, [field]: e.target.value}));
-    }
-
     function handleUpdate() {
         const newUserData = {
-            id,
+            id: formData?.id,
             name,
             surname,
             position,
@@ -64,8 +58,6 @@ function CreateEditMemberForm({isOpen, onClose, formData, isEditing}: CreateEdit
         };
 
         dispatch(updateUser(newUserData))
-
-        onClose()
     }
 
     function handleAdd() {
@@ -81,13 +73,11 @@ function CreateEditMemberForm({isOpen, onClose, formData, isEditing}: CreateEdit
 
         dispatch(createUser(newUser));
 
-        onClose()
-
-        setCurrentFormData(defaultFormData);
+        setData(defaultFormData);
     }
 
     function handleChangePermissions(e: ChangeEvent<HTMLInputElement>, permission: string) {
-        setCurrentFormData(prevState => ({
+        setData(prevState => ({
             ...prevState,
             permissions: e.target.checked
                 ? [...prevState.permissions as string[], permission]
@@ -99,19 +89,15 @@ function CreateEditMemberForm({isOpen, onClose, formData, isEditing}: CreateEdit
         const position = e.target.value;
         const {defaultPermissions} = positionsList.find(({name}) => name == position);
 
-        setCurrentFormData(prevState => ({
+        setData(prevState => ({
             ...prevState,
             position,
             permissions: defaultPermissions
         }));
     }
 
-    function handleChangeTimeload(value: number) {
-        setCurrentFormData(prevState => ({...prevState, timeload: value}));
-    }
-
     function setRandomPassword() {
-        setCurrentFormData(prevState => ({...prevState, password: generatePassword()}));
+        setData(prevState => ({...prevState, password: generatePassword()}));
     }
 
     return (
@@ -119,10 +105,12 @@ function CreateEditMemberForm({isOpen, onClose, formData, isEditing}: CreateEdit
             title={isEditing ? "Edit member" : "New member"}
             titleIcon={<PiUser size="24px"/>}
             isOpen={isOpen}
+            onOpen={onOpen}
             onClose={onClose}
+            onSubmit={isEditing ? handleUpdate : handleAdd}
             submitBtnLoading={loading}
             submitBtnText={isEditing ? "Edit" : "Add"}
-            onSubmit={isEditing ? handleUpdate : handleAdd}
+            triggerBtn={children}
         >
             <FormLabel display="flex" flexDirection="column" gap="1">
                 <Text>Name</Text>
@@ -193,7 +181,7 @@ function CreateEditMemberForm({isOpen, onClose, formData, isEditing}: CreateEdit
             </Box>}
             <FormLabel display="flex" flexDirection="column">
                 <Text>Work time (%)</Text>
-                <CustomSlider onChange={handleChangeTimeload} value={timeload}/>
+                <CustomSlider onChange={(value) => handleChangeValue(value, "timeload")} value={timeload}/>
             </FormLabel>
             <FormLabel m="0">
                 <Text>Permissions</Text>

@@ -1,61 +1,80 @@
 import { useDispatch } from "react-redux";
-import {PiNotePencil, PiPencil, PiTimer} from "react-icons/pi";
-import {Box, Divider, Flex, Icon, Text, useDisclosure} from "@chakra-ui/react";
+import { PiNotePencil, PiTimer } from "react-icons/pi";
+import { Box, Divider, Flex, Icon, Text } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/ActionMenu";
+import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/action-menu";
 
-import dateFormatConverter, { formatTime } from "@utils/formatters.ts";
+import dateFormatConverter, { convertToLocalISO, formatTime } from "@utils/formatters.ts";
 import { deleteWorkSession } from "@features/time-tracker/api/actions.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
+import CreateEditWorkSessionForm from "@features/time-tracker/components/CreateEditWorkSessionForm.tsx";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
-function WorkSession({data}: { data: WorkSessionModel }) {
+function WorkSession({ data }: { data: WorkSessionModel }) {
     const dispatch = useDispatch();
-    const {isOpen: isOpenConfirmWindow, onOpen: onOpenConfirmWindow, onClose: onCloseConfirmWindow} = useDisclosure();
+    const userId = useAppSelector(state => state.authentication.user?.id);
 
-    const totalTime: number = Math.floor((data.endTime - data.startTime) / 1000);
-    const workingTime = `${dateFormatConverter(data.startTime, "time")} - ${dateFormatConverter(data.endTime, "time")}`;
+    const { id, startTime, endTime, editedAt, editor } = data;
+
+    const totalTime: number = Math.floor((endTime - startTime) / 1000);
+    const workingTime = `${dateFormatConverter(startTime, "time")} - ${dateFormatConverter(endTime, "time")}`;
+
+    const editMessage = editedAt && `Edited by ${editor?.id == userId ? "you" : `${editor?.name} ${editor?.surname}`}, ${dateFormatConverter(editedAt, "full")}`;
+
+    const formData = {
+        id,
+        startTime: convertToLocalISO(startTime),
+        endTime: convertToLocalISO(endTime),
+    };
 
     function handleDelete() {
-        dispatch(deleteWorkSession(data.id));
+        dispatch(deleteWorkSession(id));
     }
+
     return (
         <Box position="relative">
-            {formatTime(totalTime) == "00:00:01" &&
-            <Flex  fontSize="xs" borderColor="gray.200"
-                   borderRightWidth="2px" borderBottomWidth="2px"
-                   px="1" gap="1" position="absolute" left="0" top="0"
-                   roundedBottomRight="md"  title="edited by ...">
-                <Icon as={PiNotePencil} boxSize="4"></Icon>
-                <Text>Edited</Text>
-            </Flex>
-            }
+            {editedAt &&
                 <Flex
-                    p="5"
-                    bg="gray.50"
+                    title={editMessage || ""}
+                    position="absolute"
                     align="center"
-                    justify="space-between"
-                    w="full"
+                    top={0}
+                    left={0}
+                    h="full"
+                    p="1"
+                    roundedLeft="2px"
+                    bg="gray.400"
+                    zIndex={1}
                 >
-
-                    <Flex align="center">
-                        <Flex gap="2" align="center" w="96">
-                            <PiTimer size="28"/>
-                            <Text>{`Working time: ${workingTime}`}</Text>
-                        </Flex>
-                        <CustomVerticalDivider/>
-                        <Text w="36">
-                            {`Total: ${formatTime(totalTime)}`}
-                        </Text>
-                    </Flex>
-                    <ActionMenu>
-                        <ActionMenuEditBtn onClick={() => {
-                        }}/>
-                        <Divider/>
-                        <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={() => {
-                        }}/>
-                    </ActionMenu>
+                    <Icon as={PiNotePencil} boxSize="4" color="gray.50"></Icon>
                 </Flex>
+            }
+            <Flex
+                position="relative"
+                align="center"
+                justify="space-between"
+                p="1rem 1rem 1rem 2rem"
+                bg="gray.50"
+            >
+                <Flex align="center">
+                    <Flex gap="2" align="center" w="96">
+                        <PiTimer size="28" />
+                        <Text>{`Working time: ${workingTime}`}</Text>
+                    </Flex>
+                    <CustomVerticalDivider />
+                    <Text w="36">
+                        {`Total: ${formatTime(totalTime)}`}
+                    </Text>
+                </Flex>
+                <ActionMenu>
+                    <CreateEditWorkSessionForm formData={formData} isEditing>
+                        <ActionMenuEditBtn />
+                    </CreateEditWorkSessionForm>
+                    <Divider />
+                    <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={handleDelete} />
+                </ActionMenu>
+            </Flex>
         </Box>
     );
 }

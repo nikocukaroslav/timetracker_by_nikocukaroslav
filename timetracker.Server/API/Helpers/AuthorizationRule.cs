@@ -18,7 +18,6 @@ namespace timetracker.Server.API
                 ?? throw new InvalidOperationException("An instance of IAuthorizationService could not be pulled from the dependency injection framework.");
 
             var visitor = new CustomAuthorizationVisitor(context, user, authService);
-           
             return await visitor.ValidateSchemaAsync(context) ? visitor : null;
         }
     }

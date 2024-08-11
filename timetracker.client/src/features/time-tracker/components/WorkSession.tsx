@@ -20,7 +20,7 @@ function WorkSession({data}: { data: WorkSessionModel }) {
     const totalTime: number = Math.floor((endTime - startTime) / 1000);
     const workingTime = `${dateFormatConverter(startTime, "time")} - ${dateFormatConverter(endTime, "time")}`;
 
-    const editMessage = `Edited by ${editor?.id == userId ? "you" : `${editor?.name} ${editor?.surname}`}, ${dateFormatConverter(editedAt, "full")}`;
+    const editMessage = editedAt && `Edited by ${editor?.id == userId ? "you" : `${editor?.name} ${editor?.surname}`}, ${dateFormatConverter(editedAt, "full")}`;
 
     const formData = {
         id,
@@ -36,7 +36,7 @@ function WorkSession({data}: { data: WorkSessionModel }) {
         <Box position="relative">
             {editedAt &&
                 <Flex
-                    title={editMessage}
+                    title={editMessage || ""}
                     position="absolute"
                     align="center"
                     top={0}

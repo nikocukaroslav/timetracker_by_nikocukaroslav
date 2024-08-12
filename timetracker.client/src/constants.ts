@@ -59,6 +59,20 @@ export const positionsList = [
     },
 ];
 
+export const SYSTEM = "SYSTEM"
+export const MANUALLY = "MANUALLY"
+
+export const setByList = [
+    {
+        name: SYSTEM,
+        description: "by system",
+    },
+    {
+        name: MANUALLY,
+        description: "manually",
+    }
+];
+
 export const LOGIN = "LOGIN"
 export const AUTHORIZE = "AUTHORIZE"
 export const LOGOUT = "LOGOUT"

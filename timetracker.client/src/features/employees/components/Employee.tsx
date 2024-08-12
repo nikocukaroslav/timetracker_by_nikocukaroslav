@@ -148,7 +148,7 @@ function Employee({ employee }: EmployeeProps) {
                         </CreateEditMemberForm>
                         <Divider/>
                         <ActionMenuExpandedBtn
-                            confirmText={`${employee.isEmployed ? "Terminate" : "Rehire"} ${employee.name} ${employee.surname} from company`}
+                            confirmText={`${employee.isEmployed ? "Terminate" : "Rehire"} ${employee.name} ${employee.surname} ${employee.isEmployed ? "from" : "by"} the company`}
                             onClick={handleToggleEmployed}
                             buttonName={`${employee.isEmployed ? "Terminate" : "Rehire"}`}
                             buttonColor={`${employee.isEmployed ? "yellow.700" : "green.400"}`}

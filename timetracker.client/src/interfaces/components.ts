@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler, ReactNode } from "react";
+import { ChangeEvent, ChangeEventHandler, ReactNode, ReactElement } from "react";
 import { IconType } from "react-icons";
 
 import { UserModel } from "./domain.ts";
@@ -91,6 +91,12 @@ export interface ActionMenuBtnProps {
 
 export interface ActionMenuBtnWithConfirmProps extends ActionMenuBtnProps {
     confirmText: string;
+}
+
+export interface ActionMenuExpandedBtnProps extends ActionMenuBtnWithConfirmProps {
+    buttonName: string;
+    buttonIcon: ReactElement;
+    buttonColor: string;
 }
 
 export interface ConfirmWindowProps {

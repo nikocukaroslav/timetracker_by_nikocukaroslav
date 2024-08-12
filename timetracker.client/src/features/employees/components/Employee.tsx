@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { PiCaretDown, PiClockUser } from "react-icons/pi";
+import { PiCaretDown, PiClockUser, PiUserMinus, PiUserSwitch } from "react-icons/pi";
 import {
     Button,
     Divider,
@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuTerminateBtn } from "@components/ui/action-menu";
+import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuExpandedBtn } from "@components/ui/action-menu";
 import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
 
 import { deleteUser, updateUser } from "../api/actions.ts";
@@ -25,7 +25,7 @@ import { EmployeeProps } from "@interfaces/components.ts";
 import { permissionList, positionsList } from "@constants";
 import { UserModel } from "@interfaces/domain.ts";
 
-function Employee({employee}: EmployeeProps) {
+function Employee({ employee }: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
     const {
         description: positionName,
@@ -51,8 +51,8 @@ function Employee({employee}: EmployeeProps) {
         dispatch(deleteUser(employee.id as string))
     }
 
-    function handleTerminate() {
-        const newEmployee: UserModel = { id: employee.id, isEmployed: false };
+    function handleToggleEmployed() {
+        const newEmployee: UserModel = { id: employee.id, isEmployed: !employee.isEmployed };
         dispatch(updateUser(newEmployee))
     }
 
@@ -65,7 +65,7 @@ function Employee({employee}: EmployeeProps) {
                 px="5"
                 py="4"
                 rounded="md"
-                bg = {`${employee.isEmployed ? "" : "gray.200"}`}
+                bg={`${employee.isEmployed ? "" : "gray.200"}`}
             >
                 <Img
                     alt="user-img"
@@ -81,44 +81,63 @@ function Employee({employee}: EmployeeProps) {
                         </Text>
                     </Flex>
                     <CustomVerticalDivider/>
-                    <Flex py="2" w={32} gap="2" align="center" lineHeight="1.1">
-                        <Icon boxSize={6} as={positionIcon}/>
-                        <Text>{positionName}</Text>
-                    </Flex>
-                    <CustomVerticalDivider/>
-                    <Menu variant="ghost">
-                        <MenuButton bg="gray.200" fontWeight="normal" as={Button} rightIcon={<PiCaretDown/>}>
-                            Permissions
-                        </MenuButton>
-                        <MenuList>
-                            {
-                                employee.permissions && employee.permissions.length > 0 ?
-                                    permissionList
-                                        .filter(permission => employee.permissions?.includes(permission.name))
-                                        .map((permission, index) => (
-                                            <MenuItem key={index}>{permission.description}</MenuItem>
-                                        )) :
-                                    <MenuItem>No permissions</MenuItem>
-                            }
-                        </MenuList>
-                    </Menu>
-                    <CustomVerticalDivider/>
-                    <Flex
-                        align="center"
-                        w="28"
-                        gap="2"
-                        px="5"
-                        py="2"
-                        fontWeight="bolder"
-                        opacity="80%"
-                        bg={handleColor(employee?.timeload)}
-                        color="gray.50"
-                        rounded="md"
-                    >
-                        <PiClockUser size="24px"/>
-                        <Text>{employee.timeload}%</Text>
-                    </Flex>
-
+                    {employee.isEmployed && (
+                        <>
+                            <Flex py="2" w={32} gap="2" align="center" lineHeight="1.1">
+                                <Icon boxSize={6} as={positionIcon}/>
+                                <Text>{positionName}</Text>
+                            </Flex>
+                            <CustomVerticalDivider/>
+                            <Menu variant="ghost">
+                                <MenuButton bg="gray.200" fontWeight="normal" as={Button} rightIcon={<PiCaretDown/>}>
+                                    Permissions
+                                </MenuButton>
+                                <MenuList>
+                                    {
+                                        employee.permissions && employee.permissions.length > 0 ?
+                                            permissionList
+                                                .filter(permission => employee.permissions?.includes(permission.name))
+                                                .map((permission, index) => (
+                                                    <MenuItem key={index}>{permission.description}</MenuItem>
+                                                )) :
+                                            <MenuItem>No permissions</MenuItem>
+                                    }
+                                </MenuList>
+                            </Menu>
+                            <CustomVerticalDivider/>
+                            <Flex
+                                align="center"
+                                w="28"
+                                gap="2"
+                                px="5"
+                                py="2"
+                                fontWeight="bolder"
+                                opacity="80%"
+                                bg={handleColor(employee?.timeload)}
+                                color="gray.50"
+                                rounded="md"
+                            >
+                                <PiClockUser size="24px"/>
+                                <Text>{employee.timeload}%</Text>
+                            </Flex>
+                        </>
+                    )}
+                    {!employee.isEmployed && (
+                        <Flex
+                            align="center"
+                            w="30"
+                            gap="2"
+                            px="5"
+                            py="2"
+                            fontWeight="bolder"
+                            opacity="80%"
+                            bg="red.500"
+                            color="gray.50"
+                            rounded="md"
+                        >
+                            <Text>Terminated</Text>
+                        </Flex>
+                    )}
                 </Flex>
                 <Spacer/>
 
@@ -128,14 +147,17 @@ function Employee({employee}: EmployeeProps) {
                             <ActionMenuEditBtn/>
                         </CreateEditMemberForm>
                         <Divider/>
+                        <ActionMenuExpandedBtn
+                            confirmText={`${employee.isEmployed ? "Terminate" : "Rehire"} ${employee.name} ${employee.surname} from company`}
+                            onClick={handleToggleEmployed}
+                            buttonName={`${employee.isEmployed ? "Terminate" : "Rehire"}`}
+                            buttonColor={`${employee.isEmployed ? "yellow.700" : "green.400"}`}
+                            buttonIcon={employee.isEmployed ? <PiUserMinus size="24px"/> : <PiUserSwitch size="24px"/>}
+                        />
+                        <Divider/>
                         <ActionMenuDeleteBtn
                             confirmText={`Delete ${employee.name} ${employee.surname} from company history`}
                             onClick={handleDelete}
-                        />
-                        <Divider/>
-                        <ActionMenuTerminateBtn
-                            confirmText={`Terminate ${employee.name} ${employee.surname} from company`}
-                            onClick={handleTerminate}
                         />
                     </ActionMenu>
                 }

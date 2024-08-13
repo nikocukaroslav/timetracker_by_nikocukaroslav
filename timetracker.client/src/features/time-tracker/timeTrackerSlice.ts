@@ -7,7 +7,7 @@ const initialState: TimeTrackerState = {
     workSessions: [],
     sessionId: null,
     isTracking: false,
-    SearchingLastSession: false,
+    searchingLastSession: false,
     currentTime: 0,
 }
 
@@ -25,14 +25,14 @@ const timeTrackerSlice = createSlice({
             state.workSessions = action.payload
         },
         getLastWorkSessionSuccessful(state, action) {
-            state.SearchingLastSession = false;
+            state.searchingLastSession = false;
             if (!action.payload) return
             state.sessionId = action.payload.id;
             state.currentTime = Math.floor((Date.now() - action.payload.startTime) / 1000);
             state.isTracking = true;
         },
         getLastWorkSessionError(state) {
-            state.SearchingLastSession = false;
+            state.searchingLastSession = false;
         },
         addWorkSessionSuccessful(state, action) {
             state.workSessions.unshift(action.payload);
@@ -59,7 +59,7 @@ const timeTrackerSlice = createSlice({
             state.isTracking = action.payload
         },
         setSearchingLastSession(state, action) {
-            state.SearchingLastSession = action.payload
+            state.searchingLastSession = action.payload
         },
     },
 })

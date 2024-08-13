@@ -11,7 +11,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 function TimeTrackerHeader() {
     const userId = useAppSelector(state => state.authentication.user?.id)
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
-    const SearchingLastSession = useAppSelector(state => state.timeTracker.SearchingLastSession)
+    const searchingLastSession = useAppSelector(state => state.timeTracker.searchingLastSession)
     const sessionId = useAppSelector(state => state.timeTracker.sessionId)
 
     const dispatch = useDispatch();
@@ -75,7 +75,7 @@ function TimeTrackerHeader() {
                             variant="ghost"
                             display="flex"
                             gap="2"
-                            isDisabled={SearchingLastSession}
+                            isDisabled={searchingLastSession}
                             onClick={startTracking}>
                             <Icon
                                 fill="green.600"

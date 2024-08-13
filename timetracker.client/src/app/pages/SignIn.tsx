@@ -11,7 +11,6 @@ import {
     Img,
     InputGroup,
     InputRightElement,
-    Spinner,
     Text
 } from "@chakra-ui/react";
 import { PiKey, PiSignIn, PiUser } from "react-icons/pi";
@@ -95,24 +94,20 @@ function SignIn() {
                         </InputGroup>
                         <NavLink to="password-recovery">
                             <Text mt="1" fontSize="sm" textColor="gray.500"
-                                  _hover={{textDecoration: "underline"}}>
+                                  _hover={{ textDecoration: "underline" }}>
                                 Forgot password</Text>
                         </NavLink>
                     </FormLabel>
                     <Text color="red.500">{error}</Text>
                     <Button
                         onClick={handleLogin}
-                        display="flex" gap="2" mt="auto"
+                        mt="auto"
                         borderColor="gray.300" borderWidth="2px"
-                        isDisabled={loading}
-                        _hover={{borderColor: "gray.500", bg: "gray.50"}}>
-                        {
-                            loading ? <Spinner width="24px" h="24px"/> :
-                                <>
-                                    <Icon as={PiSignIn} h="24px" w="24px"/>
-                                    <Text>Sign in</Text>
-                                </>
-                        }
+                        _hover={{ borderColor: "gray.500", bg: "gray.50" }}
+                        isLoading={loading}
+                        leftIcon={<Icon as={PiSignIn} h="24px" w="24px"/>}
+                    >
+                        Sign in
                     </Button>
                 </Flex>
             </Box>

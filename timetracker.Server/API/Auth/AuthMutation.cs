@@ -35,7 +35,7 @@ namespace timetracker.Server.API.Auth
                         context.Errors.Add(ErrorCode.INVALID_CREDENTIALS);
                         return null;
                     }
-                    if (user.Status == UserStatus.TERMINATED.ToString())
+                    if (!user.IsEmployed)
                     {
                         context.Errors.Add(ErrorCode.ACCOUNT_SUSPENDED);
                         return null;
@@ -51,7 +51,7 @@ namespace timetracker.Server.API.Auth
                     );
                 });
 
-            Field<LoginResponseType>("Authorize")
+            Field<AuthorizeResponseType>("Authorize")
                 .Arguments(new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "RefreshToken" }
                 ))
@@ -64,17 +64,14 @@ namespace timetracker.Server.API.Auth
                         var principal = jwtTokenUtils.ValidateToken(refreshToken);
 
                         var email = principal.FindFirst(ClaimTypes.Email)?.Value;
-                        var refreshTokenHash = principal.FindFirst("hash")?.Value;
 
                         var user = await userRepository.GetUserByEmailAsync(email) ?? throw new Exception();
 
                         var newAccessToken = jwtTokenUtils.GenerateAccessToken(email);
-                        var newRefreshToken = await jwtTokenUtils.GenerateRefreshToken(email, refreshTokenHash);
 
-                        return new LoginResponse(
+                        return new AuthorizeResponse(
                             user,
-                            newAccessToken,
-                            newRefreshToken
+                            newAccessToken
                         );
                     }
                     catch

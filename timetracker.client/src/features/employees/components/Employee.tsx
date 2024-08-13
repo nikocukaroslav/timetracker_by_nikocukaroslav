@@ -37,14 +37,11 @@ function Employee({ employee }: EmployeeProps) {
     const itsYou = employee.id === userId;
 
     function handleColor(timeload?: number) {
-        if (!timeload) return "gray.300";
-
+        if(!timeload || timeload < 50) return "red.500";
         if (timeload >= 100)
             return "green.500";
-        else if (timeload >= 50 && timeload < 100)
+        if (timeload >= 50 && timeload < 100)
             return "orange.500";
-        else if (timeload < 50)
-            return "red.500";
     }
 
     function handleDelete() {

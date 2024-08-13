@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 
 import Approves from "@pages/Approves";
 import Calendar from "@pages/Calendar.tsx";
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
                 <AppLayout/>
             </ProtectedRoute>,
         children: [
+            {
+                path: "/",
+                element: <Navigate to="time-tracker" replace />
+            },
             {
                 path: "time-tracker",
                 element:

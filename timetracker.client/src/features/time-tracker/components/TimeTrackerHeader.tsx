@@ -9,7 +9,7 @@ import { startSession, stopSession } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function TimeTrackerHeader() {
-    const userId = useAppSelector(state => state.authentication.user.id)
+    const userId = useAppSelector(state => state.authentication.user?.id)
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
     const sessionId = useAppSelector(state => state.timeTracker.sessionId)
 

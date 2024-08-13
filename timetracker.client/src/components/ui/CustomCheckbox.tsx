@@ -6,7 +6,7 @@ function CustomCheckbox({onChange, disabled, checked, readOnly}: CheckboxProps) 
     return (
         <Checkbox readOnly={readOnly} isChecked={checked} disabled={disabled} onChange={onChange}
                   colorScheme="gray"
-                  borderColor="gray.500"/>
+                  borderColor="gray.300"/>
     );
 }
 

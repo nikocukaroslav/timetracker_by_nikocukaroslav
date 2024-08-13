@@ -38,24 +38,19 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
     return (
         <Box position="relative">
             {editedAt &&
-                <Flex
-                    position="absolute"
-                    align="center"
-                    top={0}
-                    left={0}
-                    p="1"
-                    roundedLeft="2px"
-                    roundedRight="2px"
-                    zIndex={1}
-                >
-                    <Icon as={PiNotePencil} boxSize="4" color="gray.700"></Icon>
+                <Flex fontSize="xs" borderColor="gray.200"
+                      borderRightWidth="2px" borderBottomWidth="2px"
+                      px="1" gap="1" position="absolute" left="0" top="0"
+                      roundedBottomRight="md" zIndex="1">
+                    <Icon as={PiNotePencil} boxSize="4"></Icon>
+                    <Text>Edited</Text>
                 </Flex>
             }
             <Flex
                 position="relative"
                 align="center"
                 justify="space-between"
-                p="1rem 1rem 1rem 2rem"
+                p="5"
                 bg="gray.50"
             >
                 <Flex align="center">

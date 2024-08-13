@@ -32,7 +32,7 @@ export const MANAGER = "MANAGER"
 export const ACCOUNTANT = "ACCOUNTANT"
 export const ACCOUNT_MANAGER = "ACCOUNT_MANAGER"
 
-export const positionsList = [
+export const positionList = [
     {
         name: DEVELOPER,
         icon: PiCode,

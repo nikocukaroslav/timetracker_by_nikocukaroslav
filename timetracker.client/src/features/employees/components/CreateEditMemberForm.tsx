@@ -12,14 +12,14 @@ import { createUser, updateUser } from "../api/actions.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
-import { permissionList, positionsList } from "@constants";
+import { permissionList, positionList } from "@constants";
 
 const defaultFormData = {
     name: "",
     surname: "",
     email: "",
-    position: positionsList[0].name,
-    permissions: positionsList[0].defaultPermissions,
+    position: positionList[0].name,
+    permissions: positionList[0].defaultPermissions,
     timeload: 100
 }
 
@@ -77,7 +77,7 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
 
     function handleChangePosition(e: ChangeEvent<HTMLSelectElement>) {
         const position = e.target.value;
-        const {defaultPermissions} = positionsList.find(({name}) => name == position);
+        const {defaultPermissions} = positionList.find(({name}) => name == position);
 
         setData(prevState => ({
             ...prevState,
@@ -136,7 +136,7 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
                     value={position}
                 >
                     {
-                        positionsList.map(position =>
+                        positionList.map(position =>
                             <option key={position.name} value={position.name}>{position.description}</option>
                         )
                     }

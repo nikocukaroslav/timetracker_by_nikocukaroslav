@@ -3,7 +3,7 @@ import { PiNotePencil, PiTimer } from "react-icons/pi";
 import { Box, Divider, Flex, Icon, Text } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/action-menu";
+import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuInfoBtn } from "@components/ui/action-menu";
 
 import dateFormatConverter, { convertToLocalISO, formatTime } from "@utils/formatters.ts";
 import { deleteWorkSession } from "@features/time-tracker/api/actions.ts";
@@ -11,14 +11,13 @@ import { WorkSessionModel } from "@interfaces/domain.ts";
 import CreateEditWorkSessionForm from "@features/time-tracker/components/CreateEditWorkSessionForm.tsx";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { setByList } from "@constants";
-import { ActionMenuInfoBtn } from "@components/ui/action-menu/ActionMenuInfoBtn.tsx";
 
 function WorkSession({ data }: { data: WorkSessionModel }) {
     const dispatch = useDispatch();
     const userId = useAppSelector(state => state.authentication.user?.id);
     const { id, startTime, endTime, editedAt, editor, setBy } = data;
     const {
-        description: setByDescription
+        description: descriptionSetBy
     } = setByList.find(SetBy => SetBy.name === setBy) || {};
 
     const totalTime: number = Math.floor((endTime - startTime) / 1000);
@@ -44,13 +43,12 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
                     align="center"
                     top={0}
                     left={0}
-                    h="40%"
                     p="1"
                     roundedLeft="2px"
                     roundedRight="2px"
                     zIndex={1}
                 >
-                    <Icon as={PiNotePencil} boxSize="4" color="black"></Icon>
+                    <Icon as={PiNotePencil} boxSize="4" color="gray.700"></Icon>
                 </Flex>
             }
             <Flex
@@ -61,7 +59,7 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
                 bg="gray.50"
             >
                 <Flex align="center">
-                    <Flex gap="2" align="center" w="96" position="relative">
+                    <Flex gap="2" align="center" w="96">
                         <PiTimer size="28"/>
                         <Text>{`Working time: ${workingTime}`}</Text>
                     </Flex>
@@ -73,9 +71,9 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
                 <ActionMenu>
                     <ActionMenuInfoBtn info={
                         <Box>
-                            {setByDescription && (
+                            {descriptionSetBy && (
                                 <Text>
-                                    Set {setByDescription}
+                                    Set {descriptionSetBy}
                                 </Text>
                             )}
                             {editMessage && (

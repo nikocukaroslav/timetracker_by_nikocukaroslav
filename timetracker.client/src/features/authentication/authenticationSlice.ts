@@ -17,13 +17,12 @@ const authenticationSlice = createSlice({
     initialState,
     reducers: {
         authorizeSuccessful(state, {payload}) {
-            const {user, accessToken, refreshToken} = payload;
+            const {user, accessToken} = payload;
 
             state.authenticating = false;
             state.user = user;
             state.expiresAt = accessToken.expiresAt;
-            state.accessToken = accessToken.token
-            setCookie("refreshToken", refreshToken.token, refreshToken.expiresAt)
+            state.accessToken = accessToken.token;
         },
         authorizeError(state) {
             state.authenticating = false;

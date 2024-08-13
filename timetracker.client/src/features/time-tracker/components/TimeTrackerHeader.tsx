@@ -11,6 +11,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 function TimeTrackerHeader() {
     const userId = useAppSelector(state => state.authentication.user?.id)
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
+    const searchingLastSession = useAppSelector(state => state.timeTracker.searchingLastSession)
     const sessionId = useAppSelector(state => state.timeTracker.sessionId)
 
     const dispatch = useDispatch();
@@ -36,7 +37,6 @@ function TimeTrackerHeader() {
 
         dispatch(stopSession(workSession));
     }
-
     return (
         <Flex
             p="5"
@@ -75,6 +75,7 @@ function TimeTrackerHeader() {
                             variant="ghost"
                             display="flex"
                             gap="2"
+                            isDisabled={searchingLastSession}
                             onClick={startTracking}>
                             <Icon
                                 fill="green.600"

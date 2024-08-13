@@ -13,8 +13,8 @@ export interface UserModel {
 
 export interface WorkSessionModel {
     id?: string,
-    startTime: number,
-    endTime: number,
+    startTime?: number,
+    endTime?: number,
     setBy?: string,
     userId?: string,
     editedAt?: number,

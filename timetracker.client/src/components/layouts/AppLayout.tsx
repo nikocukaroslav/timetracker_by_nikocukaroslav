@@ -8,6 +8,7 @@ import Navbar from "./Navbar.tsx";
 
 import { getLastWorkSession } from "@features/time-tracker/api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { setSearchingLastSession } from "@features/time-tracker/timeTrackerSlice.ts";
 
 function AppLayout() {
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
@@ -18,6 +19,7 @@ function AppLayout() {
     const location = useLocation();
 
     useEffect(() => {
+        dispatch(setSearchingLastSession(true));
         dispatch(getLastWorkSession(userId))
     }, [dispatch, userId]);
 

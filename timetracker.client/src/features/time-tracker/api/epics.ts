@@ -4,7 +4,7 @@ import { Epic, ofType } from "redux-observable";
 import {
     addWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
-    editWorkSessionSuccessful,
+    editWorkSessionSuccessful, getLastWorkSessionError,
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
     startSuccessful,
@@ -78,8 +78,13 @@ export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
                     id: action.payload
                 }
             ).pipe(
-                map(response => getLastWorkSessionSuccessful(response.data.users.getLastWorkSession))
-            )
+                map((response) => {
+                   if (response.errors)
+                     return getLastWorkSessionError();
+
+                    return getLastWorkSessionSuccessful(response.data.users.getLastWorkSession);
+                }),
+            ),
         )
     );
 

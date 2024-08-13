@@ -3,19 +3,22 @@ import { PiNotePencil, PiTimer } from "react-icons/pi";
 import { Box, Divider, Flex, Icon, Text } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/action-menu";
+import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuInfoBtn } from "@components/ui/action-menu";
 
 import dateFormatConverter, { convertToLocalISO, formatTime } from "@utils/formatters.ts";
 import { deleteWorkSession } from "@features/time-tracker/api/actions.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
 import CreateEditWorkSessionForm from "@features/time-tracker/components/CreateEditWorkSessionForm.tsx";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { setByList } from "@constants";
 
 function WorkSession({ data }: { data: WorkSessionModel }) {
     const dispatch = useDispatch();
     const userId = useAppSelector(state => state.authentication.user?.id);
-
-    const { id, startTime, endTime, editedAt, editor } = data;
+    const { id, startTime, endTime, editedAt, editor, setBy } = data;
+    const {
+        description: descriptionSetBy
+    } = setByList.find(SetBy => SetBy.name === setBy) || {};
 
     const totalTime: number = Math.floor((endTime - startTime) / 1000);
     const workingTime = `${dateFormatConverter(startTime, "time")} - ${dateFormatConverter(endTime, "time")}`;
@@ -36,18 +39,16 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
         <Box position="relative">
             {editedAt &&
                 <Flex
-                    title={editMessage || ""}
                     position="absolute"
                     align="center"
                     top={0}
                     left={0}
-                    h="full"
                     p="1"
                     roundedLeft="2px"
-                    bg="gray.400"
+                    roundedRight="2px"
                     zIndex={1}
                 >
-                    <Icon as={PiNotePencil} boxSize="4" color="gray.50"></Icon>
+                    <Icon as={PiNotePencil} boxSize="4" color="gray.700"></Icon>
                 </Flex>
             }
             <Flex
@@ -59,20 +60,35 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
             >
                 <Flex align="center">
                     <Flex gap="2" align="center" w="96">
-                        <PiTimer size="28" />
+                        <PiTimer size="28"/>
                         <Text>{`Working time: ${workingTime}`}</Text>
                     </Flex>
-                    <CustomVerticalDivider />
+                    <CustomVerticalDivider/>
                     <Text w="36">
                         {`Total: ${formatTime(totalTime)}`}
                     </Text>
                 </Flex>
                 <ActionMenu>
+                    <ActionMenuInfoBtn info={
+                        <Box>
+                            {descriptionSetBy && (
+                                <Text>
+                                    Set {descriptionSetBy}
+                                </Text>
+                            )}
+                            {editMessage && (
+                                <Text mt={1}>
+                                    {editMessage}
+                                </Text>
+                            )}
+                        </Box>
+                    }/>
+                    <Divider/>
                     <CreateEditWorkSessionForm formData={formData} isEditing>
-                        <ActionMenuEditBtn />
+                        <ActionMenuEditBtn/>
                     </CreateEditWorkSessionForm>
-                    <Divider />
-                    <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={handleDelete} />
+                    <Divider/>
+                    <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={handleDelete}/>
                 </ActionMenu>
             </Flex>
         </Box>

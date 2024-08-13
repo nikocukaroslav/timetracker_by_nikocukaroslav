@@ -89,6 +89,10 @@ export interface ActionMenuBtnProps {
     onClick?: () => void;
 }
 
+export interface ActionMenuBtnWithInfoProps {
+    info: ReactNode ;
+}
+
 export interface ActionMenuBtnWithConfirmProps extends ActionMenuBtnProps {
     confirmText: string;
 }
@@ -102,6 +106,11 @@ export interface ActionMenuExpandedBtnProps extends ActionMenuBtnWithConfirmProp
 export interface ConfirmWindowProps {
     onConfirm: () => void;
     text: string;
+    children: ReactNode;
+}
+
+export interface InfoWindowProps {
+    info: ReactNode;
     children: ReactNode;
 }
 

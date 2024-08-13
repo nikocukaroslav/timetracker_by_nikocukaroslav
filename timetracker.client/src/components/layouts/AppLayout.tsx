@@ -12,7 +12,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 function AppLayout() {
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
 
-    const userId = useAppSelector(state => state.authentication.user.id)
+    const userId = useAppSelector(state => state.authentication.user?.id)
 
     const dispatch = useDispatch();
     const location = useLocation();

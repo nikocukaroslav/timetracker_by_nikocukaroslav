@@ -12,8 +12,9 @@ namespace timetracker.Server.API.WorkSession
     {
         public WorkSessionQuery(IRepository<WorkSessionModel> workSessionRepository)
         {
-            Field<WorkSessionResponseType>("GetWorkSession")
-                .Authorize()
+            this.Authorize();
+
+            Field<WorkSessionResponseType>("GetWorkSession")    
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                 .ResolveAsync(async context =>
                 {

@@ -6,7 +6,6 @@ using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 using WorkSessionModel = timetracker.Server.Domain.Entities.WorkSession;
 
-
 namespace timetracker.Server.API.WorkSession
 {
     public class WorkSessionMutation : ObjectGraphType

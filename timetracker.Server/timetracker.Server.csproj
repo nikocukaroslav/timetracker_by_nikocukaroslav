@@ -10,9 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="API\WorkSession\Models\**" />
     <Compile Remove="Domain\Interfaces\**" />
+    <Content Remove="API\WorkSession\Models\**" />
     <Content Remove="Domain\Interfaces\**" />
+    <EmbeddedResource Remove="API\WorkSession\Models\**" />
     <EmbeddedResource Remove="Domain\Interfaces\**" />
+    <None Remove="API\WorkSession\Models\**" />
     <None Remove="Domain\Interfaces\**" />
   </ItemGroup>
 
@@ -34,10 +38,6 @@
     <ProjectReference Include="..\timetracker.client\timetracker.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="API\WorkSession\Models\" />
   </ItemGroup>
 
 </Project>

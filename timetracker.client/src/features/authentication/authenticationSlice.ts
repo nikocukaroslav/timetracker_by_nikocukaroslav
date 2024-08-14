@@ -22,8 +22,9 @@ const authenticationSlice = createSlice({
             state.authenticating = false;
             state.user = user;
             state.expiresAt = accessToken.expiresAt;
-            state.accessToken = accessToken.token
-            setCookie("refreshToken", refreshToken.token, refreshToken.expiresAt)
+            state.accessToken = accessToken.token;
+            if (refreshToken)
+                setCookie("refreshToken", refreshToken.token, refreshToken.expiresAt);
         },
         authorizeError(state) {
             state.authenticating = false;

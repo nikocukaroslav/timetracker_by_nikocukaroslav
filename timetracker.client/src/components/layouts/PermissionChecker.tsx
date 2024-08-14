@@ -4,7 +4,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { LayoutProps } from "@interfaces/components.ts";
 
 function PermissionChecker({children, permissions, redirectToNotFound = false}: LayoutProps) {
-    const userPermissions = useAppSelector((state) => state.authentication.user.permissions);
+    const userPermissions = useAppSelector((state) => state.authentication.user?.permissions);
     const hasPermission = permissions?.some(permission => userPermissions?.includes(permission));
 
     if (!hasPermission) {

@@ -35,10 +35,6 @@ mutation Authorize($refreshToken: String!) {
         token
         expiresAt
       }
-      refreshToken {
-        token
-        expiresAt
-      }
     }
   }
 }

@@ -19,6 +19,7 @@ export interface TimeTrackerState {
     workSessions: WorkSessionModel[];
     sessionId: string | null;
     isTracking: boolean;
+    searchingLastSession: boolean;
     currentTime: number;
 }
 

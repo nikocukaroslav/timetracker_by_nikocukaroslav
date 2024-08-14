@@ -22,7 +22,7 @@ import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
 import { deleteUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
-import { permissionList, positionsList } from "@constants";
+import { permissionList, positionList } from "@constants";
 import { UserModel } from "@interfaces/domain.ts";
 
 function Employee({ employee }: EmployeeProps) {
@@ -30,21 +30,18 @@ function Employee({ employee }: EmployeeProps) {
     const {
         description: positionName,
         icon: positionIcon
-    } = positionsList.find(pos => pos.name === employee.position) || {};
+    } = positionList.find(pos => pos.name === employee.position) || {};
 
     const dispatch = useDispatch();
 
     const itsYou = employee.id === userId;
 
     function handleColor(timeload?: number) {
-        if (!timeload) return "gray.300";
-
+        if(!timeload || timeload < 50) return "red.500";
         if (timeload >= 100)
             return "green.500";
-        else if (timeload >= 50 && timeload < 100)
+        if (timeload >= 50 && timeload < 100)
             return "orange.500";
-        else if (timeload < 50)
-            return "red.500";
     }
 
     function handleDelete() {
@@ -148,10 +145,10 @@ function Employee({ employee }: EmployeeProps) {
                         </CreateEditMemberForm>
                         <Divider/>
                         <ActionMenuExpandedBtn
-                            confirmText={`${employee.isEmployed ? "Terminate" : "Rehire"} ${employee.name} ${employee.surname} from company`}
+                            confirmText={`${employee.isEmployed ? "Terminate" : "Rehire"} ${employee.name} ${employee.surname} ${employee.isEmployed ? "from" : "by"} the company`}
                             onClick={handleToggleEmployed}
                             buttonName={`${employee.isEmployed ? "Terminate" : "Rehire"}`}
-                            buttonColor={`${employee.isEmployed ? "yellow.700" : "green.400"}`}
+                            buttonColor={`${employee.isEmployed ? "yellow.500" : "green.500"}`}
                             buttonIcon={employee.isEmployed ? <PiUserMinus size="24px"/> : <PiUserSwitch size="24px"/>}
                         />
                         <Divider/>

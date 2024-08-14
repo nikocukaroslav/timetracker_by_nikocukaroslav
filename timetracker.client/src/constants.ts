@@ -32,7 +32,7 @@ export const MANAGER = "MANAGER"
 export const ACCOUNTANT = "ACCOUNTANT"
 export const ACCOUNT_MANAGER = "ACCOUNT_MANAGER"
 
-export const positionsList = [
+export const positionList = [
     {
         name: DEVELOPER,
         icon: PiCode,
@@ -57,6 +57,20 @@ export const positionsList = [
         description: "Account manager",
         defaultPermissions: [APPROVE_REQUESTS, MANAGE_USERS]
     },
+];
+
+export const SYSTEM = "SYSTEM"
+export const MANUALLY = "MANUALLY"
+
+export const setByList = [
+    {
+        name: SYSTEM,
+        description: "by system",
+    },
+    {
+        name: MANUALLY,
+        description: "manually",
+    }
 ];
 
 export const LOGIN = "LOGIN"

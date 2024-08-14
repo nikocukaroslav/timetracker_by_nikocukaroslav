@@ -12,7 +12,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 function AppLayout() {
     const isTracking = useAppSelector(state => state.timeTracker.isTracking)
 
-    const userId = useAppSelector(state => state.authentication.user.id)
+    const userId = useAppSelector(state => state.authentication.user?.id)
 
     const dispatch = useDispatch();
     const location = useLocation();
@@ -24,7 +24,7 @@ function AppLayout() {
     return (
         <>
             {isTracking && location.pathname !== "/time-tracker" && <GlobalTimer/>}
-            <Grid templateColumns="250px 1fr" overflow="hidden" height="100dvh" bg="gray.100" textColor="gray.700">
+            <Grid templateColumns="250px 1fr" overflow="hidden" height="100dvh" bg="gray.100" textColor="gray.800">
                 <GridItem>
                     <Navbar/>
                 </GridItem>

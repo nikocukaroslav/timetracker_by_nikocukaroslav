@@ -1,7 +1,7 @@
 import {
     addWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
-    editWorkSessionSuccessful,
+    editWorkSessionSuccessful, getLastWorkSessionError,
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
     startSuccessful,
@@ -53,6 +53,9 @@ interface GetLastWorkSessionAction {
 interface GetLastWorkSessionSuccessfulAction {
     type: typeof getLastWorkSessionSuccessful.type,
 }
+interface GetLastWorkSessionErrorAction {
+    type: typeof getLastWorkSessionError.type,
+}
 
 interface AddWorkSessionAction {
     type: typeof ADD_WORK_SESSION,
@@ -90,6 +93,7 @@ export type TimeTrackerActions =
     | GetWorkSessionsSuccessfulAction
     | GetLastWorkSessionAction
     | GetLastWorkSessionSuccessfulAction
+    | GetLastWorkSessionErrorAction
     | AddWorkSessionAction
     | AddWorkSessionSuccessfulAction
     | EditWorkSessionAction

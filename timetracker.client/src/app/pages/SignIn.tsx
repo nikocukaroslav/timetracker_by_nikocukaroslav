@@ -11,7 +11,6 @@ import {
     Img,
     InputGroup,
     InputRightElement,
-    Spinner,
     Text
 } from "@chakra-ui/react";
 import { PiKey, PiSignIn, PiUser } from "react-icons/pi";
@@ -47,7 +46,7 @@ function SignIn() {
     return (
         <Flex as="main" align="center" justify="center" bg="gray.100" overflow="hidden" h="100dvh" color="gray.700">
             <Box
-                w="25%" h="50%" minW="420px" bg="gray.50" rounded="md"
+                w="25%" minW="420px" bg="gray.50" rounded="md"
                 boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)">
 
                 <Flex p="5" direction="column" gap="5" h="full">
@@ -95,24 +94,20 @@ function SignIn() {
                         </InputGroup>
                         <NavLink to="password-recovery">
                             <Text mt="1" fontSize="sm" textColor="gray.500"
-                                  _hover={{textDecoration: "underline"}}>
+                                  _hover={{ textDecoration: "underline" }}>
                                 Forgot password</Text>
                         </NavLink>
                     </FormLabel>
                     <Text color="red.500">{error}</Text>
                     <Button
                         onClick={handleLogin}
-                        display="flex" gap="2" mt="auto"
+                        mt="auto"
                         borderColor="gray.300" borderWidth="2px"
-                        disabled={loading}
-                        _hover={{borderColor: "gray.500", bg: "gray.50"}}>
-                        {
-                            loading ? <Spinner width="24px" h="24px"/> :
-                                <>
-                                    <Icon as={PiSignIn} h="24px" w="24px"/>
-                                    <Text>Sign in</Text>
-                                </>
-                        }
+                        _hover={{ borderColor: "gray.500", bg: "gray.50" }}
+                        isLoading={loading}
+                        leftIcon={<Icon as={PiSignIn} h="24px" w="24px"/>}
+                    >
+                        Sign in
                     </Button>
                 </Flex>
             </Box>

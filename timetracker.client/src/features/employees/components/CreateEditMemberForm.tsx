@@ -4,7 +4,6 @@ import { PiUser } from "react-icons/pi";
 import { FormLabel, List, Select, Text, } from "@chakra-ui/react";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
-import CustomSlider from "@components/ui/CustomSlider.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import PermissionItem from "./PermissionItem.tsx";
 
@@ -13,6 +12,7 @@ import { useForm } from "@hooks/useForm.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
+import { convertTimeToISOTime } from "@utils/formatters.ts";
 
 const defaultFormData = {
     name: "",
@@ -20,10 +20,10 @@ const defaultFormData = {
     email: "",
     position: positionList[0].name,
     permissions: positionList[0].defaultPermissions,
-    timeload: 100
+    timeload: "08:00:00"
 }
 
-function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberFormProps) {
+function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMemberFormProps) {
     const {
         data,
         isOpen,
@@ -31,9 +31,8 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
         onClose,
         setData,
         handleChangeInput,
-        handleChangeValue
     } = useForm<typeof defaultFormData, typeof formData>(defaultFormData, formData);
-    const {name, surname, email, position, permissions, timeload} = data;
+    const { name, surname, email, position, permissions, timeload } = data;
 
     const loading = useAppSelector(state => state.employees.loading)
     const dispatch = useDispatch();
@@ -45,7 +44,7 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
             surname,
             position,
             permissions,
-            timeload,
+            timeload: convertTimeToISOTime(timeload),
         };
 
         dispatch(updateUser(newUserData))
@@ -58,11 +57,10 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
             email,
             position,
             permissions,
-            timeload,
+            timeload: convertTimeToISOTime(timeload),
         };
 
         dispatch(createUser(newUser));
-
         setData(defaultFormData);
     }
 
@@ -77,7 +75,7 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
 
     function handleChangePosition(e: ChangeEvent<HTMLSelectElement>) {
         const position = e.target.value;
-        const {defaultPermissions} = positionList.find(({name}) => name == position);
+        const { defaultPermissions } = positionList.find(({ name }) => name == position);
 
         setData(prevState => ({
             ...prevState,
@@ -143,8 +141,13 @@ function CreateEditMemberForm({formData, isEditing, children}: CreateEditMemberF
                 </Select>
             </FormLabel>
             <FormLabel display="flex" flexDirection="column">
-                <Text>Work time (%)</Text>
-                <CustomSlider onChange={(value) => handleChangeValue(value, "timeload")} value={timeload}/>
+                <Text>Work time</Text>
+                <CustomInput
+                    type="time"
+                    onChange={(e) => handleChangeInput(e, "timeload")}
+                    value={timeload}
+                    required
+                />
             </FormLabel>
             <FormLabel m="0">
                 <Text>Permissions</Text>

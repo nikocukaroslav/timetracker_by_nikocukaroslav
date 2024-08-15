@@ -27,29 +27,22 @@ import { UserModel } from "@interfaces/domain.ts";
 
 function Employee({ employee }: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
+
+    const { id, name, surname, email, position, permissions, timeload, isEmployed } = employee;
     const {
         description: positionName,
         icon: positionIcon
-    } = positionList.find(pos => pos.name === employee.position) || {};
+    } = positionList.find(pos => pos.name === position) || {};
+    const itsYou = id === userId;
 
     const dispatch = useDispatch();
 
-    const itsYou = employee.id === userId;
-
-    function handleColor(timeload?: number) {
-        if(!timeload || timeload < 50) return "red.500";
-        if (timeload >= 100)
-            return "green.500";
-        if (timeload >= 50 && timeload < 100)
-            return "orange.500";
-    }
-
     function handleDelete() {
-        dispatch(deleteUser(employee.id as string))
+        dispatch(deleteUser(id as string))
     }
 
     function handleToggleEmployed() {
-        const newEmployee: UserModel = { id: employee.id, isEmployed: !employee.isEmployed };
+        const newEmployee: UserModel = { id, isEmployed: !isEmployed };
         dispatch(updateUser(newEmployee))
     }
 
@@ -62,7 +55,7 @@ function Employee({ employee }: EmployeeProps) {
                 px="5"
                 py="4"
                 rounded="md"
-                bg={`${employee.isEmployed ? "" : "gray.200"}`}
+                bg={`${isEmployed ? "" : "gray.200"}`}
             >
                 <Img
                     alt="user-img"
@@ -72,13 +65,13 @@ function Employee({ employee }: EmployeeProps) {
                 />
                 <Flex align="center" justify="space-between">
                     <Flex direction="column" w="56">
-                        <Text> {`${employee.name} ${employee.surname} ${itsYou ? "(you)" : ""}`}</Text>
+                        <Text> {`${name} ${surname} ${itsYou ? "(you)" : ""}`}</Text>
                         <Text fontSize="sm" color="gray.500" noOfLines={1}>
-                            {employee.email}
+                            {email}
                         </Text>
                     </Flex>
                     <CustomVerticalDivider/>
-                    {employee.isEmployed && (
+                    {isEmployed && (
                         <>
                             <Flex py="2" w={32} gap="2" align="center" lineHeight="1.1">
                                 <Icon boxSize={6} as={positionIcon}/>
@@ -91,9 +84,9 @@ function Employee({ employee }: EmployeeProps) {
                                 </MenuButton>
                                 <MenuList>
                                     {
-                                        employee.permissions && employee.permissions.length > 0 ?
+                                        permissions && permissions.length > 0 ?
                                             permissionList
-                                                .filter(permission => employee.permissions?.includes(permission.name))
+                                                .filter(permission => permissions?.includes(permission.name))
                                                 .map((permission, index) => (
                                                     <MenuItem key={index}>{permission.description}</MenuItem>
                                                 )) :
@@ -104,22 +97,18 @@ function Employee({ employee }: EmployeeProps) {
                             <CustomVerticalDivider/>
                             <Flex
                                 align="center"
-                                w="28"
                                 gap="2"
                                 px="5"
                                 py="2"
-                                fontWeight="bolder"
-                                opacity="80%"
-                                bg={handleColor(employee?.timeload)}
-                                color="gray.50"
+                                bg="gray.200"
                                 rounded="md"
                             >
                                 <PiClockUser size="24px"/>
-                                <Text>{employee.timeload}%</Text>
+                                <Text>{timeload?.slice(0, -3)}</Text>
                             </Flex>
                         </>
                     )}
-                    {!employee.isEmployed && (
+                    {!isEmployed && (
                         <Flex
                             align="center"
                             w="30"
@@ -145,15 +134,15 @@ function Employee({ employee }: EmployeeProps) {
                         </CreateEditMemberForm>
                         <Divider/>
                         <ActionMenuExpandedBtn
-                            confirmText={`${employee.isEmployed ? "Terminate" : "Rehire"} ${employee.name} ${employee.surname} ${employee.isEmployed ? "from" : "by"} the company`}
+                            confirmText={`${isEmployed ? "Terminate" : "Rehire"} ${name} ${surname} ${isEmployed ? "from" : "by"} the company`}
                             onClick={handleToggleEmployed}
-                            buttonName={`${employee.isEmployed ? "Terminate" : "Rehire"}`}
-                            buttonColor={`${employee.isEmployed ? "yellow.500" : "green.500"}`}
-                            buttonIcon={employee.isEmployed ? <PiUserMinus size="24px"/> : <PiUserSwitch size="24px"/>}
+                            buttonName={`${isEmployed ? "Terminate" : "Rehire"}`}
+                            buttonColor={`${isEmployed ? "yellow.500" : "green.500"}`}
+                            buttonIcon={isEmployed ? <PiUserMinus size="24px"/> : <PiUserSwitch size="24px"/>}
                         />
                         <Divider/>
                         <ActionMenuDeleteBtn
-                            confirmText={`Delete ${employee.name} ${employee.surname} from company history`}
+                            confirmText={`Delete ${name} ${surname} from company history`}
                             onClick={handleDelete}
                         />
                     </ActionMenu>

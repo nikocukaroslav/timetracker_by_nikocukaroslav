@@ -39,7 +39,7 @@ interface UpdateUserAction {
         surname: string;
         position: string;
         permissions: [];
-        timeload: number;
+        timeload: string;
     };
 }
 

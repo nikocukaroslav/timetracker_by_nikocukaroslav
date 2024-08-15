@@ -6,7 +6,7 @@ export interface UserModel {
     position?: string,
     permissions?: string[],
     password?: string,
-    timeload?: number,
+    timeload?: string,
     status?: string,
     isEmployed?: boolean,
 }

@@ -18,10 +18,17 @@ import {
     startSessionEpic,
     stopSessionEpic,
 } from "./features/time-tracker/api/epics.ts";
+import {
+    createWorkDaysEpic,
+    deleteWorkDayEpic,
+    getWorkDaysEpic,
+    updateWorkDayEpic
+} from "@features/calendar/api/epics.ts";
 
 import authenticationReducer from "./features/authentication/authenticationSlice.ts";
 import employeesReducer from "./features/employees/employeesSlice.ts";
 import timeTrackerReducer from "./features/time-tracker/timeTrackerSlice.ts";
+import calendarReducer from "./features/calendar/calendarSlice.ts";
 
 const epics = [
     loginEpic,
@@ -40,6 +47,10 @@ const epics = [
     addWorkSessionEpic,
     editWorkSessionEpic,
     deleteWorkSessionEpic,
+    getWorkDaysEpic,
+    createWorkDaysEpic,
+    updateWorkDayEpic,
+    deleteWorkDayEpic
 ]
 
 const epicMiddleware = createEpicMiddleware();
@@ -49,6 +60,7 @@ const store = configureStore({
         authentication: authenticationReducer,
         employees: employeesReducer,
         timeTracker: timeTrackerReducer,
+        calendar: calendarReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(epicMiddleware),

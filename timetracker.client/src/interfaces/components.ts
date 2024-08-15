@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler, ReactNode, ReactElement } from "react";
+import { ChangeEvent, ChangeEventHandler, MutableRefObject, ReactElement, ReactNode } from "react";
 import { IconType } from "react-icons";
 
 import { UserModel } from "./domain.ts";
@@ -62,15 +62,15 @@ export interface ModalFormProps {
     onOpen: () => void;
     onClose: () => void;
     onSubmit: () => void;
-    triggerBtn: ReactNode;
-    submitBtnLoading: boolean;
+    triggerBtn?: ReactNode;
+    submitBtnLoading?: boolean;
     submitBtnText: string;
     children: ReactNode;
 }
 
 export interface CreateEditFormProps {
     isEditing?: boolean;
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 export interface CreateEditMemberFormProps extends CreateEditFormProps {
@@ -79,9 +79,22 @@ export interface CreateEditMemberFormProps extends CreateEditFormProps {
 
 export interface CreateEditWorkSessionFormProps extends CreateEditFormProps {
     formData?: {
-        id?: string,
-        startTime: string,
-        endTime: string,
+        id?: string;
+        startTime: string;
+        endTime: string;
+    },
+}
+
+export interface CreateEditWorkDayFormProps extends CreateEditFormProps {
+    selectedItems: MutableRefObject<string[]>,
+    isOpen: boolean,
+    onOpen: () => void,
+    onClose: () => void,
+    formData?: {
+        id?: string;
+        date: number;
+        startTime: string;
+        endTime: string;
     },
 }
 
@@ -90,7 +103,7 @@ export interface ActionMenuBtnProps {
 }
 
 export interface ActionMenuBtnWithInfoProps {
-    info: ReactNode ;
+    info: ReactNode;
 }
 
 export interface ActionMenuBtnWithConfirmProps extends ActionMenuBtnProps {

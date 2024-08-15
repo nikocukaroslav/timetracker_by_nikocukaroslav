@@ -15,7 +15,16 @@ export function convertToLocalISO(timestamp: number): string {
     return ISO;
 }
 
-const dateFormatConverter = (date: number | string, format?: string) => {
+export function convertDateToISODate(dateValue: Date): string {
+    const date = new Date(dateValue);
+    date.setMinutes(date.getMinutes() - new Date().getTimezoneOffset());
+
+    const ISO = date.toISOString().split('T')[0];
+
+    return ISO;
+}
+
+const dateFormatConverter = (date: Date | number | string, format?: string) => {
     const dateValue = new Date(date);
 
     let options: Intl.DateTimeFormatOptions;
@@ -34,6 +43,12 @@ const dateFormatConverter = (date: number | string, format?: string) => {
                 hour: "2-digit",
                 minute: "2-digit",
                 second: "2-digit",
+            };
+            break;
+        case "MMMM yyyy":
+            options = {
+                month: "long",
+                year: "numeric",
             };
             break;
         case "full-day":

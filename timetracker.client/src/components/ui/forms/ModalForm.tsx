@@ -24,7 +24,7 @@ function ModalForm(props: ModalFormProps) {
         onClose,
         onSubmit,
         triggerBtn,
-        submitBtnLoading,
+        submitBtnLoading = false,
         submitBtnText,
         children
     } = props;
@@ -36,7 +36,7 @@ function ModalForm(props: ModalFormProps) {
     }
 
     const TriggerButton = () =>
-        isValidElement(triggerBtn) ? cloneElement(triggerBtn, {onClick: onOpen}) : null;
+        isValidElement(triggerBtn) ? cloneElement(triggerBtn, { onClick: onOpen } as { onClick: () => void }) : null;
 
     return (
         <>

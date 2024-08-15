@@ -1,4 +1,4 @@
-import { UserModel, WorkSessionModel } from "./domain.ts";
+import { UserModel, WorkDayModel, WorkSessionModel } from "./domain.ts";
 
 export interface EmployeesState {
     loading: boolean;
@@ -23,8 +23,13 @@ export interface TimeTrackerState {
     currentTime: number;
 }
 
+export interface CalendarState {
+    workDays: WorkDayModel[];
+}
+
 export interface State {
-    employees: EmployeesState
-    authentication: AuthenticationState
-    timeTracker: TimeTrackerState
+    employees: EmployeesState;
+    authentication: AuthenticationState;
+    timeTracker: TimeTrackerState;
+    calendar: CalendarState;
 }

@@ -63,7 +63,7 @@ export const deleteSessionMutation = `
 
 export const getSessionsQuery = `
 query GetWorkSessions($id: Guid) {
-  users {
+  workSessions {
     getWorkSessions(id: $id) {
       id
       startTime
@@ -84,7 +84,7 @@ query GetWorkSessions($id: Guid) {
 
 export const getLastWorkSessionQuery = `
 query GetLastWorkSession($id: Guid) {
-  users {
+  workSessions {
     getLastWorkSession(id: $id) {
       id
       startTime

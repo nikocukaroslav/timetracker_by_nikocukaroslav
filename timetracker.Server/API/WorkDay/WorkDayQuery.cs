@@ -4,20 +4,20 @@ using timetracker.Server.Infrastructure.Interfaces;
 using timetracker.Server.API.WorkDay.Types;
 using GraphQL;
 using timetracker.Server.Domain.Errors;
-using timetracker.Server.Domain.Entities;
-
 namespace timetracker.Server.API.WorkDay
 {
     public class WorkDayQuery : ObjectGraphType
     {
-        public WorkDayQuery(IRepository<WorkDayModel> workDayRepository)
+        public WorkDayQuery(IWorkDayRepository workDayRepository)
         {
             this.Authorize();
 
             Field<ListGraphType<WorkDayResponseType>>("GetWorkDays")
+               .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                .ResolveAsync(async context =>
-               {
-                   var workDays = await workDayRepository.GetAllAsync();
+              {
+                   var workDays = await workDayRepository
+                   .GetUserWorkDaysByIdAsync(context.GetArgument<Guid>("id"));
 
                    if (workDays == null)
                    {

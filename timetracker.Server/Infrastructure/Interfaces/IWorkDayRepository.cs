@@ -2,8 +2,8 @@
 
 namespace timetracker.Server.Infrastructure.Interfaces
 {
-    public interface IWorkDayRepository
+    public interface IWorkDayRepository : IRepository<WorkDay>
     {
-        Task<WorkDay> AddAsync(WorkDay[] workDays);
+        Task<List<WorkDay>> GetUserWorkDaysByIdAsync(Guid id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using timetracker.Server.Domain.Entities;
+﻿using Dapper;
+using timetracker.Server.Domain.Entities;
 using timetracker.Server.Infrastructure.Database;
 using timetracker.Server.Infrastructure.Interfaces;
 
@@ -10,9 +11,13 @@ namespace timetracker.Server.Infrastructure.Repositories
         {
         }
 
-        public Task<WorkDay> AddAsync(WorkDay[] workDays)
+        public async Task<List<WorkDay>> GetUserWorkDaysByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            using var connection = _connectionFactory.Create();
+            var query = "SELECT * FROM WorkDays WHERE UserId = @UserId";
+            var workDays = await connection.QueryAsync<WorkDay>(query, new { UserId = id });
+
+            return workDays.ToList();
         }
     }
 }

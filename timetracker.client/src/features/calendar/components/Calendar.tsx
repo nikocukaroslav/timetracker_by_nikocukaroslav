@@ -3,7 +3,7 @@ import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
 import { Button, Heading, HStack, Stack } from "@chakra-ui/react";
 
 import CalendarHeader from "@features/calendar/components/CalendarHeader.tsx";
-import CalendarBody from "@features/calendar/components/СalendarBody.tsx";
+import CalendarBody from "@features/calendar/components/CalendarBody";
 import dateFormatConverter from "@utils/formatters.ts";
 
 function Calendar() {

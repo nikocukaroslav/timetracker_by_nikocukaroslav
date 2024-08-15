@@ -19,9 +19,17 @@ export function convertDateToISODate(dateValue: Date): string {
     const date = new Date(dateValue);
     date.setMinutes(date.getMinutes() - new Date().getTimezoneOffset());
 
-    const ISO = date.toISOString().split('T')[0];
+    const ISODate = date.toISOString().split('T')[0];
 
-    return ISO;
+    return ISODate;
+}
+
+export function convertTimeToISOTime(timeValue: string): string {
+    const [hours, minutes, seconds] = timeValue.split(':');
+
+    const ISOTime = `${hours || "00"}:${minutes || "00"}:${seconds || "00"}`;
+
+    return ISOTime;
 }
 
 const dateFormatConverter = (date: Date | number | string, format?: string) => {
@@ -49,6 +57,12 @@ const dateFormatConverter = (date: Date | number | string, format?: string) => {
             options = {
                 month: "long",
                 year: "numeric",
+            };
+            break;
+        case "hh:mm":
+            options = {
+                hour: "2-digit",
+                minute: "2-digit",
             };
             break;
         case "full-day":

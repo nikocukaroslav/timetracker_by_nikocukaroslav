@@ -68,7 +68,7 @@ export const getSessionsEpic: Epic<MyAction> = (action$) =>
                     id: action.payload
                 }
             ).pipe(
-                map(response => getWorkSessionsSuccessful(response.data.users.getWorkSessions)),
+                map(response => getWorkSessionsSuccessful(response.data.workSessions.getWorkSessions)),
             )
         )
     );
@@ -86,7 +86,7 @@ export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
                     if (response.errors)
                         return getLastWorkSessionError();
 
-                    return getLastWorkSessionSuccessful(response.data.users.getLastWorkSession);
+                    return getLastWorkSessionSuccessful(response.data.workSessions.getLastWorkSession);
                 }),
             ),
         )

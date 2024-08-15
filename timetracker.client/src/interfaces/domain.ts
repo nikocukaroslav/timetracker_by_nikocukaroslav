@@ -20,3 +20,11 @@ export interface WorkSessionModel {
     editedAt?: number,
     editor?: UserModel
 }
+
+export interface WorkDayModel {
+    id?: string,
+    day: string,
+    startTime?: number,
+    endTime?: number,
+    userId?: string,
+}

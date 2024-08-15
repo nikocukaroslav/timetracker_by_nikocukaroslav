@@ -1,5 +1,7 @@
+import WorkTimeCalendar from "@features/calendar/components/Calendar";
+
 function Calendar() {
-   return <div></div>;
+    return <WorkTimeCalendar/>;
 }
 
 export default Calendar;

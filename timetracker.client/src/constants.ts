@@ -77,11 +77,13 @@ export const LOGIN = "LOGIN"
 export const AUTHORIZE = "AUTHORIZE"
 export const LOGOUT = "LOGOUT"
 export const REFRESH_TOKEN = "REFRESH_TOKEN"
+
 export const CREATE_USER = "CREATE_USER"
 export const GET_USERS = "GET_USERS"
 export const GET_USER = "GET_USER"
 export const DELETE_USER = "DELETE_USER"
 export const UPDATE_USER = "UPDATE_USER"
+
 export const START_SESSION = "START_SESSION"
 export const STOP_SESSION = "STOP_SESSION"
 export const GET_SESSIONS = "GET_SESSIONS"
@@ -89,4 +91,9 @@ export const GET_LAST_WORK_SESSION = "GET_LAST_WORK_SESSION"
 export const ADD_WORK_SESSION = "ADD_WORK_SESSION"
 export const EDIT_WORK_SESSION = "EDIT_WORK_SESSION"
 export const DELETE_WORK_SESSION = "DELETE_WORK_SESSION"
+
+export const GET_WORK_DAYS = "GET_WORK_DAYS"
+export const CREATE_WORK_DAYS = "CREATE_WORK_DAYS"
+export const UPDATE_WORK_DAYS = "UPDATE_WORK_DAYS"
+export const DELETE_WORK_DAYS = "DELETE_WORK_DAYS"
 

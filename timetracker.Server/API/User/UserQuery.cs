@@ -28,23 +28,6 @@ namespace timetracker.Server.API.User
                    if (user == null) context.Errors.Add(ErrorCode.USER_NOT_FOUND);
                    return user;
                });
-
-            Field<ListGraphType<WorkSessionResponseType>>("GetWorkSessions")
-                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
-                .ResolveAsync(async context =>
-                {
-                    var workSessions = await userRepository.GetUserWorkSessionsByIdAsync(context.GetArgument<Guid>("id"));
-                    return workSessions;
-                });
-
-            Field<WorkSessionResponseType>("GetLastWorkSession")
-                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
-                .ResolveAsync(async context =>
-                {
-                    var workSession = await userRepository.GetUserLastWorkSessionAsync(context.GetArgument<Guid>("id"));
-                    if (workSession is null) context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
-                    return workSession;
-                });
         }
     }
 }

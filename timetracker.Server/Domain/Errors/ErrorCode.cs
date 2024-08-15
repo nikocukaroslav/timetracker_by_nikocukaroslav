@@ -16,6 +16,8 @@ namespace timetracker.Server.Domain.Errors
 
         public static readonly ValidationError WORK_SESSION_ALREADY_STOPPED = new Error("Work session is already stopped");
 
+        public static readonly ValidationError WORK_DAY_NOT_FOUND = new Error("Work day is not found");
+
         public static readonly ValidationError EMAIL_EXIST = new Error("This email is already registered");
 
         public static readonly ValidationError INVALID_PASSWORD_LENGTH = new Error("Password must be between 8 and 20 characters");

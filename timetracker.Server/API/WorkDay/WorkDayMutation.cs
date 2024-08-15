@@ -1,6 +1,10 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using timetracker.Server.API.WorkDay.Models;
 using timetracker.Server.API.WorkDay.Types;
+using timetracker.Server.Application.Services;
+using timetracker.Server.Domain.Entities;
+using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 using WorkDayModel = timetracker.Server.Domain.Entities.WorkDay;
 
@@ -12,23 +16,47 @@ namespace timetracker.Server.API.WorkDay
         {
             this.Authorize();
 
-            Field<AddWorkDayResponseType>("AddWorkDay")
-                .Arguments(new QueryArguments(new QueryArgument<AddWorkDayRequestType> { Name = "workDay" }
-                )).ResolveAsync(async context =>
+            Field<ListGraphType<AddWorkDaysResponseType>>("AddWorkDays")
+                .Arguments(new QueryArguments(
+                    new QueryArgument<AddWorkDaysRequestType> { Name = "workDays" }
+                ))
+                .ResolveAsync(async context =>
                 {
-                    var inputWorkDay = context.GetArgument<WorkDayModel>("workDay");
+                    var workDaysInput = context.GetArgument<AddWorkDaysRequest>("workDays");
 
-                    return await workDayRepository.AddAsync(inputWorkDay);
+                    var addedWorkDays = new List<WorkDayModel>();
+
+                        foreach (var day in workDaysInput.Days)
+                        {
+                            var workDay = new WorkDayModel
+                            {
+                                Day = DateTimeFormatter.DateOnlyToDateTime(day),
+                                StartTime = workDaysInput.StartTime,
+                                EndTime = workDaysInput.EndTime,
+                                UserId = workDaysInput.UserId
+                            };
+
+                            var addedWorkDay = await workDayRepository.AddAsync(workDay);
+                            addedWorkDays.Add(addedWorkDay);
+                        }
+     
+                    return addedWorkDays;
                 });
 
             Field<WorkDayResponseType>("EditWorkDay")
                 .Arguments(new QueryArguments(new QueryArgument<EditWorkDayRequestType> { Name = "workDay" }))
                 .ResolveAsync(async context =>
                 {
-                    var inputWorkDay = context.GetArgument<WorkDayModel>("workDay");
+                    var inputWorkDay = context.GetArgument<EditWorkDayRequest>("workDay");
                     var workDay = await workDayRepository.GetByIdAsync(inputWorkDay.Id);
 
-                    workDay.Day = inputWorkDay.Day;
+                    if (workDay == null)
+                    {
+                        context.Errors.Add(ErrorCode.WORK_DAY_NOT_FOUND);
+                        return null;
+                    }
+
+                    workDay.Day = DateTimeFormatter.DateOnlyToDateTime(inputWorkDay.Day);
                     workDay.StartTime = inputWorkDay.StartTime;
                     workDay.EndTime = inputWorkDay.EndTime;
 
@@ -40,7 +68,13 @@ namespace timetracker.Server.API.WorkDay
                  .ResolveAsync(async context =>
                  {
                      Guid id = context.GetArgument<Guid>("id");
-                     var workSession = await workDayRepository.GetByIdAsync(id);
+                     var workDay = await workDayRepository.GetByIdAsync(id);
+
+                     if (workDay == null)
+                     {
+                         context.Errors.Add(ErrorCode.WORK_DAY_NOT_FOUND);
+                         return null;
+                     }
 
                      await workDayRepository.DeleteAsync(id);
 

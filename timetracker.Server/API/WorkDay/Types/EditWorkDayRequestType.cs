@@ -8,8 +8,8 @@ namespace timetracker.Server.API.WorkDay.Types
         {
             Field<NonNullGraphType<GuidGraphType>>("id");
             Field<NonNullGraphType<DateOnlyGraphType>>("day");
-            Field<NonNullGraphType<LongGraphType>>("startTime");
-            Field<NonNullGraphType<LongGraphType>>("endTime");
+            Field<NonNullGraphType<TimeOnlyGraphType>>("startTime");
+            Field<NonNullGraphType<TimeOnlyGraphType>>("endTime");
         }
     }
 }

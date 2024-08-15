@@ -20,7 +20,7 @@ namespace timetracker.Server.API.WorkSession
                 .ResolveAsync(async context =>
                 {
                     var inputSession = context.GetArgument<WorkSessionModel>("session");
-                    inputSession.SetBy = SetBy.SYSTEM.ToString();
+                    inputSession.SetBy = SetBy.AUTOMATIC.ToString();
 
                     return await workSessionRepository.AddAsync(inputSession);
                 });
@@ -42,7 +42,7 @@ namespace timetracker.Server.API.WorkSession
                     return await workSessionRepository.UpdateAsync(session);
                 });
 
-            Field<WorkSessionResponseType>("EditSession")
+            Field<WorkSessionResponseType>("UpdateSession")
                 .Arguments(new QueryArguments(new QueryArgument<EditSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
                 {

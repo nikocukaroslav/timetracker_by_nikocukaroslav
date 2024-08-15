@@ -2,7 +2,7 @@
 {
     public enum SetBy
     {
-        SYSTEM,
+        AUTOMATIC,
         MANUALLY
     }
 }

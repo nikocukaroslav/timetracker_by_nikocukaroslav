@@ -31,8 +31,8 @@ namespace timetracker.Server.API.WorkDay
                             var workDay = new WorkDayModel
                             {
                                 Day = DateTimeFormatter.DateOnlyToDateTime(day),
-                                StartTime = workDaysInput.StartTime,
-                                EndTime = workDaysInput.EndTime,
+                                StartTime = workDaysInput.StartTime.ToTimeSpan(),
+                                EndTime = workDaysInput.EndTime.ToTimeSpan(),
                                 UserId = workDaysInput.UserId
                             };
 
@@ -43,7 +43,7 @@ namespace timetracker.Server.API.WorkDay
                     return addedWorkDays;
                 });
 
-            Field<WorkDayResponseType>("EditWorkDay")
+            Field<WorkDayResponseType>("UpdateWorkDay")
                 .Arguments(new QueryArguments(new QueryArgument<EditWorkDayRequestType> { Name = "workDay" }))
                 .ResolveAsync(async context =>
                 {
@@ -57,8 +57,8 @@ namespace timetracker.Server.API.WorkDay
                     }
 
                     workDay.Day = DateTimeFormatter.DateOnlyToDateTime(inputWorkDay.Day);
-                    workDay.StartTime = inputWorkDay.StartTime;
-                    workDay.EndTime = inputWorkDay.EndTime;
+                    workDay.StartTime = inputWorkDay.StartTime.ToTimeSpan();
+                    workDay.EndTime = inputWorkDay.EndTime.ToTimeSpan();
 
                     return await workDayRepository.UpdateAsync(workDay);
                 });

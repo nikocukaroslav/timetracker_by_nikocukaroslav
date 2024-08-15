@@ -9,12 +9,13 @@ namespace timetracker.Server.API.User.Types
         public UpdateUserRequestType()
         {
             this.AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString());
+
             Field<GuidGraphType>("id");
             Field<StringGraphType>("name");
             Field<StringGraphType>("surname");
             Field<StringGraphType>("position");
             Field<StringGraphType>("status");
-            Field<FloatGraphType>("timeload");
+            Field<TimeOnlyGraphType>("timeload");
             Field<ListGraphType<StringGraphType>>("permissions");
             Field<BooleanGraphType>("isEmployed");
         }

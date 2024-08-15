@@ -10,5 +10,9 @@
         {
             return date.ToDateTime(TimeOnly.MinValue);
         }
+        public static TimeOnly TimeSpanToTimeOnly(TimeSpan time) 
+        {
+            return TimeOnly.FromTimeSpan(time);
+        }
     }
 }

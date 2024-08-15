@@ -17,6 +17,7 @@ namespace timetracker.Server.API.User
                .ResolveAsync(async context =>
                {
                    var users = await userRepository.GetAllAsync();
+
                    return users;
                });
 

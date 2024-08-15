@@ -14,7 +14,7 @@ namespace timetracker.Server.Domain.Entities
         public string Position { get; set; }
         public string Permissions { get; set; }
         public string? RefreshTokenHash { get; set; }
-        public float Timeload { get; set; }
+        public TimeSpan Timeload { get; set; }
         public string? Status { get; set; }
         public bool IsEmployed { get; set; }
     }

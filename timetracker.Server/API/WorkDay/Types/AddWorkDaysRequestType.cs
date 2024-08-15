@@ -7,8 +7,8 @@ namespace timetracker.Server.API.WorkDay.Types
        public AddWorkDaysRequestType() 
         {
             Field<NonNullGraphType<ListGraphType<DateOnlyGraphType>>>("days");
-            Field<NonNullGraphType<LongGraphType>>("startTime");
-            Field<NonNullGraphType<LongGraphType>>("endTime");
+            Field<NonNullGraphType<TimeOnlyGraphType>>("startTime");
+            Field<NonNullGraphType<TimeOnlyGraphType>>("endTime");
             Field<NonNullGraphType<GuidGraphType>>("userId");
         }
     }

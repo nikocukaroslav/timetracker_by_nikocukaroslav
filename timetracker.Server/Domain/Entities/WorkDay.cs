@@ -7,8 +7,8 @@ namespace timetracker.Server.Domain.Entities
     {
         public Guid Id { get; set; }
         public DateTime Day { get; set; }
-        public long StartTime { get; set; }
-        public long EndTime { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
         public Guid UserId { get; set; }
     }
 }

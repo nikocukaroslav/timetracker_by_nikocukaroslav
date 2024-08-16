@@ -15,13 +15,13 @@ namespace timetracker.Server.API.WorkDay
         {
             this.Authorize();
 
-            Field<ListGraphType<AddWorkDaysResponseType>>("createWorkDays")
+            Field<ListGraphType<CreateWorkDaysResponseType>>("createWorkDays")
                 .Arguments(new QueryArguments(
-                    new QueryArgument<AddWorkDaysRequestType> { Name = "workDays" }
+                    new QueryArgument<CreateWorkDaysRequestType> { Name = "workDays" }
                 ))
                 .ResolveAsync(async context =>
                 {
-                    var workDaysInput = context.GetArgument<AddWorkDaysRequest>("workDays");
+                    var workDaysInput = context.GetArgument<CreateWorkDaysRequest>("workDays");
 
                     var addedWorkDays = new List<WorkDayModel>();
 
@@ -43,10 +43,10 @@ namespace timetracker.Server.API.WorkDay
                 });
 
             Field<WorkDayResponseType>("updateWorkDay")
-                .Arguments(new QueryArguments(new QueryArgument<EditWorkDayRequestType> { Name = "workDay" }))
+                .Arguments(new QueryArguments(new QueryArgument<UpdateWorkDayRequestType> { Name = "workDay" }))
                 .ResolveAsync(async context =>
                 {
-                    var inputWorkDay = context.GetArgument<EditWorkDayRequest>("workDay");
+                    var inputWorkDay = context.GetArgument<UpdateWorkDayRequest>("workDay");
                     var workDay = await workDayRepository.GetByIdAsync(inputWorkDay.Id);
 
                     if (workDay == null)

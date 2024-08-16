@@ -2,9 +2,9 @@
 
 namespace timetracker.Server.API.User.Types
 {
-    public class AddUserRequestType : InputObjectGraphType
+    public class CreateUserRequestType : InputObjectGraphType
     {
-        public AddUserRequestType()
+        public CreateUserRequestType()
         {
             Field<StringGraphType>("name");
             Field<StringGraphType>("surname");

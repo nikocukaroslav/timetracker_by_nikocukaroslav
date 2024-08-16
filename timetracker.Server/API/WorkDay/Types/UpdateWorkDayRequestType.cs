@@ -2,14 +2,14 @@
 
 namespace timetracker.Server.API.WorkDay.Types
 {
-    public class AddWorkDaysRequestType : InputObjectGraphType
+    public class UpdateWorkDayRequestType : InputObjectGraphType
     {
-       public AddWorkDaysRequestType() 
+        public UpdateWorkDayRequestType() 
         {
-            Field<NonNullGraphType<ListGraphType<DateOnlyGraphType>>>("days");
+            Field<NonNullGraphType<GuidGraphType>>("id");
+            Field<NonNullGraphType<DateOnlyGraphType>>("day");
             Field<NonNullGraphType<TimeOnlyGraphType>>("startTime");
             Field<NonNullGraphType<TimeOnlyGraphType>>("endTime");
-            Field<NonNullGraphType<GuidGraphType>>("userId");
         }
     }
 }

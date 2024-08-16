@@ -4,9 +4,9 @@ using timetracker.Server.Application.Services;
 
 namespace timetracker.Server.API.WorkDay.Types
 {
-    public class AddWorkDaysResponseType : ObjectGraphType<WorkDayModel>
+    public class CreateWorkDaysResponseType : ObjectGraphType<WorkDayModel>
     {
-        public AddWorkDaysResponseType()
+        public CreateWorkDaysResponseType()
         {
             Field(t => t.Id);
             Field<DateOnlyGraphType>("day")

@@ -2,9 +2,9 @@
 
 namespace timetracker.Server.API.WorkSession.Types
 {
-    public class AddSessionRequestType : InputObjectGraphType
+    public class CreateSessionRequestType : InputObjectGraphType
     {
-        public AddSessionRequestType()
+        public CreateSessionRequestType()
         {
             Field<NonNullGraphType<GuidGraphType>>("userId");
             Field<NonNullGraphType<LongGraphType>>("startTime");

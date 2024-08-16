@@ -3,9 +3,9 @@ using WorkSessionModel = timetracker.Server.Domain.Entities.WorkSession;
 
 namespace timetracker.Server.API.WorkSession.Types
 {
-    public class AddSessionResponseType : ObjectGraphType<WorkSessionModel>
+    public class CreateSessionResponseType : ObjectGraphType<WorkSessionModel>
     {
-        public AddSessionResponseType()
+        public CreateSessionResponseType()
         {
             Field(t => t.Id);
             Field(t => t.StartTime);

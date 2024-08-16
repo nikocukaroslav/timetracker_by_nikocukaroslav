@@ -14,8 +14,8 @@ namespace timetracker.Server.API.WorkSession
         {
             this.Authorize();
 
-            Field<AddSessionResponseType>("createSession")
-                 .Arguments(new QueryArguments(new QueryArgument<AddSessionRequestType> { Name = "session" }))
+            Field<CreateSessionResponseType>("createSession")
+                 .Arguments(new QueryArguments(new QueryArgument<CreateSessionRequestType> { Name = "session" }))
                  .ResolveAsync(async context =>
                  {
                      var inputSession = context.GetArgument<WorkSessionModel>("session");
@@ -25,7 +25,7 @@ namespace timetracker.Server.API.WorkSession
                  });
 
             Field<WorkSessionResponseType>("updateSession")
-                .Arguments(new QueryArguments(new QueryArgument<EditSessionRequestType> { Name = "session" }))
+                .Arguments(new QueryArguments(new QueryArgument<UpdateSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
                 {
                     var inputSession = context.GetArgument<WorkSessionModel>("session");

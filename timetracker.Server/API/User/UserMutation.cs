@@ -17,10 +17,10 @@ namespace timetracker.Server.API.User
         {
             Field<UserResponseType>("createUser")
                 .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
-                .Arguments(new QueryArguments(new QueryArgument<AddUserRequestType> { Name = "user" }))
+                .Arguments(new QueryArguments(new QueryArgument<CreateUserRequestType> { Name = "user" }))
                 .ResolveAsync(async context =>
                 {
-                    var userInput = context.GetArgument<AddUserRequest>("user");
+                    var userInput = context.GetArgument<CreateUserRequest>("user");
 
                     if (userInput is null)
                     {

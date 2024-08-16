@@ -1,7 +1,7 @@
-export const addUserMutation = `
-mutation AddUser($user: AddUserRequestType) {
+export const createUserMutation = `
+mutation CreateUser($user: CreateUserRequestType) {
   users {
-    addUser(user: $user) {
+    createUser(user: $user) {
       id
       name
       surname
@@ -19,7 +19,7 @@ mutation AddUser($user: AddUserRequestType) {
 export const getUsersQuery = `
 {
   users {
-    getUsers {
+    users {
       id
       name
       surname
@@ -37,7 +37,7 @@ export const getUsersQuery = `
 export const getUserQuery = `
 query GetUser($id: Guid!) {
   users {
-    getUser(id: $id) {
+    user(id: $id) {
       id
       name
       surname

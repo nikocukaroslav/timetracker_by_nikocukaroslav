@@ -34,10 +34,10 @@ const timeTrackerSlice = createSlice({
         getLastWorkSessionError(state) {
             state.searchingLastSession = false;
         },
-        addWorkSessionSuccessful(state, action) {
+        createWorkSessionSuccessful(state, action) {
             state.workSessions.unshift(action.payload);
         },
-        editWorkSessionSuccessful(state, {payload}) {
+        updateWorkSessionSuccessful(state, {payload}) {
             const {id, startTime, endTime, editedAt, editor} = payload;
 
             const session: WorkSessionModel | undefined = state.workSessions.find((session) => session.id === id);
@@ -70,8 +70,8 @@ export const {
     getWorkSessionsSuccessful,
     getLastWorkSessionSuccessful,
     getLastWorkSessionError,
-    addWorkSessionSuccessful,
-    editWorkSessionSuccessful,
+    createWorkSessionSuccessful,
+    updateWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
     setIsTracking,
     setTime,

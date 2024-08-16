@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PiPlus } from "react-icons/pi";
 import { Button, Divider, Flex, Img, Text } from "@chakra-ui/react";
 
-import AddMemberForm from "@features/teams/components/AddMemberForm.tsx";
+import CreateMemberForm from "@features/teams/components/CreateMemberForm.tsx";
 
 function Teams() {
     const [active, setActive] = useState(false);
@@ -47,7 +47,7 @@ function Teams() {
                     </Flex>
                 </Flex>
             </Flex>
-            <AddMemberForm isOpen={active} onClose={handleActive}/>
+            <CreateMemberForm isOpen={active} onClose={handleActive}/>
         </>
     );
 }

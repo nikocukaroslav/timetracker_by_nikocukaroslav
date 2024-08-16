@@ -5,7 +5,7 @@ import { FormLabel, Text } from "@chakra-ui/react";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
 
-import { addWorkSession, editWorkSession } from "@features/time-tracker/api/actions.ts";
+import { createWorkSession, updateWorkSession } from "@features/time-tracker/api/actions.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditWorkSessionFormProps } from "@interfaces/components.ts";
@@ -41,7 +41,7 @@ function CreateEditWorkSessionForm({formData, isEditing, children}: CreateEditWo
             editorId: userId,
         };
 
-        dispatch(editWorkSession(newSessionData))
+        dispatch(updateWorkSession(newSessionData))
     }
 
     function handleAdd() {
@@ -54,7 +54,7 @@ function CreateEditWorkSessionForm({formData, isEditing, children}: CreateEditWo
             userId
         };
 
-        dispatch(addWorkSession(newSession));
+        dispatch(createWorkSession(newSession));
         setData(defaultFormData);
     }
 

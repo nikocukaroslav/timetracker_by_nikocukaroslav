@@ -1,17 +1,17 @@
 import {
-    ADD_WORK_SESSION,
+    CREATE_WORK_SESSION,
     DELETE_WORK_SESSION,
-    EDIT_WORK_SESSION,
+    UPDATE_WORK_SESSION,
     GET_LAST_WORK_SESSION,
-    GET_SESSIONS,
+    GET_WORK_SESSIONS,
     START_SESSION,
     STOP_SESSION
 } from "@constants";
 
 export const startSession = (session) => ({type: START_SESSION, payload: session})
 export const stopSession = (session) => ({type: STOP_SESSION, payload: session})
-export const getWorkSessions = (sessionId) => ({type: GET_SESSIONS, payload: sessionId})
+export const getWorkSessions = (userId) => ({type: GET_WORK_SESSIONS, payload: userId})
 export const getLastWorkSession = (userId) => ({type: GET_LAST_WORK_SESSION, payload: userId})
-export const addWorkSession = (session) => ({type: ADD_WORK_SESSION, payload: session})
-export const editWorkSession = (session) => ({type: EDIT_WORK_SESSION, payload: session})
+export const createWorkSession = (session) => ({type: CREATE_WORK_SESSION, payload: session})
+export const updateWorkSession = (session) => ({type: UPDATE_WORK_SESSION, payload: session})
 export const deleteWorkSession = (sessionId) => ({type: DELETE_WORK_SESSION, payload: sessionId})

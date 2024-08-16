@@ -18,10 +18,10 @@ namespace timetracker.Server.API.Auth
             IPasswordHasher passwordHasher,
             IHttpContextAccessor httpContextAccessor)
         {
-            Field<LoginResponseType>("Login")
+            Field<LoginResponseType>("login")
                 .Arguments(new QueryArguments(
-                    new QueryArgument<StringGraphType> { Name = "Email" },
-                    new QueryArgument<StringGraphType> { Name = "Password" }
+                    new QueryArgument<StringGraphType> { Name = "email" },
+                    new QueryArgument<StringGraphType> { Name = "password" }
                 ))
                 .ResolveAsync(async context =>
                 {
@@ -51,9 +51,9 @@ namespace timetracker.Server.API.Auth
                     );
                 });
 
-            Field<AuthorizeResponseType>("Authorize")
+            Field<AuthorizeResponseType>("authorize")
                 .Arguments(new QueryArguments(
-                    new QueryArgument<StringGraphType> { Name = "RefreshToken" }
+                    new QueryArgument<StringGraphType> { Name = "refreshToken" }
                 ))
                 .ResolveAsync(async context =>
                 {
@@ -81,9 +81,9 @@ namespace timetracker.Server.API.Auth
                     }
                 });
 
-            Field<RefreshTokenResponseType>("RefreshToken")
+            Field<RefreshTokenResponseType>("refreshToken")
                 .Arguments(new QueryArguments(
-                    new QueryArgument<StringGraphType> { Name = "RefreshToken" }
+                    new QueryArgument<StringGraphType> { Name = "refreshToken" }
                 ))
                .ResolveAsync(async context =>
                {
@@ -109,9 +109,9 @@ namespace timetracker.Server.API.Auth
                });
 
 
-            Field<BooleanGraphType>("Logout")
+            Field<BooleanGraphType>("logout")
                 .Arguments(new QueryArguments(
-                    new QueryArgument<StringGraphType> { Name = "RefreshToken" }
+                    new QueryArgument<StringGraphType> { Name = "refreshToken" }
                 ))
                 .ResolveAsync(async context =>
                 {

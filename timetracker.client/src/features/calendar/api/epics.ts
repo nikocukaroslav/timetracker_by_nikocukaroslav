@@ -25,7 +25,7 @@ export const getWorkDaysEpic: Epic<MyAction> = (action$) =>
                     id: action.payload
                 }
             ).pipe(
-                map(response => getWorkDaysSuccessful(response.data.workDays.getWorkDays)),
+                map(response => getWorkDaysSuccessful(response.data.users.workDays)),
             )
         )
     );
@@ -38,7 +38,7 @@ export const createWorkDaysEpic: Epic<MyAction> = (action$) =>
                     workDays: action.payload
                 }
             ).pipe(
-                map(response => createWorkDaysSuccessful(response.data.workDays.addWorkDays)),
+                map(response => createWorkDaysSuccessful(response.data.workDays.createWorkDays)),
             )
         )
     );
@@ -51,7 +51,7 @@ export const updateWorkDayEpic: Epic<MyAction> = (action$) =>
                     workDay: action.payload
                 }
             ).pipe(
-                map(response => updateWorkDaySuccessful(response.data.workDays.editWorkDay)),
+                map(response => updateWorkDaySuccessful(response.data.workDays.updateWorkDay)),
             )
         )
     );

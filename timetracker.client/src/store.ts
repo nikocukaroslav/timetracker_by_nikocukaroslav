@@ -10,11 +10,11 @@ import {
     updateUserEpic
 } from "./features/employees/api/epics.ts";
 import {
-    addWorkSessionEpic,
+    createWorkSessionEpic,
     deleteWorkSessionEpic,
-    editWorkSessionEpic,
+    updateWorkSessionEpic,
     getLastWorkSessionEpic,
-    getSessionsEpic,
+    getWorkSessionsEpic,
     startSessionEpic,
     stopSessionEpic,
 } from "./features/time-tracker/api/epics.ts";
@@ -42,10 +42,10 @@ const epics = [
     updateUserEpic,
     startSessionEpic,
     stopSessionEpic,
-    getSessionsEpic,
+    getWorkSessionsEpic,
     getLastWorkSessionEpic,
-    addWorkSessionEpic,
-    editWorkSessionEpic,
+    createWorkSessionEpic,
+    updateWorkSessionEpic,
     deleteWorkSessionEpic,
     getWorkDaysEpic,
     createWorkDaysEpic,

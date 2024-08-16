@@ -10,8 +10,8 @@ namespace timetracker.Server.API
     {
         public RootMutation()
         {
-            Field<UserMutation>("users").Resolve(_ => new { });
             Field<AuthMutation>("auth").Resolve(_ => new { });
+            Field<UserMutation>("users").Resolve(_ => new { });
             Field<WorkSessionMutation>("workSessions").Resolve(_=> new { });
             Field<WorkDayMutation>("workDays").Resolve(_=> new { });
         }

@@ -3,9 +3,9 @@ import { Epic, ofType } from "redux-observable";
 
 import store from "@store";
 import {
-    addWorkSessionSuccessful,
+    createWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
-    editWorkSessionSuccessful,
+    updateWorkSessionSuccessful,
     getLastWorkSessionError,
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
@@ -14,22 +14,22 @@ import {
     stopSuccessful
 } from "../timeTrackerSlice.ts";
 import {
-    addSessionMutation,
+    createSessionMutation,
     deleteSessionMutation,
-    editSessionMutation,
+    updateSessionMutation,
     getLastWorkSessionQuery,
-    getSessionsQuery,
+    getWorkSessionsQuery,
     startSessionMutation,
     stopSessionMutation
 } from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import {
-    ADD_WORK_SESSION,
+    CREATE_WORK_SESSION,
     DELETE_WORK_SESSION,
-    EDIT_WORK_SESSION,
+    UPDATE_WORK_SESSION,
     GET_LAST_WORK_SESSION,
-    GET_SESSIONS,
+    GET_WORK_SESSIONS,
     START_SESSION,
     STOP_SESSION
 } from "@constants";
@@ -60,15 +60,15 @@ export const stopSessionEpic: Epic<MyAction> = (action$) =>
         )
     );
 
-export const getSessionsEpic: Epic<MyAction> = (action$) =>
+export const getWorkSessionsEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
-        ofType(GET_SESSIONS),
+        ofType(GET_WORK_SESSIONS),
         switchMap(action =>
-            graphQlQuery(getSessionsQuery, {
+            graphQlQuery(getWorkSessionsQuery, {
                     id: action.payload
                 }
             ).pipe(
-                map(response => getWorkSessionsSuccessful(response.data.workSessions.getWorkSessions)),
+                map(response => getWorkSessionsSuccessful(response.data.users.workSessions)),
             )
         )
     );
@@ -86,34 +86,34 @@ export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
                     if (response.errors)
                         return getLastWorkSessionError();
 
-                    return getLastWorkSessionSuccessful(response.data.workSessions.getLastWorkSession);
+                    return getLastWorkSessionSuccessful(response.data.users.lastWorkSession);
                 }),
             ),
         )
     );
 
-export const addWorkSessionEpic: Epic<MyAction> = (action$) =>
+export const createWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
-        ofType(ADD_WORK_SESSION),
+        ofType(CREATE_WORK_SESSION),
         switchMap(action =>
-            graphQlQuery(addSessionMutation, {
+            graphQlQuery(createSessionMutation, {
                     session: action.payload
                 }
             ).pipe(
-                map(response => addWorkSessionSuccessful(response.data.workSessions.addSession)),
+                map(response => createWorkSessionSuccessful(response.data.workSessions.createSession)),
             )
         )
     );
 
-export const editWorkSessionEpic: Epic<MyAction> = (action$) =>
+export const updateWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
-        ofType(EDIT_WORK_SESSION),
+        ofType(UPDATE_WORK_SESSION),
         switchMap(action =>
-            graphQlQuery(editSessionMutation, {
+            graphQlQuery(updateSessionMutation, {
                     session: action.payload
                 }
             ).pipe(
-                map(response => editWorkSessionSuccessful(response.data.workSessions.editSession)),
+                map(response => updateWorkSessionSuccessful(response.data.workSessions.updateSession)),
             )
         )
     );

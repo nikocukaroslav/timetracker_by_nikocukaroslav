@@ -59,18 +59,18 @@ export const positionList = [
     },
 ];
 
-export const SYSTEM = "SYSTEM"
+export const AUTOMATIC = "AUTOMATIC"
 export const MANUALLY = "MANUALLY"
 
 export const setByList = [
     {
-        name: SYSTEM,
-        description: "by system",
+        name: AUTOMATIC,
+        description: "automatically",
     },
     {
         name: MANUALLY,
         description: "manually",
-    }
+    },
 ];
 
 export const LOGIN = "LOGIN"
@@ -86,10 +86,10 @@ export const UPDATE_USER = "UPDATE_USER"
 
 export const START_SESSION = "START_SESSION"
 export const STOP_SESSION = "STOP_SESSION"
-export const GET_SESSIONS = "GET_SESSIONS"
+export const GET_WORK_SESSIONS = "GET_WORK_SESSIONS"
 export const GET_LAST_WORK_SESSION = "GET_LAST_WORK_SESSION"
-export const ADD_WORK_SESSION = "ADD_WORK_SESSION"
-export const EDIT_WORK_SESSION = "EDIT_WORK_SESSION"
+export const CREATE_WORK_SESSION = "CREATE_WORK_SESSION"
+export const UPDATE_WORK_SESSION = "UPDATE_WORK_SESSION"
 export const DELETE_WORK_SESSION = "DELETE_WORK_SESSION"
 
 export const GET_WORK_DAYS = "GET_WORK_DAYS"

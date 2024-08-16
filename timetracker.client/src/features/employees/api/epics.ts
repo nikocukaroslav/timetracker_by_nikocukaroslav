@@ -12,7 +12,7 @@ import {
     updateSuccessful
 } from "../employeesSlice.ts";
 import { setError } from "@features/authentication/authenticationSlice.ts";
-import { addUserMutation, deleteUserMutation, getUserQuery, getUsersQuery, updateUserMutation } from "./requests.ts";
+import { createUserMutation, deleteUserMutation, getUserQuery, getUsersQuery, updateUserMutation } from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 
@@ -22,14 +22,14 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
         tap(() => store.dispatch(setLoading(true))),
         tap(() => store.dispatch(setError(""))),
         switchMap(action =>
-            graphQlQuery(addUserMutation, {
+            graphQlQuery(createUserMutation, {
                     user: action.payload
                 }
             )
                 .pipe(
                     map(response => {
                             if (!response.errors)
-                                return createSuccessful(response.data.users.addUser)
+                                return createSuccessful(response.data.users.createUser)
                             return response.errors.forEach((message: string) => console.log(message))
                         }
                     ),
@@ -47,7 +47,7 @@ export const getUsersEpic: Epic<MyAction> = (action$) =>
         switchMap(() =>
             graphQlQuery(getUsersQuery, {})
                 .pipe(
-                    map(response => getUsersSuccessful(response.data.users.getUsers))
+                    map(response => getUsersSuccessful(response.data.users.users))
                 )
         )
     );
@@ -72,7 +72,7 @@ export const getUserEpic: Epic<MyAction> = (action$) =>
         switchMap(action =>
             graphQlQuery(getUserQuery, {id: action.payload})
                 .pipe(
-                    map(response => getUserSuccessful(response.data.users.getUser))
+                    map(response => getUserSuccessful(response.data.users.user))
                 )
         )
     )

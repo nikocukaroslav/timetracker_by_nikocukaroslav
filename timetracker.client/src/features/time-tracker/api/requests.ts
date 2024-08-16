@@ -21,10 +21,10 @@ export const stopSessionMutation = `
   }
 `
 
-export const editSessionMutation = `
-  mutation EditSession($session: EditSessionRequestType) {
+export const updateSessionMutation = `
+  mutation UpdateSession($session: UpdateSessionRequestType) {
     workSessions {
-     editSession(session: $session) {
+     updateSession(session: $session) {
         id
         startTime
         endTime
@@ -40,10 +40,10 @@ export const editSessionMutation = `
   }
 `
 
-export const addSessionMutation = `
-  mutation AddSession($session: AddSessionRequestType) {
+export const createSessionMutation = `
+  mutation createSession($session: CreateSessionRequestType) {
     workSessions {
-      addSession(session: $session) {
+      createSession(session: $session) {
         id
         startTime
         endTime
@@ -61,10 +61,10 @@ export const deleteSessionMutation = `
 }
 `
 
-export const getSessionsQuery = `
+export const getWorkSessionsQuery = `
 query GetWorkSessions($id: Guid) {
-  workSessions {
-    getWorkSessions(id: $id) {
+  users {
+    workSessions(id: $id) {
       id
       startTime
       endTime
@@ -84,8 +84,8 @@ query GetWorkSessions($id: Guid) {
 
 export const getLastWorkSessionQuery = `
 query GetLastWorkSession($id: Guid) {
-  workSessions {
-    getLastWorkSession(id: $id) {
+  users {
+    lastWorkSession(id: $id) {
       id
       startTime
     }

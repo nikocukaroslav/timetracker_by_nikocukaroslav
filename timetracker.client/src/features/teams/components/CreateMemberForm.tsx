@@ -56,7 +56,7 @@ export const users: User[] = [
     },
 ];
 
-function AddMemberForm({isOpen, onClose}: UserFormControls) {
+function CreateMemberForm({isOpen, onClose}: UserFormControls) {
     return (
         <Modal
             closeOnOverlayClick={false}
@@ -130,4 +130,4 @@ function AddMemberForm({isOpen, onClose}: UserFormControls) {
     );
 }
 
-export default AddMemberForm;
+export default CreateMemberForm;

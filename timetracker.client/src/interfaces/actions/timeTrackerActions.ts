@@ -1,7 +1,7 @@
 import {
-    addWorkSessionSuccessful,
+    createWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
-    editWorkSessionSuccessful, getLastWorkSessionError,
+    updateWorkSessionSuccessful, getLastWorkSessionError,
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
     startSuccessful,
@@ -9,11 +9,11 @@ import {
 } from "@features/time-tracker/timeTrackerSlice.ts";
 
 import {
-    ADD_WORK_SESSION,
+    CREATE_WORK_SESSION,
     DELETE_WORK_SESSION,
-    EDIT_WORK_SESSION,
+    UPDATE_WORK_SESSION,
     GET_LAST_WORK_SESSION,
-    GET_SESSIONS,
+    GET_WORK_SESSIONS,
     START_SESSION,
     STOP_SESSION
 } from "@constants";
@@ -37,7 +37,7 @@ interface StopSuccessfulAction {
 }
 
 interface GetWorkSessionsAction {
-    type: typeof GET_SESSIONS,
+    type: typeof GET_WORK_SESSIONS,
     payload: string,
 }
 
@@ -57,22 +57,22 @@ interface GetLastWorkSessionErrorAction {
     type: typeof getLastWorkSessionError.type,
 }
 
-interface AddWorkSessionAction {
-    type: typeof ADD_WORK_SESSION,
+interface CreateWorkSessionAction {
+    type: typeof CREATE_WORK_SESSION,
     payload: object,
 }
 
-interface AddWorkSessionSuccessfulAction {
-    type: typeof addWorkSessionSuccessful.type,
+interface CreateWorkSessionSuccessfulAction {
+    type: typeof createWorkSessionSuccessful.type,
 }
 
-interface EditWorkSessionAction {
-    type: typeof EDIT_WORK_SESSION,
+interface UpdateWorkSessionAction {
+    type: typeof UPDATE_WORK_SESSION,
     payload: object,
 }
 
-interface EditWorkSessionSuccessfulAction {
-    type: typeof editWorkSessionSuccessful.type,
+interface UpdateWorkSessionSuccessfulAction {
+    type: typeof updateWorkSessionSuccessful.type,
 }
 
 interface DeleteWorkSessionAction {
@@ -94,9 +94,9 @@ export type TimeTrackerActions =
     | GetLastWorkSessionAction
     | GetLastWorkSessionSuccessfulAction
     | GetLastWorkSessionErrorAction
-    | AddWorkSessionAction
-    | AddWorkSessionSuccessfulAction
-    | EditWorkSessionAction
-    | EditWorkSessionSuccessfulAction
+    | CreateWorkSessionAction
+    | CreateWorkSessionSuccessfulAction
+    | UpdateWorkSessionAction
+    | UpdateWorkSessionSuccessfulAction
     | DeleteWorkSessionAction
     | DeleteWorkSessionSuccessfulAction

@@ -1,7 +1,7 @@
 export const getWorkDaysQuery = `
 query GetWorkDays($id: Guid) {
-  workDays {
-    getWorkDays(id: $id) {
+  users {
+    workDays(id: $id) {
       id
       day
       startTime
@@ -13,9 +13,9 @@ query GetWorkDays($id: Guid) {
 `;
 
 export const createWorkDaysMutation = `
-mutation CreateWorkDays($workDays: AddWorkDaysRequestType) {
+mutation CreateWorkDays($workDays: CreateWorkDaysRequestType) {
   workDays {
-    addWorkDays(workDays: $workDays) {
+    createWorkDays(workDays: $workDays) {
       id
       day
       startTime
@@ -26,9 +26,9 @@ mutation CreateWorkDays($workDays: AddWorkDaysRequestType) {
 `;
 
 export const updateWorkDayMutation = `
-mutation UpdateWorkDay($workDay: EditWorkDayRequestType) {
+mutation UpdateWorkDay($workDay: UpdateWorkDayRequestType) {
   workDays {
-    editWorkDay(workDay: $workDay) {
+    updateWorkDay(workDay: $workDay) {
       id
       day
       startTime

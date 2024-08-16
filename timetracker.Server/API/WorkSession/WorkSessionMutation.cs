@@ -14,7 +14,52 @@ namespace timetracker.Server.API.WorkSession
         {
             this.Authorize();
 
-            Field<StartSessionResponseType>("StartSession")
+            Field<AddSessionResponseType>("createSession")
+                 .Arguments(new QueryArguments(new QueryArgument<AddSessionRequestType> { Name = "session" }))
+                 .ResolveAsync(async context =>
+                 {
+                     var inputSession = context.GetArgument<WorkSessionModel>("session");
+                     inputSession.SetBy = SetBy.MANUALLY.ToString();
+
+                     return await workSessionRepository.CreateAsync(inputSession);
+                 });
+
+            Field<WorkSessionResponseType>("updateSession")
+                .Arguments(new QueryArguments(new QueryArgument<EditSessionRequestType> { Name = "session" }))
+                .ResolveAsync(async context =>
+                {
+                    var inputSession = context.GetArgument<WorkSessionModel>("session");
+                    var session = await workSessionRepository.GetByIdAsync(inputSession.Id);
+                    if (session is null)
+                    {
+                        context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
+                        return null;
+                    }
+                    session.StartTime = inputSession.StartTime;
+                    session.EndTime = inputSession.EndTime;
+                    session.EditorId = inputSession.EditorId;
+                    session.EditedAt = inputSession.EditedAt;
+
+                    return await workSessionRepository.UpdateAsync(session);
+                });
+
+            Field<BooleanGraphType>("deleteSession")
+                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
+                .ResolveAsync(async context =>
+                {
+                    Guid id = context.GetArgument<Guid>("id");
+                    var workSession = await workSessionRepository.GetByIdAsync(id);
+                    if (workSession is null)
+                    {
+                        context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
+                        return null;
+                    }
+                    await workSessionRepository.DeleteAsync(id);
+
+                    return true;
+                });
+
+            Field<StartSessionResponseType>("startSession")
                 .AuthorizeWithPolicy(Permission.MANAGE_OWN_TIME.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<StartSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
@@ -22,10 +67,10 @@ namespace timetracker.Server.API.WorkSession
                     var inputSession = context.GetArgument<WorkSessionModel>("session");
                     inputSession.SetBy = SetBy.AUTOMATIC.ToString();
 
-                    return await workSessionRepository.AddAsync(inputSession);
+                    return await workSessionRepository.CreateAsync(inputSession);
                 });
 
-            Field<StopSessionResponseType>("StopSession")
+            Field<StopSessionResponseType>("stopSession")
                 .AuthorizeWithPolicy(Permission.MANAGE_OWN_TIME.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<StopSessionRequestType> { Name = "session" }))
                 .ResolveAsync(async context =>
@@ -40,51 +85,6 @@ namespace timetracker.Server.API.WorkSession
                     session.EndTime = inputSession.EndTime;
 
                     return await workSessionRepository.UpdateAsync(session);
-                });
-
-            Field<WorkSessionResponseType>("UpdateSession")
-                .Arguments(new QueryArguments(new QueryArgument<EditSessionRequestType> { Name = "session" }))
-                .ResolveAsync(async context =>
-                {
-                    var inputSession = context.GetArgument<WorkSessionModel>("session");
-                    var session = await workSessionRepository.GetByIdAsync(inputSession.Id);
-                    if(session is null)
-                    {
-                        context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
-                        return null;
-                    }
-                    session.StartTime = inputSession.StartTime;
-                    session.EndTime = inputSession.EndTime;
-                    session.EditorId = inputSession.EditorId;
-                    session.EditedAt = inputSession.EditedAt;
-
-                    return await workSessionRepository.UpdateAsync(session);
-                });
-
-            Field<AddSessionResponseType>("AddSession")
-                .Arguments(new QueryArguments(new QueryArgument<AddSessionRequestType> { Name = "session" }))
-                .ResolveAsync(async context =>
-                {
-                    var inputSession = context.GetArgument<WorkSessionModel>("session");
-                    inputSession.SetBy = SetBy.MANUALLY.ToString();
-
-                    return await workSessionRepository.AddAsync(inputSession);
-                });
-
-            Field<BooleanGraphType>("DeleteSession")
-                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
-                .ResolveAsync(async context =>
-                {
-                    Guid id = context.GetArgument<Guid>("id");
-                    var workSession = await workSessionRepository.GetByIdAsync(id);
-                    if (workSession is null)
-                    {
-                        context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
-                        return null;
-                    }
-                    await workSessionRepository.DeleteAsync(id);
-
-                    return true;
                 });
         }
     }

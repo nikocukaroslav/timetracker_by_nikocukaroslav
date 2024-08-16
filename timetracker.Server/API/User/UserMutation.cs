@@ -13,10 +13,9 @@ namespace timetracker.Server.API.User
 {
     public class UserMutation : ObjectGraphType
     {
-
         public UserMutation(IUserRepository userRepository, IEmailSender emailSender)
         {
-            Field<UserResponseType>("AddUser")
+            Field<UserResponseType>("createUser")
                 .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<AddUserRequestType> { Name = "user" }))
                 .ResolveAsync(async context =>
@@ -66,28 +65,10 @@ namespace timetracker.Server.API.User
                     $"Welcome to the company, {user.Name}",
                     $"Your password: {password}");
 
-                    return await userRepository.AddAsync(user);
+                    return await userRepository.CreateAsync(user);
                 });
 
-            Field<BooleanGraphType>("DeleteUser")
-                .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
-                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
-                .ResolveAsync(async context =>
-                {
-                    Guid id = context.GetArgument<Guid>("id");
-                    var user = await userRepository.GetByIdAsync(id);
-                    if (user is null)
-                    {
-                        context.Errors.Add(ErrorCode.USER_NOT_FOUND);
-                        return null;
-                    }
-
-                    await userRepository.DeleteAsync(id);
-
-                    return true;
-                });
-
-            Field<UserResponseType>("UpdateUser")
+            Field<UserResponseType>("updateUser")
                  .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
                  .Arguments(new QueryArguments(
                     new QueryArgument<UpdateUserRequestType> { Name = "user" })
@@ -116,6 +97,24 @@ namespace timetracker.Server.API.User
                      }
 
                      return await userRepository.UpdateAsync(user);
+                 });
+
+            Field<BooleanGraphType>("deleteUser")
+                 .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
+                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
+                 .ResolveAsync(async context =>
+                 {
+                     Guid id = context.GetArgument<Guid>("id");
+                     var user = await userRepository.GetByIdAsync(id);
+                     if (user is null)
+                     {
+                         context.Errors.Add(ErrorCode.USER_NOT_FOUND);
+                         return null;
+                     }
+
+                     await userRepository.DeleteAsync(id);
+
+                     return true;
                  });
         }
     }

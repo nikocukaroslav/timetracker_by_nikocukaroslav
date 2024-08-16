@@ -3,7 +3,6 @@ using GraphQL.Types;
 using timetracker.Server.API.WorkDay.Models;
 using timetracker.Server.API.WorkDay.Types;
 using timetracker.Server.Application.Services;
-using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 using WorkDayModel = timetracker.Server.Domain.Entities.WorkDay;
@@ -16,7 +15,7 @@ namespace timetracker.Server.API.WorkDay
         {
             this.Authorize();
 
-            Field<ListGraphType<AddWorkDaysResponseType>>("AddWorkDays")
+            Field<ListGraphType<AddWorkDaysResponseType>>("createWorkDays")
                 .Arguments(new QueryArguments(
                     new QueryArgument<AddWorkDaysRequestType> { Name = "workDays" }
                 ))
@@ -36,14 +35,14 @@ namespace timetracker.Server.API.WorkDay
                                 UserId = workDaysInput.UserId
                             };
 
-                            var addedWorkDay = await workDayRepository.AddAsync(workDay);
+                            var addedWorkDay = await workDayRepository.CreateAsync(workDay);
                             addedWorkDays.Add(addedWorkDay);
                         }
      
                     return addedWorkDays;
                 });
 
-            Field<WorkDayResponseType>("UpdateWorkDay")
+            Field<WorkDayResponseType>("updateWorkDay")
                 .Arguments(new QueryArguments(new QueryArgument<EditWorkDayRequestType> { Name = "workDay" }))
                 .ResolveAsync(async context =>
                 {
@@ -63,7 +62,7 @@ namespace timetracker.Server.API.WorkDay
                     return await workDayRepository.UpdateAsync(workDay);
                 });
 
-            Field<BooleanGraphType>("DeleteWorkDay")
+            Field<BooleanGraphType>("deleteWorkDay")
                  .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                  .ResolveAsync(async context =>
                  {

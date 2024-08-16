@@ -28,7 +28,7 @@ namespace timetracker.Server.Infrastructure.Repositories
             var sql = $"SELECT * FROM {_tableName} WHERE Id = @Id";
             return await connection.QuerySingleOrDefaultAsync<T>(sql, new { Id = id });
         }
-        public virtual async Task<T> AddAsync(T entity)
+        public virtual async Task<T> CreateAsync(T entity)
         {
             using var connection = _connectionFactory.Create();
 

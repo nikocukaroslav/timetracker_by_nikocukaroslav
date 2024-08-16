@@ -7,5 +7,8 @@ namespace timetracker.Server.Infrastructure.Interfaces
         Task<string> GetUserPermissionsByEmailAsync(string email);
         Task<User> GetUserByEmailAsync(string email);
         Task<IDictionary<Guid?, User>> GetUsersByIdAsync(IEnumerable<Guid?> ids);
+        Task<WorkSession> GetLastWorkSessionAsync(Guid id);
+        Task<List<WorkSession>> GetWorkSessionsByIdAsync(Guid id);
+        Task<List<WorkDay>> GetWorkDaysByIdAsync(Guid id);
     }
 }

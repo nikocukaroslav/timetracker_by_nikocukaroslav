@@ -9,9 +9,9 @@ namespace timetracker.Server.API
     {
         public RootQuery()
         {
-            Field<UserQuery>("users").Resolve(_ => new { });
-            Field<WorkSessionQuery>("workSessions").Resolve(_ => new { });
-            Field<WorkDayQuery>("workDays").Resolve(_ => new { });
+            Field<UserQuery>("user").Resolve(_ => new { });
+            Field<WorkSessionQuery>("workSession").Resolve(_ => new { });
+            Field<WorkDayQuery>("workDay").Resolve(_ => new { });
         }
     }
 }

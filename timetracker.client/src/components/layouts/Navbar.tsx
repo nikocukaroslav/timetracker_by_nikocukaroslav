@@ -41,7 +41,7 @@ function Navbar() {
                 <Divider borderColor="gray.600"/>
             </Box>
 
-            <Stack direction="column" spacing="1" py="8">
+            <Stack direction="column" spacing="1" py="8" alignItems={{lg: "normal", base: "center"}}>
                 <NavigationLink
                     to="time-tracker"
                     icon={PiClock}

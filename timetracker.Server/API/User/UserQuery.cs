@@ -48,12 +48,12 @@ namespace timetracker.Server.API.User
                     var workDays = await userRepository
                     .GetWorkDaysByUserIdAsync(workDaysRequest);
 
-                    if (workDays == null || !workDays.Any())
+                    if (workDays == null)
                     {
                         context.Errors.Add(ErrorCode.WORK_DAY_NOT_FOUND);
                         return null;
                     }
-
+                        
                     return workDays;
                 });
 

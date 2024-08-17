@@ -24,7 +24,7 @@ function CalendarCell({
 
     const isoDate = convertDateToISODate(date);
     const isSelected = selectedItems.includes(isoDate);
-    const cellBg = isSelected ? "gray.200" : "gray.100";
+    const cellBg = isSelected ? "gray.400 !important" : "gray.100";
 
     const number = date.getDate();
 

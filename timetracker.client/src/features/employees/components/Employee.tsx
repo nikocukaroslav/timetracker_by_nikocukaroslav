@@ -18,6 +18,7 @@ import {
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuExpandedBtn } from "@components/ui/action-menu";
 import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
+import StatusLabel from "@components/ui/StatusLabel.tsx";
 
 import { deleteUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
@@ -49,14 +50,17 @@ function Employee({ employee }: EmployeeProps) {
     return (
         <>
             <ListItem
+                position="relative"
                 display="flex"
                 alignItems="center"
                 gap="5"
                 px="5"
                 py="4"
                 rounded="md"
-                bg={`${isEmployed ? "" : "gray.200"}`}
             >
+                {!isEmployed &&
+                    <StatusLabel label="Terminated" bgColor="red.500" color="gray.50"/>
+                }
                 <Img
                     alt="user-img"
                     w="28px"
@@ -70,9 +74,9 @@ function Employee({ employee }: EmployeeProps) {
                             {email}
                         </Text>
                     </Flex>
-                    <CustomVerticalDivider/>
                     {isEmployed && (
                         <>
+                            <CustomVerticalDivider/>
                             <Flex py="2" w={32} gap="2" align="center" lineHeight="1.1">
                                 <Icon boxSize={6} as={positionIcon}/>
                                 <Text>{positionName}</Text>
@@ -108,30 +112,17 @@ function Employee({ employee }: EmployeeProps) {
                             </Flex>
                         </>
                     )}
-                    {!isEmployed && (
-                        <Flex
-                            align="center"
-                            w="30"
-                            gap="2"
-                            px="5"
-                            py="2"
-                            fontWeight="bolder"
-                            opacity="80%"
-                            bg="red.500"
-                            color="gray.50"
-                            rounded="md"
-                        >
-                            <Text>Terminated</Text>
-                        </Flex>
-                    )}
+                    <CustomVerticalDivider/>
                 </Flex>
                 <Spacer/>
 
                 {!itsYou &&
                     <ActionMenu>
-                        <CreateEditMemberForm formData={employee} isEditing>
-                            <ActionMenuEditBtn/>
-                        </CreateEditMemberForm>
+                        {isEmployed &&
+                            <CreateEditMemberForm formData={employee} isEditing>
+                                <ActionMenuEditBtn/>
+                            </CreateEditMemberForm>
+                        }
                         <Divider/>
                         <ActionMenuExpandedBtn
                             confirmText={`${isEmployed ? "Terminate" : "Rehire"} ${name} ${surname} ${isEmployed ? "from" : "by"} the company`}

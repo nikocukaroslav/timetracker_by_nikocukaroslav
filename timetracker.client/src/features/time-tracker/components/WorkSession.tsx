@@ -1,8 +1,9 @@
 import { useDispatch } from "react-redux";
-import { PiNotePencil, PiTimer } from "react-icons/pi";
-import { Box, Divider, Flex, Icon, Text } from "@chakra-ui/react";
+import { PiPencilSimple, PiTimer } from "react-icons/pi";
+import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
+import StatusLabel from "@components/ui/StatusLabel.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuInfoBtn } from "@components/ui/action-menu";
 
 import dateFormatConverter, { convertToLocalISO, formatTime } from "@utils/formatters.ts";
@@ -38,13 +39,7 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
     return (
         <Box position="relative">
             {editedAt &&
-                <Flex fontSize="xs" borderColor="gray.200"
-                      borderRightWidth="2px" borderBottomWidth="2px"
-                      px="1" gap="1" position="absolute" left="0" top="0"
-                      roundedBottomRight="md" zIndex="1">
-                    <Icon as={PiNotePencil} boxSize="4"></Icon>
-                    <Text>Edited</Text>
-                </Flex>
+                <StatusLabel label="Edited" icon={PiPencilSimple}/>
             }
             <Flex
                 position="relative"

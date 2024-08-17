@@ -8,6 +8,8 @@ import CustomInput from "@components/ui/CustomInput.tsx";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { CreateEditWorkDayFormProps } from "@interfaces/components.ts";
+import { createWorkDays } from "@features/calendar/api/actions.ts";
+import { convertTimeToISOTime } from "@utils/formatters.ts";
 
 const defaultFormData = {
     startTime: "",
@@ -55,12 +57,12 @@ function CreateEditWorkDayForm({
     function handleAdd() {
         const newWorkDays = {
             days: selectedItems.current,
-            startTime: data?.startTime,
-            endTime: data?.endTime,
-            userId,
+            startTime: convertTimeToISOTime(data?.startTime),
+            endTime: convertTimeToISOTime(data?.endTime),
+            userId: userId as string,
         }
 
-        /*dispatch(createWorkDays(newWorkDays))*/
+        dispatch(createWorkDays(newWorkDays))
         setData(defaultFormData);
     }
 

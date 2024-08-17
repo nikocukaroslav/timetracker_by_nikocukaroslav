@@ -24,7 +24,7 @@ export interface WorkSessionModel {
 export interface WorkDayModel {
     id?: string,
     day: string,
-    startTime?: number,
-    endTime?: number,
+    startTime?: string,
+    endTime?: string,
     userId?: string,
 }

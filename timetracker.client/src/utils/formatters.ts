@@ -82,4 +82,27 @@ const dateFormatConverter = (date: Date | number | string, format?: string) => {
     return new Intl.DateTimeFormat("en-US", options).format(dateValue);
 };
 
+export const timeConverter = (time: string, format?: string) => {
+    const dateValue = new Date("1970-01-01T" + time);
+
+    let options: Intl.DateTimeFormatOptions;
+
+    switch (format) {
+        case "hh:mm":
+            options = {
+                hour: "2-digit",
+                minute: "2-digit",
+            };
+            break;
+        default:
+            options = {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            };
+    }
+
+    return new Intl.DateTimeFormat("en-US", options).format(dateValue);
+};
+
 export default dateFormatConverter;

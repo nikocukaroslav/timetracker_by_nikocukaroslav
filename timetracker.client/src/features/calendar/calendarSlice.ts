@@ -14,7 +14,7 @@ const calendarSlice = createSlice({
             state.workDays = payload;
         },
         createWorkDaysSuccessful(state, { payload }) {
-            state.workDays.concat(payload);
+            state.workDays = state.workDays.concat(payload);
         },
         updateWorkDaySuccessful(state, { payload }) {
             const { id, startTime, endTime } = payload;
@@ -28,7 +28,7 @@ const calendarSlice = createSlice({
         },
         deleteWorkDaySuccessful(state, { payload }) {
             state.workDays = state.workDays.filter(workDay => workDay.id !== payload)
-        }
+        },
     },
 })
 

@@ -22,7 +22,7 @@ export const getWorkDaysEpic: Epic<MyAction> = (action$) =>
         ofType(GET_WORK_DAYS),
         switchMap(action =>
             graphQlQuery(getWorkDaysQuery, {
-                    id: action.payload
+                    workDays: action.payload
                 }
             ).pipe(
                 map(response => getWorkDaysSuccessful(response.data.users.workDays)),

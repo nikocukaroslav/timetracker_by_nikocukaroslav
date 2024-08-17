@@ -62,6 +62,11 @@ function CalendarCell({
             userSelect="none"
             cursor="pointer"
             p={1}
+            sx={{
+                "&:nth-of-type(7n + 6), &:nth-of-type(7n + 7)": {
+                    bg: "gray.200"
+                }
+            }}
         >
             <Center
                 position="absolute"

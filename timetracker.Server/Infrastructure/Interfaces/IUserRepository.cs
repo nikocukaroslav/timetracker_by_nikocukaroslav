@@ -1,4 +1,5 @@
-﻿using timetracker.Server.Domain.Entities;
+﻿using timetracker.Server.API.User.Models;
+using timetracker.Server.Domain.Entities;
 
 namespace timetracker.Server.Infrastructure.Interfaces
 {
@@ -7,8 +8,8 @@ namespace timetracker.Server.Infrastructure.Interfaces
         Task<string> GetUserPermissionsByEmailAsync(string email);
         Task<User> GetUserByEmailAsync(string email);
         Task<IDictionary<Guid?, User>> GetUsersByIdAsync(IEnumerable<Guid?> ids);
-        Task<WorkSession> GetLastWorkSessionAsync(Guid id);
-        Task<List<WorkSession>> GetWorkSessionsByIdAsync(Guid id);
-        Task<List<WorkDay>> GetWorkDaysByIdAsync(Guid id);
+        Task<WorkSession> GetLastUserWorkSessionAsync(Guid id);
+        Task<List<WorkSession>> GetWorkSessionsByUserIdAsync(Guid id);
+        Task<List<WorkDay>> GetWorkDaysByUserIdAsync(WorkDaysRequest workDaysRequest);
     }
 }

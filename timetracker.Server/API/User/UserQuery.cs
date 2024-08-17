@@ -1,5 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using timetracker.Server.API.User.Models;
 using timetracker.Server.API.User.Types;
 using timetracker.Server.API.WorkDay.Types;
 using timetracker.Server.API.WorkSession.Types;
@@ -32,13 +33,15 @@ namespace timetracker.Server.API.User
                });
 
             Field<ListGraphType<WorkDayResponseType>>("workDays")
-                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
+                .Arguments(new QueryArguments(new QueryArgument<GetWorkDaysRequestType> { Name = "workDays" }))
                 .ResolveAsync(async context =>
                 {
-                    var workDays = await userRepository
-                    .GetWorkDaysByIdAsync(context.GetArgument<Guid>("id"));
+                    var workDaysRequest = context.GetArgument<WorkDaysRequest>("workDays");
 
-                    if (workDays == null)
+                    var workDays = await userRepository
+                    .GetWorkDaysByUserIdAsync(workDaysRequest);
+
+                    if (workDays == null || !workDays.Any())
                     {
                         context.Errors.Add(ErrorCode.WORK_DAY_NOT_FOUND);
                         return null;
@@ -52,7 +55,7 @@ namespace timetracker.Server.API.User
                 .ResolveAsync(async context =>
                 {
                     var workSessions = await userRepository
-                    .GetWorkSessionsByIdAsync(context.GetArgument<Guid>("id"));
+                    .GetWorkSessionsByUserIdAsync(context.GetArgument<Guid>("id"));
                     return workSessions;
                 });
 
@@ -61,7 +64,7 @@ namespace timetracker.Server.API.User
                .ResolveAsync(async context =>
                {
                     var workSession = await userRepository
-                    .GetLastWorkSessionAsync(context.GetArgument<Guid>("id"));
+                    .GetLastUserWorkSessionAsync(context.GetArgument<Guid>("id"));
                     if (workSession is null) context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
                     return workSession;
                });

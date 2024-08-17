@@ -4,7 +4,6 @@ using System.Security.Claims;
 using timetracker.Server.API.Auth.Models;
 using timetracker.Server.API.Auth.Types;
 using timetracker.Server.Application.Interfaces;
-using timetracker.Server.Domain.Enums;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 
@@ -63,9 +62,21 @@ namespace timetracker.Server.API.Auth
 
                         var principal = jwtTokenUtils.ValidateToken(refreshToken);
 
+                        var refreshTokenHash = principal.FindFirst("hash")?.Value;
+
                         var email = principal.FindFirst(ClaimTypes.Email)?.Value;
 
                         var user = await userRepository.GetUserByEmailAsync(email) ?? throw new Exception();
+
+                        if (user == null)
+                        {
+                            throw new Exception();
+                        }
+
+                        if (user.RefreshTokenHash != refreshTokenHash)
+                        {
+                            throw new Exception();
+                        }
 
                         var newAccessToken = jwtTokenUtils.GenerateAccessToken(email);
 

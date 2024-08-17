@@ -15,7 +15,6 @@ namespace timetracker.Server.API.WorkDay.Types
               .Resolve(context => DateTimeFormatter.TimeSpanToTimeOnly(context.Source.StartTime));
             Field<TimeOnlyGraphType>("endTime")
                .Resolve(context => DateTimeFormatter.TimeSpanToTimeOnly(context.Source.EndTime));
-            Field(t => t.UserId);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using timetracker.Server.API.Pagination.Models;
 using timetracker.Server.API.User.Models;
 using timetracker.Server.Domain.Entities;
 using timetracker.Server.Infrastructure.Database;
@@ -10,6 +11,24 @@ namespace timetracker.Server.Infrastructure.Repositories
     {
         public UserRepository(ISqlConnectionFactory connectionFactory) : base(connectionFactory)
         {
+        }
+        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(int page, int pageSize)
+        {
+            using var connection = _connectionFactory.Create();
+
+            var totalQuery = @"SELECT COUNT(*)FROM Users";
+
+            var totalCount = await connection.ExecuteScalarAsync<int>(totalQuery);
+
+            var query = @"SELECT * FROM Users ORDER BY Name OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+            var users = await connection.QueryAsync<User>(query, new
+            {
+                Offset = (page - 1) * pageSize,
+                PageSize = pageSize
+            });
+
+            return new PaginatedList<User>(users.ToList(), totalCount, page, pageSize);
         }
 
         public async Task<string> GetUserPermissionsByEmailAsync(string email)

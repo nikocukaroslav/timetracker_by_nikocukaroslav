@@ -108,6 +108,7 @@ export interface ActionMenuBtnWithInfoProps {
 
 export interface ActionMenuBtnWithConfirmProps extends ActionMenuBtnProps {
     confirmText: string;
+    onClick: () => void;
 }
 
 export interface ActionMenuExpandedBtnProps extends ActionMenuBtnWithConfirmProps {
@@ -130,4 +131,11 @@ export interface InfoWindowProps {
 export interface CustomSliderProps {
     onChange: (value: number) => void,
     value?: number
+}
+
+export interface InfoLabelProps {
+    label: string;
+    icon?: IconType;
+    bgColor?: string;
+    color?: string;
 }

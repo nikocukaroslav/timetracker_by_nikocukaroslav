@@ -14,7 +14,7 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
     const monthDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
     const dayShift = startMonthDay !== 0 ? startMonthDay : 7;
-    const countRows = Math.ceil((dayShift + monthDays) / 7);
+    const countRows = Math.ceil((dayShift - 1 + monthDays) / 7);
     const shownDays = countRows * 7;
 
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -41,7 +41,7 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
         <SimpleGrid columns={7} w="full" h="full">
             {[...Array(shownDays)].map((_, i) => {
                 const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), (dayShift * -1) + 2 + i);
-                
+
                 return <CalendarCell
                     key={i}
                     selecting={selecting}

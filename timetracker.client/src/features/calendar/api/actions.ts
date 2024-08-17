@@ -1,13 +1,17 @@
 import { WorkDayModel } from "@interfaces/domain.ts";
 import { CREATE_WORK_DAYS, DELETE_WORK_DAYS, GET_WORK_DAYS, UPDATE_WORK_DAYS } from "@constants";
 
-export const getWorkDays = (id: string) => ({ type: GET_WORK_DAYS, payload: id })
-export const createWorkDays = (newWorkDays: {
+export const getWorkDays = (workDays: {
+    startDate: string,
+    endDate: string,
+    userId: string
+}) => ({ type: GET_WORK_DAYS, payload: workDays })
+export const createWorkDays = (workDays: {
     days: string[],
     startTime: string,
     endTime: string,
     userId: string
-}) => ({ type: CREATE_WORK_DAYS, payload: newWorkDays })
+}) => ({ type: CREATE_WORK_DAYS, payload: workDays })
 export const updateWorkDay = (workDayToUpdate: WorkDayModel) => ({
     type: UPDATE_WORK_DAYS,
     payload: workDayToUpdate

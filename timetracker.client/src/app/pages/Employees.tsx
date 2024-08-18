@@ -24,11 +24,11 @@ function Employees() {
                 flexDirection="column"
                 rounded="md"
                 boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
+                minWidth="700px"
             >
                 <Flex
                     justify="space-between"
                     align="center"
-                    w="full"
                     p="5"
                 >
                     <Text fontSize="2xl">Company ({employees.length} members)</Text>

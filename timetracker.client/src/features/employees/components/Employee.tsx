@@ -11,8 +11,10 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
+    Show,
     Spacer,
-    Text
+    Text,
+    useBreakpointValue
 } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
@@ -25,6 +27,8 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
 import { UserModel } from "@interfaces/domain.ts";
+import useTruncate from "@hooks/useTruncate.ts";
+import { useEffect } from "react";
 
 function Employee({ employee }: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
@@ -47,13 +51,27 @@ function Employee({ employee }: EmployeeProps) {
         dispatch(updateUser(newEmployee))
     }
 
+    const fullName = `${name} ${surname} ${itsYou ? "(you)" : ""}`;
+
+    const { ref: refFullName, truncated: truncatedFullName, checkTruncate: checkTruncateFullName } = useTruncate<HTMLHeadingElement>();
+    useEffect(() => {
+        checkTruncateFullName();
+    }, [fullName])
+    const { ref: refEmail, truncated: truncatedEmail, checkTruncate: checkTruncateEmail } = useTruncate<HTMLHeadingElement>();
+    useEffect(() => {
+        checkTruncateEmail();
+    }, [email])
+
+
+    const positionTitle = useBreakpointValue({ base: positionName, lg: "" });
+    const timeloadTitle = useBreakpointValue({ base: timeload?.slice(0, -3), lg: "" });
+
     return (
         <>
             <ListItem
                 position="relative"
                 display="flex"
                 alignItems="center"
-                gap="5"
                 px="5"
                 py="4"
                 rounded="md"
@@ -67,19 +85,22 @@ function Employee({ employee }: EmployeeProps) {
                     h="28px"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
                 />
-                <Flex align="center" justify="space-between">
-                    <Flex direction="column" w="56">
-                        <Text> {`${name} ${surname} ${itsYou ? "(you)" : ""}`}</Text>
-                        <Text fontSize="sm" color="gray.500" noOfLines={1}>
+                <Flex align="center" justify="space-between" ml="5">
+                    <Flex direction="column" w={{ xl: "14rem", lg: "10rem", base: "7rem" }}>
+                        <Text ref={refFullName} title={truncatedFullName ? fullName : undefined} isTruncated> {fullName}</Text>
+                        <Text fontSize="sm" color="gray.500" ref={refEmail} title={truncatedEmail ? email : undefined} isTruncated>
                             {email}
                         </Text>
                     </Flex>
                     {isEmployed && (
                         <>
                             <CustomVerticalDivider/>
-                            <Flex py="2" w={32} gap="2" align="center" lineHeight="1.1">
-                                <Icon boxSize={6} as={positionIcon}/>
-                                <Text>{positionName}</Text>
+                            <Flex py="2" w={{ xl: 32, base: 8 }} justifyContent={{ xl: "flex-start", base: "center" }}
+                                  gap="2" align="center" lineHeight="1.1">
+                                <Icon boxSize={6} as={positionIcon} title={positionTitle}/>
+                                <Show above="xl">
+                                    <Text>{positionName}</Text>
+                                </Show>
                             </Flex>
                             <CustomVerticalDivider/>
                             <Menu variant="ghost">
@@ -106,16 +127,18 @@ function Employee({ employee }: EmployeeProps) {
                                 py="2"
                                 bg="gray.200"
                                 rounded="md"
+                                w={{lg:32, base: 16}}
                             >
-                                <PiClockUser size="24px"/>
-                                <Text>{timeload?.slice(0, -3)}</Text>
+                                <PiClockUser size="24px" title={timeloadTitle}/>
+                                <Show above="lg">
+                                    <Text>{timeload?.slice(0, -3)}</Text>
+                                </Show>
                             </Flex>
                         </>
                     )}
                     <CustomVerticalDivider/>
                 </Flex>
                 <Spacer/>
-
                 {!itsYou &&
                     <ActionMenu>
                         {isEmployed &&

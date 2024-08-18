@@ -1,12 +1,15 @@
 import { NavLink } from "react-router-dom";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Show, Text, useBreakpointValue } from "@chakra-ui/react";
 
 import { NavigationLinkProps } from "@interfaces/components.ts";
 
-function NavigationLink({icon: Icon, label, to}: NavigationLinkProps) {
+function NavigationLink({ icon: Icon, label, to }: NavigationLinkProps) {
+
+    const titleValue = useBreakpointValue({ base: label, lg: "" });
+
     return (
         <NavLink to={to}>
-            {({isActive}) => (
+            {({ isActive }) => (
                 <Flex
                     align="center"
                     gap="2"
@@ -14,15 +17,17 @@ function NavigationLink({icon: Icon, label, to}: NavigationLinkProps) {
                     px="4"
                     bg={isActive ? "gray.700" : "transparent"}
                     borderRadius="md"
-                    _hover={{bg: "gray.700"}}
+                    _hover={{ bg: "gray.700" }}
                     onClick={(e) => {
                         if (isActive) {
                             e.preventDefault();
                         }
                     }}
                 >
-                    <Icon size="28"/>
-                    <Text>{label}</Text>
+                    <Icon size="28" title={titleValue}/>
+                    <Show above="lg">
+                        <Text>{label}</Text>
+                    </Show>
                 </Flex>
             )}
         </NavLink>

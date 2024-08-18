@@ -1,14 +1,14 @@
-﻿    using GraphQL.Types;
+﻿using GraphQL.Types;
 
-    namespace timetracker.Server.API.User.Types
+namespace timetracker.Server.API.User.Types
+{
+    public class GetWorkDaysRequestType : InputObjectGraphType
     {
-        public class GetWorkDaysRequestType : InputObjectGraphType
+        public GetWorkDaysRequestType()
         {
-            public GetWorkDaysRequestType() 
-            {
-                Field<DateOnlyGraphType>("startDate");
-                Field<DateOnlyGraphType>("endDate");
-                Field<GuidGraphType>("userId");
-            }
+            Field<NonNullGraphType<DateOnlyGraphType>>("startDate");
+            Field<NonNullGraphType<DateOnlyGraphType>>("endDate");
+            Field<NonNullGraphType<GuidGraphType>>("userId");
         }
     }
+}

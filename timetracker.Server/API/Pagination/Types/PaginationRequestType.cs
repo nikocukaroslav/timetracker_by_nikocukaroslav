@@ -6,8 +6,8 @@ namespace timetracker.Server.API.Pagination.Types
     {
         public PaginationRequestType()
         {
-            Field<IntGraphType>("page");
-            Field<IntGraphType>("pageSize");
+            Field<NonNullGraphType<IntGraphType>>("page");
+            Field<NonNullGraphType<IntGraphType>>("pageSize");
         }
     }
 }

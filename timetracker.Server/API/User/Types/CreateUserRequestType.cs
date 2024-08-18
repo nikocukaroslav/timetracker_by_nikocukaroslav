@@ -6,12 +6,11 @@ namespace timetracker.Server.API.User.Types
     {
         public CreateUserRequestType()
         {
-            Field<StringGraphType>("name");
-            Field<StringGraphType>("surname");
-            Field<StringGraphType>("email");
-            Field<StringGraphType>("password");
-            Field<TimeOnlyGraphType>("timeload");
-            Field<StringGraphType>("position");
+            Field<NonNullGraphType<StringGraphType>>("name");
+            Field<NonNullGraphType<StringGraphType>>("surname");
+            Field<NonNullGraphType<StringGraphType>>("email");
+            Field<NonNullGraphType<TimeOnlyGraphType>>("timeload");
+            Field<NonNullGraphType<StringGraphType>>("position");
             Field<ListGraphType<StringGraphType>>("permissions");
         }
     }

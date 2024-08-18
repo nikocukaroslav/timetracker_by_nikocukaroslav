@@ -7,8 +7,8 @@ namespace timetracker.Server.API.WorkSession.Types
         public UpdateSessionRequestType()
         {
             Field<NonNullGraphType<GuidGraphType>>("id");
-            Field<NonNullGraphType<LongGraphType>>("startTime");
-            Field<NonNullGraphType<LongGraphType>>("endTime");
+            Field<LongGraphType>("startTime");
+            Field<LongGraphType>("endTime");
             Field<NonNullGraphType<LongGraphType>>("editedAt");
             Field<NonNullGraphType<GuidGraphType>>("editorId");
         }

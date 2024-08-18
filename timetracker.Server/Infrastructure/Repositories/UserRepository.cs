@@ -12,20 +12,42 @@ namespace timetracker.Server.Infrastructure.Repositories
         public UserRepository(ISqlConnectionFactory connectionFactory) : base(connectionFactory)
         {
         }
-        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(int page, int pageSize)
+        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(int page,
+            int pageSize, FilterRequest? filter)
         {
             using var connection = _connectionFactory.Create();
 
-            var totalQuery = @"SELECT COUNT(*)FROM Users";
+            var totalCountQuery = @"SELECT COUNT(*) FROM Users";
 
-            var totalCount = await connection.ExecuteScalarAsync<int>(totalQuery);
+            var query = @"SELECT * FROM Users";
 
-            var query = @"SELECT * FROM Users ORDER BY Name OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+            var whereConditions = new List<string>();
+
+            if (filter != null)
+            {
+                if (filter.IsEmployed != null) whereConditions.Add("IsEmployed = @IsEmployed");
+                if (filter.Status != null) whereConditions.Add("Status = @Status");
+                if (filter.Position != null) whereConditions.Add("Position = @Position");
+            }
+
+            if (whereConditions.Any())
+            {
+                var whereClause = " WHERE " + string.Join(" AND ", whereConditions);
+                totalCountQuery += whereClause;
+                query += whereClause;
+            }
+
+            query += " ORDER BY Name OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+            var totalCount = await connection.ExecuteScalarAsync<int>(totalCountQuery,filter);
 
             var users = await connection.QueryAsync<User>(query, new
             {
                 Offset = (page - 1) * pageSize,
-                PageSize = pageSize
+                PageSize = pageSize,
+                IsEmployed = filter.IsEmployed,
+                Status = filter.Status,
+                Position = filter.Position,
             });
 
             return new PaginatedList<User>(users.ToList(), totalCount, page, pageSize);

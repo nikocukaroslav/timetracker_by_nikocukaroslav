@@ -10,7 +10,7 @@ namespace timetracker.Server.API.User.Types
         {
             this.AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString());
 
-            Field<GuidGraphType>("id");
+            Field<NonNullGraphType<GuidGraphType>>("id");
             Field<StringGraphType>("name");
             Field<StringGraphType>("surname");
             Field<StringGraphType>("position");

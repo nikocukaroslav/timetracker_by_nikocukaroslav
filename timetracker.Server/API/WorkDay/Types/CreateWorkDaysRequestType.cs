@@ -4,7 +4,7 @@ namespace timetracker.Server.API.WorkDay.Types
 {
     public class CreateWorkDaysRequestType : InputObjectGraphType
     {
-       public CreateWorkDaysRequestType() 
+        public CreateWorkDaysRequestType()
         {
             Field<NonNullGraphType<ListGraphType<DateOnlyGraphType>>>("days");
             Field<NonNullGraphType<TimeOnlyGraphType>>("startTime");

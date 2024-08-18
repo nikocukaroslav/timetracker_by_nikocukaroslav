@@ -19,13 +19,19 @@ namespace timetracker.Server.API.User
             this.Authorize();
 
             Field<PaginationResponseType<UserResponseType, UserModel>>("users")
-               .Arguments(new QueryArguments(new QueryArgument<PaginationRequestType> { Name = "pagination" }))
+               .Arguments(
+                new QueryArguments(
+                    new QueryArgument<PaginationRequestType> { Name = "pagination" },
+                    new QueryArgument<FilterUsersRequestType> { Name = "filter", DefaultValue = null }
+               ))
                .ResolveAsync(async context =>
                {
                    var pagination = context.GetArgument<PaginationRequest>("pagination");
 
+                   var filter = context.GetArgument<FilterRequest>("filter");
+
                    var paginatedUsers = await userRepository
-                   .GetPaginatedUserListAsync(pagination.Page, pagination.PageSize);
+                   .GetPaginatedUserListAsync(pagination.Page, pagination.PageSize, filter);
 
                    return paginatedUsers;
                });
@@ -53,7 +59,7 @@ namespace timetracker.Server.API.User
                         context.Errors.Add(ErrorCode.WORK_DAY_NOT_FOUND);
                         return null;
                     }
-                        
+
                     return workDays;
                 });
 

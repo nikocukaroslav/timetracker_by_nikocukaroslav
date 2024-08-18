@@ -7,9 +7,9 @@ namespace timetracker.Server.API.WorkDay.Types
         public UpdateWorkDayRequestType() 
         {
             Field<NonNullGraphType<GuidGraphType>>("id");
-            Field<NonNullGraphType<DateOnlyGraphType>>("day");
-            Field<NonNullGraphType<TimeOnlyGraphType>>("startTime");
-            Field<NonNullGraphType<TimeOnlyGraphType>>("endTime");
+            Field<DateOnlyGraphType>("day");
+            Field<TimeOnlyGraphType>("startTime");
+            Field<TimeOnlyGraphType>("endTime");
         }
     }
 }

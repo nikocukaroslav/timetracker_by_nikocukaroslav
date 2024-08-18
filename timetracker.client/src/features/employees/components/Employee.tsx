@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import useTruncate from "@hooks/useTruncate.ts";
 import { PiCaretDown, PiClockUser, PiUserMinus, PiUserSwitch } from "react-icons/pi";
 import {
     Button,
@@ -27,8 +29,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
 import { UserModel } from "@interfaces/domain.ts";
-import useTruncate from "@hooks/useTruncate.ts";
-import { useEffect } from "react";
+import { timeConverter } from "@utils/formatters.ts";
 
 function Employee({ employee }: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
@@ -52,19 +53,28 @@ function Employee({ employee }: EmployeeProps) {
     }
 
     const fullName = `${name} ${surname} ${itsYou ? "(you)" : ""}`;
+    const timeloadString = timeload ? timeConverter(timeload, "hh:mm") : "";
 
-    const { ref: refFullName, truncated: truncatedFullName, checkTruncate: checkTruncateFullName } = useTruncate<HTMLHeadingElement>();
+    const {
+        ref: refFullName,
+        truncated: truncatedFullName,
+        checkTruncate: checkTruncateFullName
+    } = useTruncate<HTMLHeadingElement>();
     useEffect(() => {
         checkTruncateFullName();
     }, [fullName])
-    const { ref: refEmail, truncated: truncatedEmail, checkTruncate: checkTruncateEmail } = useTruncate<HTMLHeadingElement>();
+    const {
+        ref: refEmail,
+        truncated: truncatedEmail,
+        checkTruncate: checkTruncateEmail
+    } = useTruncate<HTMLHeadingElement>();
     useEffect(() => {
         checkTruncateEmail();
     }, [email])
 
 
-    const positionTitle = useBreakpointValue({ base: positionName, lg: "" });
-    const timeloadTitle = useBreakpointValue({ base: timeload?.slice(0, -3), lg: "" });
+    const positionTitle = useBreakpointValue({ base: positionName, xl: "" });
+    const timeloadTitle = useBreakpointValue({ base: timeloadString, lg: "" });
 
     return (
         <>
@@ -87,8 +97,18 @@ function Employee({ employee }: EmployeeProps) {
                 />
                 <Flex align="center" justify="space-between" ml="5">
                     <Flex direction="column" w={{ xl: "14rem", lg: "10rem", base: "7rem" }}>
-                        <Text ref={refFullName} title={truncatedFullName ? fullName : undefined} isTruncated> {fullName}</Text>
-                        <Text fontSize="sm" color="gray.500" ref={refEmail} title={truncatedEmail ? email : undefined} isTruncated>
+                        <Text
+                            ref={refFullName}
+                            title={truncatedFullName ? fullName : undefined}
+                            isTruncated>
+                            {fullName}
+                        </Text>
+                        <Text
+                            fontSize="sm"
+                            color="gray.500"
+                            ref={refEmail}
+                            title={truncatedEmail ? email : undefined}
+                            isTruncated>
                             {email}
                         </Text>
                     </Flex>
@@ -127,11 +147,11 @@ function Employee({ employee }: EmployeeProps) {
                                 py="2"
                                 bg="gray.200"
                                 rounded="md"
-                                w={{lg:32, base: 16}}
+                                w={{ lg: 32, base: 16 }}
                             >
                                 <PiClockUser size="24px" title={timeloadTitle}/>
                                 <Show above="lg">
-                                    <Text>{timeload?.slice(0, -3)}</Text>
+                                    <Text>{timeloadString}</Text>
                                 </Show>
                             </Flex>
                         </>

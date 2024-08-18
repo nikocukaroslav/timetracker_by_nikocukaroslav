@@ -1,9 +1,10 @@
-import { UserModel, WorkDayModel, WorkSessionModel } from "./domain.ts";
+import { UserModel, UserPaginationModel, WorkDayModel, WorkSessionModel } from "./domain.ts";
 
 export interface EmployeesState {
     loading: boolean;
     user: UserModel;
     users: UserModel[];
+    pagination: UserPaginationModel;
 }
 
 export interface AuthenticationState {

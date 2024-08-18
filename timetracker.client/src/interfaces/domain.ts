@@ -11,6 +11,15 @@ export interface UserModel {
     isEmployed?: boolean,
 }
 
+export interface UserPaginationModel {
+    totalCount?: number,
+    pageSize?: number,
+    page?: number,
+    hasNextPage?: boolean,
+    hasPreviousPage?: boolean,
+    totalPages?: number,
+}
+
 export interface WorkSessionModel {
     id?: string,
     startTime?: number,

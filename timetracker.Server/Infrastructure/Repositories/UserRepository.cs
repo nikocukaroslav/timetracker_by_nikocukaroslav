@@ -45,9 +45,9 @@ namespace timetracker.Server.Infrastructure.Repositories
             {
                 Offset = (page - 1) * pageSize,
                 PageSize = pageSize,
-                IsEmployed = filter.IsEmployed,
-                Status = filter.Status,
-                Position = filter.Position,
+                IsEmployed = filter?.IsEmployed,
+                Status = filter?.Status,
+                Position = filter?.Position,
             });
 
             return new PaginatedList<User>(users.ToList(), totalCount, page, pageSize);

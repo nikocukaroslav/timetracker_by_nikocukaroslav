@@ -44,8 +44,13 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
 export const getUsersEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(GET_USERS),
-        switchMap(() =>
-            graphQlQuery(getUsersQuery, {})
+        switchMap(action =>
+            graphQlQuery(getUsersQuery, {
+                pagination: {
+                    page: action.payload,
+                    pageSize: 4
+                }
+            })
                 .pipe(
                     map(response => getUsersSuccessful(response.data.users.users))
                 )
@@ -70,7 +75,7 @@ export const getUserEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(GET_USER),
         switchMap(action =>
-            graphQlQuery(getUserQuery, {id: action.payload})
+            graphQlQuery(getUserQuery, { id: action.payload })
                 .pipe(
                     map(response => getUserSuccessful(response.data.users.user))
                 )
@@ -83,7 +88,7 @@ export const updateUserEpic: Epic<MyAction> = (action$) =>
         tap(() => store.dispatch(setLoading(true))),
         tap(() => store.dispatch(setError(""))),
         switchMap(action =>
-            graphQlQuery(updateUserMutation, {user: action.payload})
+            graphQlQuery(updateUserMutation, { user: action.payload })
                 .pipe(
                     map(response => updateSuccessful(response.data.users.updateUser)),
                     tap(() => store.dispatch(setLoading(false))),

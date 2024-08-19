@@ -14,6 +14,7 @@ interface CreateUserAction {
 
 interface GetUsersAction {
     type: typeof GET_USERS;
+    payload: string;
 }
 
 interface GetUserAction {

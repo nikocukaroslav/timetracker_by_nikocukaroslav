@@ -8,13 +8,12 @@ import Positions from "@pages/Positions.tsx";
 import Requests from "@pages/Requests.tsx";
 import Settings from "@pages/Settings.tsx";
 import SignIn from "@pages/SignIn.tsx";
-import Teams from "@pages/Teams.tsx";
 import TimeTracker from "@pages/TimeTracker.tsx";
 import AppLayout from "@components/layouts/AppLayout.tsx";
 import PermissionChecker from "@components/layouts/PermissionChecker.tsx";
 import ProtectedRoute from "@components/layouts/ProtectedRoute.tsx";
 
-import { APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS } from "@constants";
+import { APPROVE_REQUESTS, MANAGE_USERS } from "@constants";
 
 const router = createBrowserRouter([
     {
@@ -25,7 +24,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Navigate to="time-tracker" replace />
+                element: <Navigate to="time-tracker" replace/>
             },
             {
                 path: "time-tracker",
@@ -43,13 +42,6 @@ const router = createBrowserRouter([
                     <PermissionChecker redirectToNotFound permissions={[MANAGE_USERS]}>
                         <Employees/>
                     </PermissionChecker>,
-            },
-            {
-                path: "teams",
-                element:
-                    <PermissionChecker redirectToNotFound permissions={[MANAGE_TEAMS]}>
-                        <Teams/>
-                    </PermissionChecker>
             },
             {
                 path: "approves",

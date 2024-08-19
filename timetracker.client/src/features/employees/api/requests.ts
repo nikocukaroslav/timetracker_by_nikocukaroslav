@@ -17,18 +17,26 @@ mutation CreateUser($user: CreateUserRequestType) {
 `
 
 export const getUsersQuery = `
-{
+query GetUsers($pagination: PaginationRequestType) {
   users {
-    users {
-      id
-      name
-      surname
-      email
-      position
-      status
-      timeload
-      permissions
-      isEmployed
+    users(pagination: $pagination) {
+      items {
+        id
+        name
+        surname
+        email
+        position
+        status
+        timeload
+        permissions
+        isEmployed
+      }
+      totalCount
+      pageSize
+      page
+      hasNextPage
+      hasPreviousPage
+      totalPages
     }
   }
 }

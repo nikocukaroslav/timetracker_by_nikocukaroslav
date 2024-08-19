@@ -44,6 +44,7 @@ const dateFormatConverter = (date: Date | number | string, format?: string) => {
                 month: "long",
                 hour: "2-digit",
                 minute: "2-digit",
+                hour12: false,
             };
             break;
         case "time":
@@ -51,24 +52,28 @@ const dateFormatConverter = (date: Date | number | string, format?: string) => {
                 hour: "2-digit",
                 minute: "2-digit",
                 second: "2-digit",
+                hour12: false,
             };
             break;
         case "MMMM yyyy":
             options = {
                 month: "long",
                 year: "numeric",
+                hour12: false,
             };
             break;
         case "hh:mm":
             options = {
                 hour: "2-digit",
                 minute: "2-digit",
+                hour12: false,
             };
             break;
         case "full-day":
             options = {
                 month: "long",
                 day: "2-digit",
+                hour12: false,
             };
             break;
         default:
@@ -76,6 +81,7 @@ const dateFormatConverter = (date: Date | number | string, format?: string) => {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
+                hour12: false,
             };
     }
 
@@ -92,6 +98,7 @@ export const timeConverter = (time: string, format?: string) => {
             options = {
                 hour: "2-digit",
                 minute: "2-digit",
+                hour12: false,
             };
             break;
         default:
@@ -99,6 +106,7 @@ export const timeConverter = (time: string, format?: string) => {
                 hour: "2-digit",
                 minute: "2-digit",
                 second: "2-digit",
+                hour12: false,
             };
     }
 

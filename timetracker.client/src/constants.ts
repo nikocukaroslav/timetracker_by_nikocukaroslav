@@ -5,7 +5,6 @@ export const BASE_URL = "https://localhost:7023/graphql";
 
 export const APPROVE_REQUESTS = "APPROVE_REQUESTS"
 export const MANAGE_USERS = "MANAGE_USERS"
-export const MANAGE_TEAMS = "MANAGE_TEAMS"
 export const MANAGE_OWN_TIME = "MANAGE_OWN_TIME"
 
 export const permissionList = [
@@ -16,10 +15,6 @@ export const permissionList = [
     {
         name: MANAGE_USERS,
         description: "manage users",
-    },
-    {
-        name: MANAGE_TEAMS,
-        description: "manage teams"
     },
     {
         name: MANAGE_OWN_TIME,

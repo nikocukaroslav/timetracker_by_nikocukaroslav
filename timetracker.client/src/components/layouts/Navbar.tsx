@@ -1,20 +1,11 @@
-import {
-    PiCalendarBlank,
-    PiClock,
-    PiGear,
-    PiListChecks,
-    PiNote,
-    PiUserGear,
-    PiUserPlus,
-    PiUsersThree,
-} from "react-icons/pi";
+import { PiCalendarBlank, PiClock, PiGear, PiListChecks, PiNote, PiUserGear, PiUserPlus, } from "react-icons/pi";
 import { AbsoluteCenter, Box, Divider, Flex, Img, Stack } from "@chakra-ui/react";
 
 import NavigationLink from "@components/ui/NavigationLink.tsx";
 import CustomNavbarDivider from "@components/ui/CustomNavbarDivider.tsx";
 import PermissionChecker from "./PermissionChecker.tsx";
 
-import { APPROVE_REQUESTS, MANAGE_TEAMS, MANAGE_USERS } from "@constants";
+import { APPROVE_REQUESTS, MANAGE_USERS } from "@constants";
 
 function Navbar() {
     return (
@@ -41,7 +32,7 @@ function Navbar() {
                 <Divider borderColor="gray.600"/>
             </Box>
 
-            <Stack direction="column" spacing="1" py="8" alignItems={{lg: "normal", base: "center"}}>
+            <Stack direction="column" spacing="1" py="8" alignItems={{ lg: "normal", base: "center" }}>
                 <NavigationLink
                     to="time-tracker"
                     icon={PiClock}
@@ -52,7 +43,7 @@ function Navbar() {
                     icon={PiCalendarBlank}
                     label="Calendar"
                 />
-                <PermissionChecker permissions={[MANAGE_TEAMS, MANAGE_USERS, APPROVE_REQUESTS]}>
+                <PermissionChecker permissions={[MANAGE_USERS, APPROVE_REQUESTS]}>
                     <CustomNavbarDivider label="Manage"/>
                 </PermissionChecker>
                 <PermissionChecker permissions={[MANAGE_USERS]}>
@@ -60,13 +51,6 @@ function Navbar() {
                         to="employees"
                         icon={PiUserPlus}
                         label="Employees"
-                    />
-                </PermissionChecker>
-                <PermissionChecker permissions={[MANAGE_TEAMS]}>
-                    <NavigationLink
-                        to="teams"
-                        icon={PiUsersThree}
-                        label="Teams"
                     />
                 </PermissionChecker>
                 <PermissionChecker permissions={[APPROVE_REQUESTS]}>

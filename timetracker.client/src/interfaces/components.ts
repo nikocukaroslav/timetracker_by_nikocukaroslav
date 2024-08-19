@@ -1,5 +1,6 @@
-import { ChangeEvent, ChangeEventHandler, MutableRefObject, ReactElement, ReactNode } from "react";
+import { ChangeEvent, ChangeEventHandler, ReactElement, ReactNode } from "react";
 import { IconType } from "react-icons";
+import { UseDisclosureProps } from "@chakra-ui/react";
 
 import { UserModel } from "./domain.ts";
 
@@ -86,13 +87,16 @@ export interface CreateEditWorkSessionFormProps extends CreateEditFormProps {
 }
 
 export interface CreateEditWorkDayFormProps extends CreateEditFormProps {
-    selectedItems: MutableRefObject<string[]>,
-    isOpen: boolean,
-    onOpen: () => void,
-    onClose: () => void,
+    disclosure?: UseDisclosureProps,
+    onCreate?: ({ startTime, endTime }: {
+        startTime: string;
+        endTime: string;
+    }) => void,
+    onUpdate?: ({ startTime, endTime }: {
+        startTime: string;
+        endTime: string;
+    }) => void,
     formData?: {
-        id?: string;
-        date: number;
         startTime: string;
         endTime: string;
     },

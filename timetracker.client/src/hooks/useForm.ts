@@ -1,8 +1,8 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useDisclosure } from "@chakra-ui/react";
+import { useDisclosure, UseDisclosureProps } from "@chakra-ui/react";
 
-export function useForm<TDefaultData, TFormData>(defaultData: TDefaultData, formData?: TFormData) {
-    const {isOpen, onOpen, onClose} = useDisclosure();
+export function useForm<TDefaultData, TFormData>(defaultData: TDefaultData, formData?: TFormData, disclosure?: UseDisclosureProps) {
+    const { isOpen, onOpen, onClose } = useDisclosure(disclosure);
     const [data, setData] = useState<TDefaultData>(defaultData);
 
     useEffect(() => {
@@ -15,11 +15,11 @@ export function useForm<TDefaultData, TFormData>(defaultData: TDefaultData, form
     }, [isOpen])
 
     const handleChangeInput = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>, field: string) => {
-        setData(prevData => ({...prevData, [field]: e.target.value}));
+        setData(prevData => ({ ...prevData, [field]: e.target.value }));
     }
 
     const handleChangeValue = (value: string | number, field: string) => {
-        setData(prevData => ({...prevData, [field]: value}));
+        setData(prevData => ({ ...prevData, [field]: value }));
     }
 
     return {

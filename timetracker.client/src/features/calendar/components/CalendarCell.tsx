@@ -1,9 +1,14 @@
 import { MutableRefObject, useEffect, useRef } from "react";
-import { PiClock } from "react-icons/pi";
-import { Center, Stack, Text } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import { PiClock, PiPencilSimple, PiTrash } from "react-icons/pi";
+import { Center, HStack, Stack, Text, useDisclosure } from "@chakra-ui/react";
 
-import { convertDateToISODate, timeConverter } from "@utils/formatters.ts";
+import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkDayForm.tsx";
+import ConfirmWindow from "@components/ui/ConfirmWindow.tsx";
+
+import { convertDateToISODate, convertTimeToISOTime, timeConverter } from "@utils/formatters.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { deleteWorkDay, updateWorkDay } from "@features/calendar/api/actions.ts";
 
 function CalendarCell({
                           selecting,
@@ -22,7 +27,7 @@ function CalendarCell({
     const workDay = useAppSelector((state) => state.calendar.workDays.find(({ day }) => day == isoDate));
     const ref = useRef<HTMLDivElement>(null);
 
-    const { startTime, endTime } = workDay || {};
+    const { id, day, startTime, endTime } = workDay || {};
     const tooltipLabel = workDay && `${timeConverter(startTime as string, "hh:mm")} - ${timeConverter(endTime as string, "hh:mm")}`;
 
     const today = date.getTime() == new Date(new Date().toDateString()).getTime();
@@ -33,6 +38,26 @@ function CalendarCell({
     const cellBg = isSelected ? "gray.400 !important" : "gray.100";
 
     const number = date.getDate();
+
+    const dispatch = useDispatch();
+    const disclosure = useDisclosure();
+
+    const { onOpen } = disclosure;
+
+    function handleUpdate({ startTime, endTime }: { startTime: string; endTime: string }) {
+        const updatedWorkDay = {
+            id: id as string,
+            day: day as string,
+            startTime: convertTimeToISOTime(startTime),
+            endTime: convertTimeToISOTime(endTime),
+        }
+
+        dispatch(updateWorkDay(updatedWorkDay))
+    }
+
+    function handleDelete() {
+        dispatch(deleteWorkDay(id as string));
+    }
 
     useEffect(() => {
         function mouseDown(e: MouseEvent) {
@@ -65,6 +90,7 @@ function CalendarCell({
     return (
         <Stack
             ref={ref}
+            role="group"
             position="relative"
             alignItems="center"
             border="1px"
@@ -90,10 +116,42 @@ function CalendarCell({
                 {number}
             </Center>
             {workDay &&
-                <Center position="absolute" top={10} gap={1}>
-                    <PiClock size={20}/>
-                    <Text>{tooltipLabel}</Text>
-                </Center>
+                <>
+                    <Center position="absolute" top={10} gap={1}>
+                        <PiClock size={20}/>
+                        <Text>{tooltipLabel}</Text>
+                    </Center>
+                    <HStack
+                        position="absolute"
+                        display="none"
+                        right={1}
+                        bottom={1}
+                        spacing={1}
+                        _groupHover={{
+                            display: "flex"
+                        }}
+                    >
+                        <Center onClick={onOpen} _hover={{ bg: "gray.200" }} p={1.5} rounded="md">
+                            <PiPencilSimple size={20} title="Edit"/>
+                        </Center>
+                        <ConfirmWindow onConfirm={handleDelete} text="Delete this work day?">
+                            <Center _hover={{ bg: "red.100" }} p={1.5} rounded="md">
+                                <PiTrash title="Delete" color="red" size={20}/>
+                            </Center>
+                        </ConfirmWindow>
+                    </HStack>
+                    <CreateEditWorkDayForm
+                        disclosure={disclosure}
+                        formData={workDay
+                            ? {
+                                startTime: startTime as string,
+                                endTime: endTime as string
+                            }
+                            : undefined
+                        }
+                        onUpdate={handleUpdate}
+                        isEditing/>
+                </>
             }
         </Stack>
     );

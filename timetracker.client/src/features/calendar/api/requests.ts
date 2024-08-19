@@ -32,7 +32,6 @@ mutation UpdateWorkDay($workDay: UpdateWorkDayRequestType) {
       day
       startTime
       endTime
-      userId
     }
   }
 }

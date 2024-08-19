@@ -7,6 +7,7 @@ using timetracker.Server.API.User.Types;
 using timetracker.Server.API.WorkDay.Types;
 using timetracker.Server.API.WorkSession.Types;
 using timetracker.Server.Domain.Errors;
+using timetracker.Server.Domain.Models;
 using timetracker.Server.Infrastructure.Interfaces;
 using UserModel = timetracker.Server.Domain.Entities.User;
 
@@ -22,16 +23,19 @@ namespace timetracker.Server.API.User
                .Arguments(
                 new QueryArguments(
                     new QueryArgument<PaginationRequestType> { Name = "pagination" },
-                    new QueryArgument<FilterUsersRequestType> { Name = "filter", DefaultValue = null }
+                    new QueryArgument<FilterUsersRequestType> { Name = "filter" },
+                    new QueryArgument<SortRequestType> { Name = "sort" }
                ))
                .ResolveAsync(async context =>
                {
                    var pagination = context.GetArgument<PaginationRequest>("pagination");
 
-                   var filter = context.GetArgument<FilterRequest>("filter");
+                   var filter = context.GetArgument<Filter>("filter");
+
+                   var sort = context.GetArgument<Sort>("sort");
 
                    var paginatedUsers = await userRepository
-                   .GetPaginatedUserListAsync(pagination.Page, pagination.PageSize, filter);
+                   .GetPaginatedUserListAsync(pagination.Page, pagination.PageSize, filter, sort);
 
                    return paginatedUsers;
                });

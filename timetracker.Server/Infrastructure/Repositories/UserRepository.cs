@@ -2,6 +2,7 @@
 using timetracker.Server.API.Pagination.Models;
 using timetracker.Server.API.User.Models;
 using timetracker.Server.Domain.Entities;
+using timetracker.Server.Domain.Models;
 using timetracker.Server.Infrastructure.Database;
 using timetracker.Server.Infrastructure.Interfaces;
 
@@ -13,7 +14,7 @@ namespace timetracker.Server.Infrastructure.Repositories
         {
         }
         public async Task<PaginatedList<User>> GetPaginatedUserListAsync(int page,
-            int pageSize, FilterRequest? filter)
+            int pageSize, Filter? filter, Sort? sort)
         {
             using var connection = _connectionFactory.Create();
 
@@ -26,8 +27,18 @@ namespace timetracker.Server.Infrastructure.Repositories
             if (filter != null)
             {
                 if (filter.IsEmployed != null) whereConditions.Add("IsEmployed = @IsEmployed");
-                if (filter.Status != null) whereConditions.Add("Status = @Status");
-                if (filter.Position != null) whereConditions.Add("Position = @Position");
+
+                if (filter.StatusList != null)
+                    foreach (var status in filter.StatusList)
+                    {
+                        whereConditions.Add("Status in @StatusList");
+                    }
+
+                if (filter.PositionList != null)
+                    foreach (var status in filter.PositionList)
+                    {
+                        whereConditions.Add("Position in @PositionList");
+                    }
             }
 
             if (whereConditions.Any())
@@ -37,17 +48,22 @@ namespace timetracker.Server.Infrastructure.Repositories
                 query += whereClause;
             }
 
-            query += " ORDER BY Name OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+            if (sort != null)
+                query += $" ORDER BY {sort.SortBy} {(sort.Ascending ? "ASC" : "DESC")} ";
+            else
+                query += " ORDER BY Name";
 
-            var totalCount = await connection.ExecuteScalarAsync<int>(totalCountQuery,filter);
+            query += " OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+            var totalCount = await connection.ExecuteScalarAsync<int>(totalCountQuery, filter);
 
             var users = await connection.QueryAsync<User>(query, new
             {
                 Offset = (page - 1) * pageSize,
                 PageSize = pageSize,
-                IsEmployed = filter.IsEmployed,
-                Status = filter.Status,
-                Position = filter.Position,
+                IsEmployed = filter?.IsEmployed,
+                StatusList = filter?.StatusList,
+                PositionList = filter?.PositionList,
             });
 
             return new PaginatedList<User>(users.ToList(), totalCount, page, pageSize);

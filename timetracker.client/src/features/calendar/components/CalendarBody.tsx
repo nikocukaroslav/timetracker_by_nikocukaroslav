@@ -1,12 +1,17 @@
 import { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { SimpleGrid, useDisclosure } from "@chakra-ui/react";
 
 import CalendarCell from "@features/calendar/components/CalendarCell.tsx";
 import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkDayForm.tsx";
 
 import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts";
+import { convertTimeToISOTime } from "@utils/formatters.ts";
+import { createWorkDays } from "@features/calendar/api/actions.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function CalendarBody({ currentDate }: { currentDate: Date }) {
+    const userId = useAppSelector((state) => state.authentication.user?.id);
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
     const selecting = useRef<boolean>(false);
@@ -14,7 +19,10 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
 
     const { startDate, dayCount } = getCalendarBounds(currentDate.getFullYear(), currentDate.getMonth());
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const dispatch = useDispatch();
+    const disclosure = useDisclosure();
+
+    const { onOpen, onClose } = disclosure;
 
     function handleSelect(day: string) {
         if (selecting.current && !selectedItemsRef.current.includes(day)) {
@@ -28,6 +36,17 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
             selecting.current = false;
             onOpen();
         }
+    }
+
+    function handleCreate({ startTime, endTime }: { startTime: string; endTime: string }) {
+        const newWorkDays = {
+            days: selectedItemsRef.current,
+            startTime: convertTimeToISOTime(startTime),
+            endTime: convertTimeToISOTime(endTime),
+            userId: userId as string,
+        }
+
+        dispatch(createWorkDays(newWorkDays))
     }
 
     function handleCloseForm() {
@@ -52,10 +71,12 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
                 />;
             })}
             <CreateEditWorkDayForm
-                selectedItems={selectedItemsRef}
-                isOpen={isOpen}
-                onOpen={onOpen}
-                onClose={handleCloseForm}/>
+                onCreate={handleCreate}
+                disclosure={{
+                    ...disclosure,
+                    onClose: handleCloseForm
+                }}
+            />
         </SimpleGrid>
     );
 }

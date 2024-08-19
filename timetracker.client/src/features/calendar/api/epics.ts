@@ -64,7 +64,7 @@ export const deleteWorkDayEpic: Epic<MyAction> = (action$) =>
                     id: action.payload
                 }
             ).pipe(
-                map(response => deleteWorkDaySuccessful(response.data.workDays.deleteWorkDay)),
+                map(() => deleteWorkDaySuccessful(action.payload)),
             )
         )
     );

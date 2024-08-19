@@ -1,15 +1,11 @@
-import { useDispatch } from "react-redux";
 import { PiTimer } from "react-icons/pi";
 import { FormLabel, Text } from "@chakra-ui/react";
 
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
 
-import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { CreateEditWorkDayFormProps } from "@interfaces/components.ts";
-import { createWorkDays } from "@features/calendar/api/actions.ts";
-import { convertTimeToISOTime } from "@utils/formatters.ts";
 
 const defaultFormData = {
     startTime: "",
@@ -17,63 +13,43 @@ const defaultFormData = {
 }
 
 function CreateEditWorkDayForm({
-                                   selectedItems,
-                                   isOpen,
-                                   onOpen,
-                                   onClose,
+                                   disclosure,
+                                   onCreate,
+                                   onUpdate,
                                    formData,
                                    isEditing
                                }: CreateEditWorkDayFormProps) {
-    const formatedFormData = {
-        startTime: formData?.startTime || "",
-        endTime: formData?.endTime || "",
-    }
-
-    const userId = useAppSelector((state) => state.authentication.user?.id);
     const {
         data,
-        onOpen: onOpenEvent,
-        onClose: onCloseEvent,
+        isOpen,
+        onOpen,
+        onClose,
         setData,
         handleChangeInput
-    } = useForm<typeof defaultFormData, typeof formatedFormData>(defaultFormData, formatedFormData);
+    } = useForm<typeof defaultFormData, typeof formData>(defaultFormData, formData, disclosure);
     const { startTime, endTime } = data;
 
-    const dispatch = useDispatch();
-
-    function handleOpen() {
-        onOpen();
-        onOpenEvent();
-    }
-
-    function handleClose() {
-        onClose();
-        onCloseEvent();
-    }
-
     function handleUpdate() {
+        if (onUpdate) {
+            onUpdate(data);
+        }
     }
 
-    function handleAdd() {
-        const newWorkDays = {
-            days: selectedItems.current,
-            startTime: convertTimeToISOTime(data?.startTime),
-            endTime: convertTimeToISOTime(data?.endTime),
-            userId: userId as string,
+    function handleCreate() {
+        if (onCreate) {
+            onCreate(data);
         }
-
-        dispatch(createWorkDays(newWorkDays))
         setData(defaultFormData);
     }
 
     return (
         <ModalForm
-            title={isEditing ? "Edit work time" : "New work time"}
+            title={isEditing ? "Edit work day" : "New work day"}
             titleIcon={<PiTimer size="24px"/>}
             isOpen={isOpen}
-            onOpen={handleOpen}
-            onClose={handleClose}
-            onSubmit={isEditing ? handleUpdate : handleAdd}
+            onOpen={onOpen}
+            onClose={onClose}
+            onSubmit={isEditing ? handleUpdate : handleCreate}
             submitBtnText={isEditing ? "Edit" : "Add"}
         >
             <FormLabel display="flex" flexDirection="column" gap="1">

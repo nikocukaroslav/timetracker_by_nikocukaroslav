@@ -7,7 +7,7 @@ import {
     createSuccessful,
     deleteSuccessful,
     getUsersSuccessful,
-    getUserSuccessful,
+    getUserSuccessful, setFilter,
     setLoading,
     updateSuccessful
 } from "../employeesSlice.ts";
@@ -47,12 +47,18 @@ export const getUsersEpic: Epic<MyAction> = (action$) =>
         switchMap(action =>
             graphQlQuery(getUsersQuery, {
                 pagination: {
-                    page: action.payload,
-                    pageSize: 4
+                    page: action.payload.pagination.page,
+                    pageSize: action.payload.pagination.pageSize
+                },
+                filter: {
+                    isEmployed: action.payload.filter?.isEmployed,
+                    statusList: action.payload.filter?.statusList,
+                    positionList: action.payload.filter?.positionList,
                 }
             })
                 .pipe(
-                    map(response => getUsersSuccessful(response.data.users.users))
+                    map(response => getUsersSuccessful(response.data.users.users)),
+                    tap(() => store.dispatch(setFilter(action.payload.filter))),
                 )
         )
     );

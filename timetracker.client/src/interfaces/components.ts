@@ -56,6 +56,20 @@ export interface RandomPasswordButtonProps {
     setRandomPassword: () => void
 }
 
+export interface FilterFormProps {
+    children: ReactNode;
+}
+
+export interface FilterDrawerProps {
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
+    onSubmit: () => void;
+    onClear: () => void;
+    triggerBtn: ReactNode;
+    children: ReactNode;
+}
+
 export interface ModalFormProps {
     title?: string;
     titleIcon?: ReactNode;

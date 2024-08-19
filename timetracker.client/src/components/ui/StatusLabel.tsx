@@ -9,7 +9,7 @@ function  StatusLabel({label, icon, bgColor, color}: InfoLabelProps) {
             left="0"
             top="0"
             fontSize="0.625rem"
-            borderColor="gray.200"
+            borderColor={bgColor ? bgColor : "gray.200" }
             bg={bgColor}
             color={color}
             borderRightWidth="2px"

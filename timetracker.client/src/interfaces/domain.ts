@@ -20,6 +20,12 @@ export interface UserPaginationModel {
     totalPages?: number,
 }
 
+export interface UserFilterModel {
+    isEmployed?: boolean,
+    statusList?: string[],
+    positionList?: string[],
+}
+
 export interface WorkSessionModel {
     id?: string,
     startTime?: number,

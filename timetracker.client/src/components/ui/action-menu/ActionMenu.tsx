@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { FiMenu } from "react-icons/fi";
-import { IconButton, Menu, MenuButton, MenuList } from "@chakra-ui/react";
+import { IconButton, Menu, MenuButton, MenuList, Portal } from "@chakra-ui/react";
 
 function ActionMenu({children}: { children: ReactNode }) {
     return (
@@ -12,9 +12,11 @@ function ActionMenu({children}: { children: ReactNode }) {
                 icon={<FiMenu size="24px"/>}
                 variant='outline'
             />
-            <MenuList>
-                {children}
-            </MenuList>
+            <Portal>
+                <MenuList>
+                    {children}
+                </MenuList>
+            </Portal>
         </Menu>
     );
 }

@@ -17,9 +17,9 @@ mutation CreateUser($user: CreateUserRequestType) {
 `
 
 export const getUsersQuery = `
-query GetUsers($pagination: PaginationRequestType) {
+query GetUsers($pagination: PaginationRequestType, $filter: FilterUsersRequestType) {
   users {
-    users(pagination: $pagination) {
+    users(pagination: $pagination, filter: $filter) {
       items {
         id
         name

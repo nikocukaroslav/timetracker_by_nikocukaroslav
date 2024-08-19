@@ -6,6 +6,7 @@ export const initialState: EmployeesState = {
     users: [],
     loading: false,
     pagination: {},
+    filter: null,
 }
 
 const employeesSlice = createSlice({
@@ -46,14 +47,17 @@ const employeesSlice = createSlice({
         setLoading(state, action) {
             state.loading = action.payload
         },
+        setFilter(state, action) {
+            state.filter = action.payload
+        }
     },
 })
 
 export const {
     createSuccessful,
     getUsersSuccessful,
-    deleteSuccessful,
-    setLoading,
+    deleteSuccessful, setLoading,
+    setFilter,
     getUserSuccessful,
     updateSuccessful
 } = employeesSlice.actions;

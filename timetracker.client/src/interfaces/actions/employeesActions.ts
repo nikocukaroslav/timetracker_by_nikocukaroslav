@@ -14,7 +14,17 @@ interface CreateUserAction {
 
 interface GetUsersAction {
     type: typeof GET_USERS;
-    payload: string;
+    payload: {
+        pagination: {
+            page: number,
+            pageSize: number
+        },
+        filter?: {
+            isEmployed?: boolean,
+            statusList?: string[],
+            positionList?: string[]
+        } | undefined
+    }
 }
 
 interface GetUserAction {

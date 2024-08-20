@@ -1,6 +1,4 @@
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import useTruncate from "@hooks/useTruncate.ts";
 import { PiCaretDown, PiClockUser, PiUserMinus, PiUserSwitch } from "react-icons/pi";
 import {
     Button,
@@ -23,6 +21,7 @@ import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuExpandedBtn } from "@components/ui/action-menu";
 import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
 import StatusLabel from "@components/ui/StatusLabel.tsx";
+import TitledText from "@components/ui/TitledText.tsx";
 
 import { deleteUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
@@ -55,24 +54,6 @@ function Employee({ employee }: EmployeeProps) {
     const fullName = `${name} ${surname} ${itsYou ? "(you)" : ""}`;
     const timeloadString = timeload ? timeConverter(timeload, "hh:mm") : "";
 
-    const {
-        ref: refFullName,
-        truncated: truncatedFullName,
-        checkTruncate: checkTruncateFullName
-    } = useTruncate<HTMLHeadingElement>();
-    useEffect(() => {
-        checkTruncateFullName();
-    }, [fullName])
-    const {
-        ref: refEmail,
-        truncated: truncatedEmail,
-        checkTruncate: checkTruncateEmail
-    } = useTruncate<HTMLHeadingElement>();
-    useEffect(() => {
-        checkTruncateEmail();
-    }, [email])
-
-
     const positionTitle = useBreakpointValue({ base: positionName, xl: "" });
     const timeloadTitle = useBreakpointValue({ base: timeloadString, lg: "" });
 
@@ -97,20 +78,12 @@ function Employee({ employee }: EmployeeProps) {
                 />
                 <Flex align="center" justify="space-between" ml="5">
                     <Flex direction="column" w={{ xl: "14rem", lg: "10rem", base: "7rem" }}>
-                        <Text
-                            ref={refFullName}
-                            title={truncatedFullName ? fullName : undefined}
-                            isTruncated>
+                        <TitledText title={fullName}>
                             {fullName}
-                        </Text>
-                        <Text
-                            fontSize="sm"
-                            color="gray.500"
-                            ref={refEmail}
-                            title={truncatedEmail ? email : undefined}
-                            isTruncated>
+                        </TitledText>
+                        <TitledText title={fullName} fontSize="sm" color="gray.500">
                             {email}
-                        </Text>
+                        </TitledText>
                     </Flex>
                     {isEmployed && (
                         <>

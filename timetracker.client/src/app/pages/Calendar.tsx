@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { HStack, Stack } from "@chakra-ui/react";
-
-import CalendarHeading from "@features/calendar/components/CalendarHeading.tsx";
 import CalendarControls from "@features/calendar/components/CalendarControls.tsx";
 import CalendarHeader from "@features/calendar/components/CalendarHeader.tsx";
 import CalendarBody from "@features/calendar/components/CalendarBody";
@@ -11,6 +9,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { getWorkDays } from "@features/calendar/api/actions.ts";
 import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts";
 import { convertDateToISODate } from "@utils/formatters.ts";
+import TitledText from "@components/ui/TitledText.tsx";
 
 function Calendar() {
     const userId = useAppSelector(state => state.authentication.user?.id);
@@ -33,7 +32,9 @@ function Calendar() {
     return (
         <Stack gap={0} h="full">
             <HStack gap={4} justifyContent="space-between" mb={4}>
-                <CalendarHeading title="Your calendar"/>
+                <TitledText title="Your calendar" fontSize={24}>
+                    Your calendar
+                </TitledText>
                 <CalendarControls currentDate={currentDate} setCurrentDate={setCurrentDate}/>
             </HStack>
             <CalendarHeader/>

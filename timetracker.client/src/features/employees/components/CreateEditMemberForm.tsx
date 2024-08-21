@@ -13,6 +13,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
 import { timeConverter } from "@utils/formatters.ts";
+import TimeSelect from "@components/ui/TimeSelect.tsx";
 
 const defaultFormData = {
     name: "",
@@ -20,7 +21,7 @@ const defaultFormData = {
     email: "",
     position: positionList[0].name,
     permissions: positionList[0].defaultPermissions,
-    timeload: "08:00:00"
+    timeload: "08:00"
 }
 
 function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMemberFormProps) {
@@ -142,11 +143,10 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
             </FormLabel>
             <FormLabel display="flex" flexDirection="column">
                 <Text>Work time</Text>
-                <CustomInput
-                    type="time"
+                <TimeSelect
                     onChange={(e) => handleChangeInput(e, "timeload")}
                     value={timeload}
-                    required
+                    isRequired
                 />
             </FormLabel>
             <FormLabel m="0">

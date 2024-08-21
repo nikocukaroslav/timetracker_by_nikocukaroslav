@@ -142,15 +142,13 @@ function CalendarCell({
                     </HStack>
                     <CreateEditWorkDayForm
                         disclosure={disclosure}
-                        formData={workDay
-                            ? {
-                                startTime: startTime as string,
-                                endTime: endTime as string
-                            }
-                            : undefined
-                        }
+                        formData={{
+                            startTime: startTime as string,
+                            endTime: endTime as string
+                        }}
                         onUpdate={handleUpdate}
-                        isEditing/>
+                        isEditing
+                    />
                 </>
             }
         </Stack>

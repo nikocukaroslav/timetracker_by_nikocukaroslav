@@ -135,7 +135,13 @@ function Employee({ employee }: EmployeeProps) {
                 {!itsYou &&
                     <ActionMenu>
                         {isEmployed &&
-                            <CreateEditMemberForm formData={employee} isEditing>
+                            <CreateEditMemberForm
+                                formData={{
+                                    ...employee,
+                                    timeload: timeConverter(employee.timeload as string, "hh:mm")
+                                }}
+                                isEditing
+                            >
                                 <ActionMenuEditBtn/>
                             </CreateEditMemberForm>
                         }

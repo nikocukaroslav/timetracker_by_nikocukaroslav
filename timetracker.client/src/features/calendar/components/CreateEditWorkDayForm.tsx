@@ -53,7 +53,7 @@ function CreateEditWorkDayForm({
             submitBtnText={isEditing ? "Edit" : "Add"}
         >
             <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Time start</Text>
+                <Text>Work start</Text>
                 <CustomInput
                     type="time"
                     onChange={(e) => handleChangeInput(e, "startTime")}
@@ -62,7 +62,7 @@ function CreateEditWorkDayForm({
                 />
             </FormLabel>
             <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Time end</Text>
+                <Text>Work end</Text>
                 <CustomInput
                     type="time"
                     onChange={(e) => handleChangeInput(e, "endTime")}

@@ -25,6 +25,10 @@ namespace timetracker.Server.Domain.Errors
         public static readonly ValidationError INVALID_EMAIL_FORMAT = new Error("Invalid email format");
 
         public static readonly ValidationError ACCOUNT_SUSPENDED = new Error("Account suspended");
+
+        public static readonly ValidationError LINK_NOT_CREATED = new Error("Link not created");
+
+        public static readonly ValidationError LINK_EXPIRED = new Error("Link expired");
     }
 
 }

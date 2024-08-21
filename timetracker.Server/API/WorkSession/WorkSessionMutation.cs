@@ -10,7 +10,7 @@ namespace timetracker.Server.API.WorkSession
 {
     public class WorkSessionMutation : ObjectGraphType
     {
-        public WorkSessionMutation(IRepository<WorkSessionModel> workSessionRepository)
+        public WorkSessionMutation(IWorkSessionRepository workSessionRepository)
         {
             this.Authorize();
 

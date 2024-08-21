@@ -4,11 +4,11 @@ import { AccordionButton, AccordionItem, AccordionPanel, Divider, Flex, Stack, T
 
 import WorkSession from "@features/time-tracker/components/WorkSession.tsx";
 
-import dateFormatConverter, { formatTime } from "@utils/formatters.ts";
+import dateConverter, { formatTime } from "@utils/formatters.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
 
-function WorkSessionGroup({day, workSessions}: { day: string, workSessions: WorkSessionModel[] }) {
-    const totalTime: number = workSessions.reduce((accumulator, {startTime, endTime}) => {
+function WorkSessionGroup({ day, workSessions }: { day: string, workSessions: WorkSessionModel[] }) {
+    const totalTime: number = workSessions.reduce((accumulator, { startTime, endTime }) => {
         return accumulator + Math.floor((endTime - startTime) / 1000);
     }, 0)
 
@@ -21,11 +21,11 @@ function WorkSessionGroup({day, workSessions}: { day: string, workSessions: Work
                 roundedTop="md"
                 roundedBottom="md"
                 boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
-                _expanded={{roundedBottom: 0}}
+                _expanded={{ roundedBottom: 0 }}
             >
                 <Flex alignItems="center" gap={2}>
                     <PiCalendar size={25}/>
-                    <Text fontWeight={500}>{dateFormatConverter(day, "full-day")}</Text>
+                    <Text fontWeight={500}>{dateConverter(day, "full-day")}</Text>
                 </Flex>
                 <Flex gap={1}>
                     <Text fontWeight={500}>Total:</Text>

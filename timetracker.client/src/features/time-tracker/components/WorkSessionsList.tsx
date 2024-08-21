@@ -3,17 +3,17 @@ import { Accordion, Stack, } from "@chakra-ui/react";
 import WorkSessionGroup from "@features/time-tracker/components/WorkSessionGroup.tsx";
 
 import { useAppSelector } from "@hooks/useAppSelector.ts";
-import dateFormatConverter from "@utils/formatters.ts";
+import dateConverter from "@utils/formatters.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
 
 function WorkSessionsList() {
     const workSessions = useAppSelector(state => state.timeTracker.workSessions);
 
-    const completedWorkSessions: WorkSessionModel[] = workSessions.filter(({endTime}) => endTime);
+    const completedWorkSessions: WorkSessionModel[] = workSessions.filter(({ endTime }) => endTime);
     const sortedWorkSessions = completedWorkSessions.sort((a, b) => b.startTime - a.startTime);
-    const workSessionGroups = Object.groupBy(sortedWorkSessions, ({startTime}: {
+    const workSessionGroups = Object.groupBy(sortedWorkSessions, ({ startTime }: {
         startTime: number
-    }) => dateFormatConverter(startTime));
+    }) => dateConverter(startTime));
 
     const daysGroup: [string, WorkSessionModel[]][] = Object.entries(workSessionGroups);
 

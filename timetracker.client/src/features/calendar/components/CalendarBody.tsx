@@ -6,9 +6,9 @@ import CalendarCell from "@features/calendar/components/CalendarCell.tsx";
 import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkDayForm.tsx";
 
 import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts";
-import { convertTimeToISOTime } from "@utils/formatters.ts";
-import { createWorkDays } from "@features/calendar/api/actions.ts";
+import { timeConverter } from "@utils/formatters.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { createWorkDays } from "@features/calendar/api/actions.ts";
 
 function CalendarBody({ currentDate }: { currentDate: Date }) {
     const userId = useAppSelector((state) => state.authentication.user?.id);
@@ -41,8 +41,8 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
     function handleCreate({ startTime, endTime }: { startTime: string; endTime: string }) {
         const newWorkDays = {
             days: selectedItemsRef.current,
-            startTime: convertTimeToISOTime(startTime),
-            endTime: convertTimeToISOTime(endTime),
+            startTime: timeConverter(startTime),
+            endTime: timeConverter(endTime),
             userId: userId as string,
         }
 

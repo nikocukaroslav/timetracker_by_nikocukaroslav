@@ -1,14 +1,14 @@
 import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
 import { Button, Heading, HStack } from "@chakra-ui/react";
 
-import dateFormatConverter from "@utils/formatters.ts";
+import dateConverter from "@utils/formatters.ts";
 
 function CalendarControls({ currentDate, setCurrentDate }: {
     currentDate: Date,
     setCurrentDate: (date: Date) => void
 }) {
 
-    const formattedDate = dateFormatConverter(currentDate, "MMMM yyyy");
+    const formattedDate = dateConverter(currentDate, "MMMM yyyy");
 
     function prevMonth() {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));

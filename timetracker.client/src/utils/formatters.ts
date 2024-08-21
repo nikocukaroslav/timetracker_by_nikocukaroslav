@@ -24,15 +24,7 @@ export function convertDateToISODate(dateValue: Date): string {
     return ISODate;
 }
 
-export function convertTimeToISOTime(timeValue: string): string {
-    const [hours, minutes, seconds] = timeValue.split(':');
-
-    const ISOTime = `${hours || "00"}:${minutes || "00"}:${seconds || "00"}`;
-
-    return ISOTime;
-}
-
-const dateFormatConverter = (date: Date | number | string, format?: string) => {
+const dateConverter = (date: Date | number | string, format?: string) => {
     const dateValue = new Date(date);
 
     let options: Intl.DateTimeFormatOptions;
@@ -47,25 +39,10 @@ const dateFormatConverter = (date: Date | number | string, format?: string) => {
                 hour12: false,
             };
             break;
-        case "time":
-            options = {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-            };
-            break;
         case "MMMM yyyy":
             options = {
                 month: "long",
                 year: "numeric",
-                hour12: false,
-            };
-            break;
-        case "hh:mm":
-            options = {
-                hour: "2-digit",
-                minute: "2-digit",
                 hour12: false,
             };
             break;
@@ -88,8 +65,10 @@ const dateFormatConverter = (date: Date | number | string, format?: string) => {
     return new Intl.DateTimeFormat("en-US", options).format(dateValue);
 };
 
-export const timeConverter = (time: string, format?: string) => {
-    const dateValue = new Date("1970-01-01T" + time);
+export const timeConverter = (time: string | number, format?: string) => {
+    const dateValue = typeof time === "string"
+        ? new Date("1970-01-01T" + time)
+        : new Date(time);
 
     let options: Intl.DateTimeFormatOptions;
 
@@ -113,4 +92,4 @@ export const timeConverter = (time: string, format?: string) => {
     return new Intl.DateTimeFormat("en-US", options).format(dateValue);
 };
 
-export default dateFormatConverter;
+export default dateConverter;

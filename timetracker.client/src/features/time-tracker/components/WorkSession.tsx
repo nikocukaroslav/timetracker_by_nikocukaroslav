@@ -6,7 +6,7 @@ import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import StatusLabel from "@components/ui/StatusLabel.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuInfoBtn } from "@components/ui/action-menu";
 
-import dateFormatConverter, { convertToLocalISO, formatTime } from "@utils/formatters.ts";
+import dateConverter, { convertToLocalISO, formatTime, timeConverter } from "@utils/formatters.ts";
 import { deleteWorkSession } from "@features/time-tracker/api/actions.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
 import CreateEditWorkSessionForm from "@features/time-tracker/components/CreateEditWorkSessionForm.tsx";
@@ -22,9 +22,9 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
     } = setByList.find(SetBy => SetBy.name === setBy) || {};
 
     const totalTime: number = Math.floor((endTime - startTime) / 1000);
-    const workingTime = `${dateFormatConverter(startTime, "time")} - ${dateFormatConverter(endTime, "time")}`;
+    const workingTime = `${timeConverter(startTime)} - ${timeConverter(endTime)}`;
 
-    const editMessage = editedAt && `Edited by ${editor?.id == userId ? "you" : `${editor?.name} ${editor?.surname}`}, ${dateFormatConverter(editedAt, "full")}`;
+    const editMessage = editedAt && `Edited by ${editor?.id == userId ? "you" : `${editor?.name} ${editor?.surname}`}, ${dateConverter(editedAt, "full")}`;
 
     const formData = {
         id,

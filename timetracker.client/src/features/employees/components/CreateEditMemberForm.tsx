@@ -12,7 +12,7 @@ import { useForm } from "@hooks/useForm.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
-import { convertTimeToISOTime } from "@utils/formatters.ts";
+import { timeConverter } from "@utils/formatters.ts";
 
 const defaultFormData = {
     name: "",
@@ -44,7 +44,7 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
             surname,
             position,
             permissions,
-            timeload: convertTimeToISOTime(timeload),
+            timeload: timeConverter(timeload),
         };
 
         dispatch(updateUser(newUserData))
@@ -57,7 +57,7 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
             email,
             position,
             permissions,
-            timeload: convertTimeToISOTime(timeload),
+            timeload: timeConverter(timeload),
         };
 
         dispatch(createUser(newUser));

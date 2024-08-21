@@ -6,7 +6,7 @@ import { Center, HStack, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkDayForm.tsx";
 import ConfirmWindow from "@components/ui/ConfirmWindow.tsx";
 
-import { convertDateToISODate, convertTimeToISOTime, timeConverter } from "@utils/formatters.ts";
+import { convertDateToISODate, timeConverter } from "@utils/formatters.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { deleteWorkDay, updateWorkDay } from "@features/calendar/api/actions.ts";
 
@@ -48,8 +48,8 @@ function CalendarCell({
         const updatedWorkDay = {
             id: id as string,
             day: day as string,
-            startTime: convertTimeToISOTime(startTime),
-            endTime: convertTimeToISOTime(endTime),
+            startTime: timeConverter(startTime),
+            endTime: timeConverter(endTime),
         }
 
         dispatch(updateWorkDay(updatedWorkDay))

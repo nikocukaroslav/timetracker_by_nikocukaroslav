@@ -1,5 +1,8 @@
-﻿namespace timetracker.Server.Domain.Entities
+﻿using timetracker.Server.Domain.Attributes;
+
+namespace timetracker.Server.Domain.Entities
 {
+    [TableName("TemporaryLinks")]
     public class TemporaryLink
     {
         public Guid Id { get; set; }

@@ -70,7 +70,7 @@ namespace timetracker.Server.API.User
 
                     var temporaryLinkToSend = await temporaryLinkRepository.CreateAsync(temporaryLink);
 
-                    if (temporaryLinkToSend != null)
+                    if (temporaryLinkToSend == null)
                     {
                         context.Errors.Add(ErrorCode.LINK_NOT_CREATED);
                         return null;
@@ -79,7 +79,7 @@ namespace timetracker.Server.API.User
                     await emailSender.SendEmailAsync(user.Email,
                     $"Welcome to the company, {user.Name}",
                     $"Please, set your password: " +
-                    $"{configuration.GetValue<string>("BaseUrl")}/auth/set-password/{temporaryLink.Id}");
+                    $"{configuration.GetValue<string>("BaseUrl")}/auth/set-password/{temporaryLinkToSend.Id}");
 
                     return createdUser;
                 });
@@ -140,7 +140,16 @@ namespace timetracker.Server.API.User
                 {
                     var updateInput = context.GetArgument<CreatePasswordRequest>("user");
 
-                    if (updateInput.Password is null || updateInput.Password.Length < 8 
+                    var temporaryLink = await temporaryLinkRepository
+                    .GetByIdAsync(updateInput.TemporaryLinkId);
+
+                    if (temporaryLink.ExpiresAt < new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds())
+                    {
+                        context.Errors.Add(ErrorCode.LINK_EXPIRED);
+                        return null;
+                    }
+
+                    if (updateInput.Password is null || updateInput.Password.Length < 8
                     || updateInput.Password.Length > 20)
                     {
                         context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
@@ -151,7 +160,7 @@ namespace timetracker.Server.API.User
 
                     var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
                     var hashPasswordResponse = passwordHasher.HashPassword(updateInput.Password);
-             
+
                     if (user is null)
                     {
                         context.Errors.Add(ErrorCode.USER_NOT_FOUND);
@@ -160,6 +169,8 @@ namespace timetracker.Server.API.User
 
                     user.Password = hashPasswordResponse.Password;
                     user.Salt = hashPasswordResponse.Salt;
+
+                    await temporaryLinkRepository.DeleteAllAsync(updateInput.UserId);
 
                     return await userRepository.UpdateAsync(user) != null;
                 });

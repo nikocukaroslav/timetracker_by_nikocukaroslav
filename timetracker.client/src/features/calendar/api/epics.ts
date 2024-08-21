@@ -1,5 +1,5 @@
 import { Epic, ofType } from "redux-observable";
-import { map, switchMap } from "rxjs";
+import { debounceTime, map, switchMap, tap } from "rxjs";
 
 import {
     createWorkDaysMutation,
@@ -11,21 +11,26 @@ import {
     createWorkDaysSuccessful,
     deleteWorkDaySuccessful,
     getWorkDaysSuccessful,
+    setLoading,
     updateWorkDaySuccessful
 } from "@features/calendar/calendarSlice.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { CREATE_WORK_DAYS, DELETE_WORK_DAYS, GET_WORK_DAYS, UPDATE_WORK_DAYS } from "@constants";
+import store from "@store";
 
 export const getWorkDaysEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(GET_WORK_DAYS),
+        tap(() => store.dispatch(setLoading(true))),
+        debounceTime(200),
         switchMap(action =>
             graphQlQuery(getWorkDaysQuery, {
                     workDays: action.payload
                 }
             ).pipe(
                 map(response => getWorkDaysSuccessful(response.data.users.workDays)),
+                tap(() => store.dispatch(setLoading(false))),
             )
         )
     );

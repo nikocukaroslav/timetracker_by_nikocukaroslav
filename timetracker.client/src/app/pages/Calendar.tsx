@@ -32,7 +32,7 @@ function Calendar() {
     return (
         <Stack gap={0} h="full">
             <HStack gap={4} justifyContent="space-between" mb={4}>
-                <TitledText title="Your calendar" fontSize={24}>
+                <TitledText title="Your calendar" fontSize={24} fontWeight="bold">
                     Your calendar
                 </TitledText>
                 <CalendarControls currentDate={currentDate} setCurrentDate={setCurrentDate}/>

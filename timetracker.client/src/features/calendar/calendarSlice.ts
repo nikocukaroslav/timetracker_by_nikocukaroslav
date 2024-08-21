@@ -4,6 +4,7 @@ import { CalendarState } from "@interfaces/state.ts";
 
 const initialState: CalendarState = {
     workDays: [],
+    loading: false,
 }
 
 const calendarSlice = createSlice({
@@ -29,6 +30,9 @@ const calendarSlice = createSlice({
         deleteWorkDaySuccessful(state, { payload }) {
             state.workDays = state.workDays.filter(workDay => workDay.id !== payload)
         },
+        setLoading(state, { payload }) {
+            state.loading = payload;
+        }
     },
 })
 
@@ -36,7 +40,8 @@ export const {
     getWorkDaysSuccessful,
     createWorkDaysSuccessful,
     updateWorkDaySuccessful,
-    deleteWorkDaySuccessful
+    deleteWorkDaySuccessful,
+    setLoading
 } = calendarSlice.actions;
 
 export default calendarSlice.reducer;

@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { SimpleGrid, useDisclosure } from "@chakra-ui/react";
+import { AbsoluteCenter, SimpleGrid, useDisclosure } from "@chakra-ui/react";
 
 import CalendarCell from "@features/calendar/components/CalendarCell.tsx";
 import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkDayForm.tsx";
+import Spinner from "@components/ui/Spinner.tsx";
 
 import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts";
 import { timeConverter } from "@utils/formatters.ts";
@@ -11,6 +12,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { createWorkDays } from "@features/calendar/api/actions.ts";
 
 function CalendarBody({ currentDate }: { currentDate: Date }) {
+    const isLoading = useAppSelector((state) => state.calendar.loading);
     const userId = useAppSelector((state) => state.authentication.user?.id);
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -56,7 +58,7 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
     }
 
     return (
-        <SimpleGrid columns={7} w="full" h="full">
+        <SimpleGrid columns={7} position="relative" w="full" h="full">
             {[...Array(dayCount)].map((_, i) => {
                 const date = new Date(startDate);
                 date.setDate(startDate.getDate() + i);
@@ -77,6 +79,12 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
                     onClose: handleCloseForm
                 }}
             />
+            {isLoading &&
+                <AbsoluteCenter w="full" h="full">
+                    <Spinner/>
+                </AbsoluteCenter>
+            }
+
         </SimpleGrid>
     );
 }

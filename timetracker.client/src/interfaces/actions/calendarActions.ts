@@ -1,8 +1,8 @@
 import {
     createWorkDaysSuccessful,
-    deleteWorkDaysSuccessful,
+    deleteWorkDaySuccessful,
     getWorkDaysSuccessful,
-    updateWorkDaysSuccessful
+    updateWorkDaySuccessful
 } from "@features/calendar/calendarSlice.ts";
 
 import { CREATE_WORK_DAYS, DELETE_WORK_DAYS, GET_WORK_DAYS, UPDATE_WORK_DAYS } from "@constants";
@@ -33,7 +33,7 @@ interface UpdateWorkDaysAction {
 }
 
 interface UpdateWorkDaysSuccessfulAction {
-    type: typeof updateWorkDaysSuccessful.type,
+    type: typeof updateWorkDaySuccessful.type,
     payload: object
 }
 
@@ -43,7 +43,7 @@ interface DeleteWorkDaysAction {
 }
 
 interface DeleteWorkDaysSuccessfulAction {
-    type: typeof deleteWorkDaysSuccessful.type,
+    type: typeof deleteWorkDaySuccessful.type,
     payload: boolean
 }
 

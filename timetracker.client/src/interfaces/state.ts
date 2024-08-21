@@ -27,6 +27,7 @@ export interface TimeTrackerState {
 
 export interface CalendarState {
     workDays: WorkDayModel[];
+    loading: boolean;
 }
 
 export interface State {

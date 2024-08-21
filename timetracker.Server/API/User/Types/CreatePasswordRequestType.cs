@@ -6,7 +6,6 @@ namespace timetracker.Server.API.User.Types
     {
         public CreatePasswordRequestType()
         {
-            Field<NonNullGraphType<GuidGraphType>>("userId");
             Field<NonNullGraphType<GuidGraphType>>("temporaryLinkId");
             Field<NonNullGraphType<StringGraphType>>("password");
         }

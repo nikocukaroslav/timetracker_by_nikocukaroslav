@@ -156,7 +156,7 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    var user = await userRepository.GetByIdAsync(updateInput.UserId);
+                    var user = await userRepository.GetByIdAsync(temporaryLink.UserId);
 
                     var passwordHasher = context.RequestServices.GetRequiredService<IPasswordHasher>();
                     var hashPasswordResponse = passwordHasher.HashPassword(updateInput.Password);

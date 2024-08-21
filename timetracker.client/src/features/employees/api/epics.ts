@@ -12,7 +12,13 @@ import {
     updateSuccessful
 } from "../employeesSlice.ts";
 import { setError } from "@features/authentication/authenticationSlice.ts";
-import { createUserMutation, deleteUserMutation, getUserQuery, getUsersQuery, updateUserMutation } from "./requests.ts";
+import {
+    createUserMutation,
+    deleteUserMutation,
+    getUserQuery,
+    getUsersQuery,
+    updateUserMutation
+} from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 

@@ -79,7 +79,7 @@ namespace timetracker.Server.API.User
                     await emailSender.SendEmailAsync(user.Email,
                     $"Welcome to the company, {user.Name}",
                     $"Please, set your password: " +
-                    $"{configuration.GetValue<string>("BaseUrl")}/auth/set-password/{temporaryLinkToSend.Id}");
+                    $"{configuration.GetValue<string>("BaseUrl")}/auth/create-password/{temporaryLinkToSend.Id}");
 
                     return createdUser;
                 });

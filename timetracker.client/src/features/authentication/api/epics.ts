@@ -8,13 +8,14 @@ import {
     logoutSuccessful,
     refreshTokenSuccessful,
     setError,
-    setLoading
+    setLoading,
+    createUserPasswordSuccessful,
 } from "../authenticationSlice.ts";
-import { authorizeMutation, loginMutation, logoutMutation, refreshTokenMutation } from "./requests.ts";
+import { authorizeMutation, loginMutation, logoutMutation, refreshTokenMutation, createUserPasswordMutation } from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import { getCookie } from "@utils/cookieHandlers.ts";
-import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN } from "@constants";
+import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN, CREATE_USER_PASSWORD } from "@constants";
 
 export const loginEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
@@ -84,6 +85,23 @@ export const refreshTokenEpic: Epic<MyAction> = (action$) =>
                             return authorizeError();
 
                         return refreshTokenSuccessful(response.data.auth);
+                    }),
+                    catchError((error) => of(setError(error.message))),
+                )
+        )
+    )
+
+export const createUserPasswordEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(CREATE_USER_PASSWORD),
+        switchMap(action =>
+            graphQlQuery(createUserPasswordMutation, {
+                password: action.payload.password,
+                temporaryLinkId: action.payload.temporaryLinkId
+            })
+                .pipe(
+                    map((response) => {
+                        return createUserPasswordSuccessful(response.data.users);
                     }),
                     catchError((error) => of(setError(error.message))),
                 )

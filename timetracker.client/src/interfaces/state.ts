@@ -15,6 +15,7 @@ export interface AuthenticationState {
     loading: boolean;
     authenticating: boolean;
     error: string | null;
+    setPasswordResult : boolean;
 }
 
 export interface TimeTrackerState {

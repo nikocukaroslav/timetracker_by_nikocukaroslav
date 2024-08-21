@@ -63,5 +63,12 @@ mutation RefreshToken($refreshToken: String!) {
     }
   }
 }
+`
 
+export const createUserPasswordMutation = `
+mutation CreatePassword($password: String!, $temporaryLinkId: Guid!) {
+  users {
+    createPassword(user: { password: $password, temporaryLinkId: $temporaryLinkId })
+  }
+}
 `

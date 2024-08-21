@@ -3,9 +3,10 @@ import {
     authorizeSuccessful,
     logoutSuccessful,
     refreshTokenSuccessful,
+    createUserPasswordSuccessful,
     setError
 } from "@features/authentication/authenticationSlice.ts";
-import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN } from "@constants";
+import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN, CREATE_USER_PASSWORD } from "@constants";
 
 interface LoginAction {
     type: typeof LOGIN;
@@ -49,6 +50,18 @@ interface RefreshTokenSuccessfulAction {
     type: typeof refreshTokenSuccessful.type,
 }
 
+interface SetUserPasswordSuccessfulAction {
+    type: typeof createUserPasswordSuccessful.type,
+}
+
+interface SetUserPasswordAction {
+    type: typeof CREATE_USER_PASSWORD,
+    payload: {
+        password: string,
+        temporaryLinkId: string
+    }
+}
+
 export type AuthenticationActions =
     | LoginAction
     | SetErrorAction
@@ -59,3 +72,5 @@ export type AuthenticationActions =
     | LogoutSuccessfulAction
     | RefreshTokenAction
     | RefreshTokenSuccessfulAction
+    | SetUserPasswordSuccessfulAction
+    | SetUserPasswordAction

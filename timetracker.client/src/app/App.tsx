@@ -12,6 +12,7 @@ import TimeTracker from "@pages/TimeTracker.tsx";
 import AppLayout from "@components/layouts/AppLayout.tsx";
 import PermissionChecker from "@components/layouts/PermissionChecker.tsx";
 import ProtectedRoute from "@components/layouts/ProtectedRoute.tsx";
+import SetPassword from "@pages/SetPassword.tsx";
 
 import { APPROVE_REQUESTS, MANAGE_USERS } from "@constants";
 
@@ -66,6 +67,11 @@ const router = createBrowserRouter([
                     <Settings/>
             },
         ],
+    },
+    {
+        path: "auth/create-password/:temporaryLinkId",
+        element:
+            <SetPassword/>
     },
     {
         path: "/sign-in",

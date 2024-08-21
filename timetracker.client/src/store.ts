@@ -1,13 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
 
-import { authorizeEpic, loginEpic, logoutEpic, refreshTokenEpic } from "./features/authentication/api/epics.ts";
+import { authorizeEpic,
+         loginEpic,
+         logoutEpic,
+         refreshTokenEpic,
+         createUserPasswordEpic
+} from "./features/authentication/api/epics.ts";
 import {
     createUserEpic,
     deleteUserEpic,
     getUserEpic,
     getUsersEpic,
-    updateUserEpic
+    updateUserEpic,
 } from "./features/employees/api/epics.ts";
 import {
     createWorkSessionEpic,
@@ -35,6 +40,7 @@ const epics = [
     authorizeEpic,
     logoutEpic,
     refreshTokenEpic,
+    createUserPasswordEpic,
     createUserEpic,
     getUsersEpic,
     getUserEpic,

@@ -10,6 +10,7 @@ export const initialState: AuthenticationState = {
     error: null,
     authenticating: true,
     loading: false,
+    setPasswordResult: false,
 }
 
 const authenticationSlice = createSlice({
@@ -55,6 +56,9 @@ const authenticationSlice = createSlice({
         setError(state, {payload}) {
             state.error = payload;
         },
+        createUserPasswordSuccessful(state, {payload}){
+            state.setPasswordResult = payload.createPassword;
+        },
     },
 })
 
@@ -65,7 +69,8 @@ export const {
     setError,
     authorizeSuccessful,
     authorizeError,
-    refreshTokenSuccessful
+    refreshTokenSuccessful,
+    createUserPasswordSuccessful
 } = authenticationSlice.actions;
 
 export default authenticationSlice.reducer;

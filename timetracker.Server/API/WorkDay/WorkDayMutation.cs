@@ -11,7 +11,7 @@ namespace timetracker.Server.API.WorkDay
 {
     public class WorkDayMutation : ObjectGraphType
     {
-        public WorkDayMutation(IRepository<WorkDayModel> workDayRepository)
+        public WorkDayMutation(IWorkDayRepository workDayRepository)
         {
             this.Authorize();
 

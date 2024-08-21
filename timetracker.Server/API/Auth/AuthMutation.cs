@@ -51,8 +51,7 @@ namespace timetracker.Server.API.Auth
                 });
 
             Field<AuthorizeResponseType>("authorize")
-                .Arguments(new QueryArguments(
-                    new QueryArgument<StringGraphType> { Name = "refreshToken" }
+                .Arguments(new QueryArguments(new QueryArgument<StringGraphType> { Name = "refreshToken" }
                 ))
                 .ResolveAsync(async context =>
                 {
@@ -118,7 +117,6 @@ namespace timetracker.Server.API.Auth
                        return null;
                    }
                });
-
 
             Field<BooleanGraphType>("logout")
                 .Arguments(new QueryArguments(

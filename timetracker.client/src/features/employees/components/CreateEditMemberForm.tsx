@@ -6,6 +6,7 @@ import { FormLabel, List, Select, Text, } from "@chakra-ui/react";
 import CustomInput from "@components/ui/CustomInput.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import PermissionItem from "./PermissionItem.tsx";
+import TimeSelect from "@components/ui/TimeSelect.tsx";
 
 import { createUser, updateUser } from "../api/actions.ts";
 import { useForm } from "@hooks/useForm.ts";
@@ -13,7 +14,6 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
 import { timeConverter } from "@utils/formatters.ts";
-import TimeSelect from "@components/ui/TimeSelect.tsx";
 
 const defaultFormData = {
     name: "",

@@ -15,8 +15,8 @@ export interface AuthenticationState {
     loading: boolean;
     authenticating: boolean;
     error: string | null;
-    isPageFound : boolean;
-    createPasswordResult : boolean;
+    isPageFound: boolean;
+    createPasswordResult: boolean;
     isTemporaryLinkValid: boolean;
     resendCreatePasswordEmailStatus: string | null;
 }
@@ -31,6 +31,11 @@ export interface TimeTrackerState {
 
 export interface CalendarState {
     workDays: WorkDayModel[];
+    user: {
+        id: string,
+        name: string,
+        surname: string
+    } | null,
     loading: boolean;
 }
 

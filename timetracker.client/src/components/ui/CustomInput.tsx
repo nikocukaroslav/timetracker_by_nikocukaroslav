@@ -1,6 +1,4 @@
-import { Input } from "@chakra-ui/react";
-
-import { InputProps } from "@interfaces/components.ts";
+import { Input, InputProps } from "@chakra-ui/react";
 
 function CustomInput(props: InputProps) {
     return (
@@ -8,7 +6,6 @@ function CustomInput(props: InputProps) {
             {...props}
             borderColor="gray.300"
             focusBorderColor="gray.500"
-            _hover=""
         />
     );
 }

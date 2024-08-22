@@ -2,10 +2,17 @@ export const getWorkDaysQuery = `
 query GetWorkDays($workDays: GetWorkDaysRequestType) {
   users {
     workDays(workDays: $workDays) {
-      id
-      day
-      startTime
-      endTime
+      workDays {
+        id
+        day
+        startTime
+        endTime
+      } 
+      user {
+        id
+        name
+        surname
+      } 
     }
   }
 }

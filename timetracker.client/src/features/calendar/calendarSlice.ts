@@ -4,6 +4,7 @@ import { CalendarState } from "@interfaces/state.ts";
 
 const initialState: CalendarState = {
     workDays: [],
+    user: null,
     loading: false,
 }
 
@@ -12,7 +13,10 @@ const calendarSlice = createSlice({
     initialState,
     reducers: {
         getWorkDaysSuccessful(state, { payload }) {
-            state.workDays = payload;
+            const { workDays, user } = payload;
+
+            state.workDays = workDays
+            state.user = user;
         },
         createWorkDaysSuccessful(state, { payload }) {
             state.workDays = state.workDays.concat(payload);

@@ -42,6 +42,19 @@ query GetUsers($pagination: PaginationRequestType, $filter: FilterUsersRequestTy
 }
 `
 
+export const findUserQuery = `
+query FindUser($input: String!) {
+  users {
+    find(input: $$input) {
+      id
+      name
+      surname
+      email
+    }
+  }
+}
+`
+
 export const getUserQuery = `
 query GetUser($id: Guid!) {
   users {

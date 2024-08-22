@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler, ReactElement, ReactNode } from "react";
+import { ChangeEvent, ReactElement, ReactNode } from "react";
 import { IconType } from "react-icons";
 import { UseDisclosureProps } from "@chakra-ui/react";
 
@@ -9,16 +9,6 @@ export interface CheckboxProps {
     disabled?: boolean;
     checked?: boolean;
     readOnly?: boolean;
-}
-
-export interface InputProps {
-    type: string;
-    step?: number;
-    required?: boolean;
-    onChange?: ChangeEventHandler<HTMLInputElement>,
-    value?: string;
-    readOnly?: boolean;
-    isDisabled?: boolean;
 }
 
 export interface StackProps {

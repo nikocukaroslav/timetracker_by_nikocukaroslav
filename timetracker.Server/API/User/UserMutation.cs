@@ -43,12 +43,6 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    var emailSender = new EmailSender();
-
-                    var expires = DateTime.Now.AddDays(1);
-
-                    var expiresAtTimeStamp = new DateTimeOffset(expires).ToUnixTimeMilliseconds();
-
                     var user = new Entities.User()
                     {
                         Name = userInput.Name,
@@ -62,24 +56,15 @@ namespace timetracker.Server.API.User
 
                     var createdUser = await userRepository.CreateAsync(user);
 
-                    var temporaryLink = new Entities.TemporaryLink()
-                    {
-                        ExpiresAt = expiresAtTimeStamp,
-                        UserId = createdUser.Id,
-                    };
+                    var emailSender = context.RequestServices.GetRequiredService<IEmailSender>();
 
-                    var temporaryLinkToSend = await temporaryLinkRepository.CreateAsync(temporaryLink);
-
-                    if (temporaryLinkToSend == null)
+                    if (emailSender == null)
                     {
                         context.Errors.Add(ErrorCode.LINK_NOT_CREATED);
                         return null;
                     }
 
-                    await emailSender.SendEmailAsync(user.Email,
-                    $"Welcome to the company, {user.Name}",
-                    $"Please, set your password: " +
-                    $"{configuration.GetValue<string>("BaseUrl")}/auth/create-password/{temporaryLinkToSend.Id}");
+                    await emailSender.SendCreatePasswordEmailAsync(createdUser);
 
                     return createdUser;
                 });
@@ -143,6 +128,12 @@ namespace timetracker.Server.API.User
                     var temporaryLink = await temporaryLinkRepository
                     .GetByIdAsync(updateInput.TemporaryLinkId);
 
+                    if (temporaryLink == null)
+                    {
+                        context.Errors.Add(ErrorCode.LINK_NOT_FOUND);
+                        return null;
+                    }
+
                     if (temporaryLink.ExpiresAt < new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds())
                     {
                         context.Errors.Add(ErrorCode.LINK_EXPIRED);
@@ -170,10 +161,48 @@ namespace timetracker.Server.API.User
                     user.Password = hashPasswordResponse.Password;
                     user.Salt = hashPasswordResponse.Salt;
 
-                    await temporaryLinkRepository.DeleteAllAsync(updateInput.UserId);
+                    await temporaryLinkRepository.DeleteAllAsync(temporaryLink.UserId);
 
                     return await userRepository.UpdateAsync(user) != null;
                 });
+
+            Field<BooleanGraphType>("resendCreatePasswordEmail")
+             .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "tokenId" }))
+             .ResolveAsync(async context =>
+             {
+                 var tokenId = context.GetArgument<Guid>("tokenId");
+
+                 var temporaryLink = await temporaryLinkRepository
+                  .GetByIdAsync(tokenId);
+
+                 if (temporaryLink == null)
+                 {
+                     context.Errors.Add(ErrorCode.LINK_NOT_FOUND);
+                     return null;
+                 }
+
+                 var createdUser = await userRepository.GetByIdAsync(temporaryLink.UserId);
+
+                 if (createdUser == null)
+                 {
+                     context.Errors.Add(ErrorCode.USER_NOT_FOUND);
+                     return null;
+                 }
+
+                 await temporaryLinkRepository.DeleteAllAsync(temporaryLink.UserId);
+
+                 var emailSender = context.RequestServices.GetRequiredService<IEmailSender>();
+
+                 if (emailSender == null)
+                 {
+                     context.Errors.Add(ErrorCode.LINK_NOT_CREATED);
+                     return null;
+                 }
+
+                 await emailSender.SendCreatePasswordEmailAsync(createdUser);
+
+                 return true;
+             });
         }
     }
 }

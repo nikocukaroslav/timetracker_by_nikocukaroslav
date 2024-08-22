@@ -1,7 +1,7 @@
 ﻿using GraphQL.Types;
 using timetracker.Server.Domain.Models;
 
-namespace timetracker.Server.API.User.Types
+namespace timetracker.Server.API.Pagination.Types
 {
     public class SortRequestType : InputObjectGraphType<Sort>
     {

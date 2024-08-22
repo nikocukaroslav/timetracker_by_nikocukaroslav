@@ -1,6 +1,8 @@
 ﻿using GraphQL;
 using GraphQL.Types;
 using timetracker.Server.API.Auth.Types;
+using timetracker.Server.Application.Services;
+using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.API.Auth
@@ -9,7 +11,7 @@ namespace timetracker.Server.API.Auth
     {
         public AuthQuery(ITemporaryLinkRepository temporaryLinkRepository)
         {
-            Field<TemporaryLinkResponseType>("temporaryLink")
+            Field<BooleanGraphType>("temporaryLinkValidity")
                 .Arguments(
                 new QueryArguments(
                     new QueryArgument<GuidGraphType> { Name = "id" }
@@ -20,7 +22,19 @@ namespace timetracker.Server.API.Auth
 
                     var temporaryLink = await temporaryLinkRepository.GetByIdAsync(id);
 
-                    return temporaryLink;
+                    if (temporaryLink == null)
+                    {
+                        context.Errors.Add(ErrorCode.LINK_NOT_FOUND);
+                        return null;
+                    }
+
+                    if (temporaryLink.ExpiresAt < new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds())
+                    {
+                        context.Errors.Add(ErrorCode.LINK_EXPIRED);
+                        return null;
+                    }
+
+                    return true;
                 });
         }
     }

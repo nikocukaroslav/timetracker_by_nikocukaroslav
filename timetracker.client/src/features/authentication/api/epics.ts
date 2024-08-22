@@ -10,12 +10,31 @@ import {
     setError,
     setLoading,
     createUserPasswordSuccessful,
+    temporaryLinkValidationError,
+    temporaryLinkValidationSuccessful,
+    resendCreatePasswordEmailSuccessful,
+    resendCreatePasswordEmailError,
 } from "../authenticationSlice.ts";
-import { authorizeMutation, loginMutation, logoutMutation, refreshTokenMutation, createUserPasswordMutation } from "./requests.ts";
+import {
+    authorizeMutation,
+    loginMutation,
+    logoutMutation,
+    refreshTokenMutation,
+    createUserPasswordMutation,
+    temporaryLinkValidationQuery, resendCreatePasswordEmailMutation,
+} from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import { getCookie } from "@utils/cookieHandlers.ts";
-import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN, CREATE_USER_PASSWORD } from "@constants";
+import {
+    AUTHORIZE,
+    LOGIN,
+    LOGOUT,
+    REFRESH_TOKEN,
+    CREATE_USER_PASSWORD,
+    TEMPORARY_LINK_VALIDATION,
+    RESEND_CREATE_PASSWORD_EMAIL
+} from "@constants";
 
 export const loginEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
@@ -44,7 +63,7 @@ export const authorizeEpic: Epic<MyAction> = (action$) =>
         ofType(AUTHORIZE),
         tap(() => store.dispatch(setError(""))),
         switchMap(() =>
-            graphQlQuery(authorizeMutation, {refreshToken: getCookie("refreshToken")})
+            graphQlQuery(authorizeMutation, { refreshToken: getCookie("refreshToken") })
                 .pipe(
                     map(response => {
                         if (response.errors)
@@ -64,7 +83,7 @@ export const logoutEpic: Epic<MyAction> = (action$) =>
         tap(() => store.dispatch(setLoading(true))),
         tap(() => store.dispatch(setError(""))),
         switchMap(() =>
-            graphQlQuery(logoutMutation, {refreshToken: getCookie("refreshToken")})
+            graphQlQuery(logoutMutation, { refreshToken: getCookie("refreshToken") })
                 .pipe(
                     map(() => logoutSuccessful()),
                     catchError((error) => of(setError(error.message))),
@@ -78,7 +97,7 @@ export const refreshTokenEpic: Epic<MyAction> = (action$) =>
         ofType(REFRESH_TOKEN),
         tap(() => store.dispatch(setError(""))),
         switchMap(() =>
-            graphQlQuery(refreshTokenMutation, {refreshToken: getCookie("refreshToken")})
+            graphQlQuery(refreshTokenMutation, { refreshToken: getCookie("refreshToken") })
                 .pipe(
                     map((response) => {
                         if (response.errors)
@@ -101,7 +120,45 @@ export const createUserPasswordEpic: Epic<MyAction> = (action$) =>
             })
                 .pipe(
                     map((response) => {
-                        return createUserPasswordSuccessful(response.data.users);
+                        if (!response.errors)
+                            return createUserPasswordSuccessful(response.data.users);
+                        return setError(response.errors[0].message)
+                    }),
+                    catchError((error) => of(setError(error.message))),
+                )
+        )
+    )
+
+export const temporaryLinkValidationEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(TEMPORARY_LINK_VALIDATION),
+        switchMap(action =>
+            graphQlQuery(temporaryLinkValidationQuery, {
+                temporaryLinkId: action.payload
+            })
+                .pipe(
+                    map(response => {
+                        if (!response.errors)
+                            return temporaryLinkValidationSuccessful()
+                        return temporaryLinkValidationError(response.errors[0].extensions.code)
+                    }),
+                    catchError((error) => of(setError(error.message))),
+                )
+        )
+    )
+
+export const resendCreatePasswordEmailEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(RESEND_CREATE_PASSWORD_EMAIL),
+        switchMap(action =>
+            graphQlQuery(resendCreatePasswordEmailMutation, {
+                temporaryLinkId: action.payload
+            })
+                .pipe(
+                    map(response => {
+                        if (!response.errors)
+                            return resendCreatePasswordEmailSuccessful(response.data.users.resendCreatePasswordEmail)
+                        return resendCreatePasswordEmailError( {message: response.errors[0].message, code: response.errors[0].extensions.code})
                     }),
                     catchError((error) => of(setError(error.message))),
                 )

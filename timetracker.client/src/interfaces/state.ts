@@ -15,7 +15,10 @@ export interface AuthenticationState {
     loading: boolean;
     authenticating: boolean;
     error: string | null;
-    setPasswordResult : boolean;
+    isPageFound : boolean;
+    createPasswordResult : boolean;
+    isTemporaryLinkValid: boolean;
+    resendCreatePasswordEmailStatus: string | null;
 }
 
 export interface TimeTrackerState {

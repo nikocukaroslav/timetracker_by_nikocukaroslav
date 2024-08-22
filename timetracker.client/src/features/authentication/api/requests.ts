@@ -72,3 +72,19 @@ mutation CreatePassword($password: String!, $temporaryLinkId: Guid!) {
   }
 }
 `
+
+export const temporaryLinkValidationQuery = `
+query TemporaryLinkValidity($temporaryLinkId: Guid!) {
+  authQuery {
+    temporaryLinkValidity(id: $temporaryLinkId)
+  }
+}
+`
+
+export const resendCreatePasswordEmailMutation = `
+mutation ResendCreatePasswordEmail($temporaryLinkId: Guid!) {
+  users {
+    resendCreatePasswordEmail(tokenId: $temporaryLinkId)
+  }
+}
+`

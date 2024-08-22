@@ -5,7 +5,9 @@ export const initialState: EmployeesState = {
     user: {},
     users: [],
     loading: false,
-    pagination: {},
+    pagination: {
+        pageSize: Number(localStorage.getItem("pageSize")) || 10,
+    },
     filter: null,
 }
 
@@ -13,25 +15,6 @@ const employeesSlice = createSlice({
     name: "employees",
     initialState,
     reducers: {
-        createSuccessful(state, action) {
-            state.users.push(action.payload)
-        },
-        updateSuccessful(state, {payload}) {
-            const {id, name, surname, permissions, timeload, position, isEmployed} = payload;
-            const userToUpdate = state.users.find(user => user.id === id)
-
-            if (!userToUpdate) return
-
-            userToUpdate.name = name;
-            userToUpdate.surname = surname;
-            userToUpdate.permissions = permissions;
-            userToUpdate.timeload = timeload;
-            userToUpdate.position = position;
-            userToUpdate.isEmployed = isEmployed;
-        },
-        deleteSuccessful(state, action) {
-            state.users = state.users.filter(user => user.id !== action.payload)
-        },
         getUserSuccessful(state, action) {
             state.user = action.payload
         },
@@ -54,12 +37,10 @@ const employeesSlice = createSlice({
 })
 
 export const {
-    createSuccessful,
     getUsersSuccessful,
-    deleteSuccessful, setLoading,
+    setLoading,
     setFilter,
     getUserSuccessful,
-    updateSuccessful
 } = employeesSlice.actions;
 
 export default employeesSlice.reducer;

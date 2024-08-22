@@ -155,5 +155,6 @@ export interface InfoLabelProps {
     label: string;
     icon?: IconType;
     bgColor?: string;
+    borderColor?: string;
     color?: string;
 }

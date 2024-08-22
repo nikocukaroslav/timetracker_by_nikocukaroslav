@@ -68,7 +68,7 @@ function Employee({ employee }: EmployeeProps) {
                 rounded="md"
             >
                 {!isEmployed &&
-                    <StatusLabel label="Terminated" bgColor="red.500" color="gray.50"/>
+                    <StatusLabel label="Terminated" bgColor="red.500" borderColor="red.500" color="gray.50"/>
                 }
                 <Img
                     alt="user-img"
@@ -81,7 +81,7 @@ function Employee({ employee }: EmployeeProps) {
                         <TitledText title={fullName}>
                             {fullName}
                         </TitledText>
-                        <TitledText title={fullName} fontSize="sm" color="gray.500">
+                        <TitledText title={email} fontSize="sm" color="gray.500">
                             {email}
                         </TitledText>
                     </Flex>

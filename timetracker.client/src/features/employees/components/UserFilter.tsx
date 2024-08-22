@@ -4,7 +4,7 @@ import { FormLabel, Checkbox, Stack, Text } from "@chakra-ui/react";
 import FilterDrawer from "@components/ui/FilterDrawer.tsx";
 
 import { FilterFormProps } from "@interfaces/components.ts";
-import { positionList } from "@constants";
+import { positionList, userStatusList } from "@constants";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { getUsers } from "@features/employees/api/actions.ts";
@@ -13,16 +13,16 @@ function UserFilter({ children }: FilterFormProps) {
     const filter = useAppSelector((state) => state.employees.filter);
     const pagination = useAppSelector(state => state.employees.pagination);
 
-    const defaultFilterData: { _isEmployed: string, _statusList: string[], _positionList: string[] } = {
-        _isEmployed: "",
-        _statusList: [],
-        _positionList: [],
+    const defaultFilterData: { filterIsEmployed: string, filterStatusList: string[], filterPositionList: string[] } = {
+        filterIsEmployed: "",
+        filterStatusList: [],
+        filterPositionList: [],
     };
 
     const filterData = {
-        _isEmployed: filter?.isEmployed != null ? String(filter.isEmployed) : "",
-        _statusList: filter?.statusList || [],
-        _positionList: filter?.positionList || [],
+        filterIsEmployed: filter?.isEmployed != null ? String(filter.isEmployed) : "",
+        filterStatusList: filter?.statusList || [],
+        filterPositionList: filter?.positionList || [],
     };
 
     const {
@@ -32,15 +32,15 @@ function UserFilter({ children }: FilterFormProps) {
         onClose,
         setData
     } = useForm<typeof defaultFilterData, typeof filterData>(defaultFilterData, filterData);
-    const { _isEmployed, _statusList, _positionList } = data;
+    const { filterIsEmployed, filterStatusList, filterPositionList } = data;
 
     const dispatch = useDispatch();
 
     function handleRequest() {
         const paginationRequest = { page: 1, pageSize: pagination.pageSize };
-        const currentPosition = _positionList.length ? _positionList : null;
-        const currentStatus = _statusList.length ? _statusList : null;
-        const currentIsEmployed = _isEmployed === "" ? null : _isEmployed === "true";
+        const currentPosition = filterPositionList.length ? filterPositionList : null;
+        const currentStatus = filterStatusList.length ? filterStatusList : null;
+        const currentIsEmployed = filterIsEmployed === "" ? null : filterIsEmployed === "true";
 
         const filter = {
             isEmployed: currentIsEmployed,
@@ -48,7 +48,6 @@ function UserFilter({ children }: FilterFormProps) {
             statusList: currentStatus,
         };
         const isFilterEmpty = Object.values(filter).every((value) => value === null);
-
         dispatch(getUsers(paginationRequest, isFilterEmpty ? null : filter));
     }
 
@@ -78,8 +77,8 @@ function UserFilter({ children }: FilterFormProps) {
                         <Checkbox
                             colorScheme="gray"
                             key={pos.name}
-                            isChecked={_positionList.includes(pos.name)}
-                            onChange={() => handleCheckboxChange(_positionList, pos.name, "_positionList")}
+                            isChecked={filterPositionList.includes(pos.name)}
+                            onChange={() => handleCheckboxChange(filterPositionList, pos.name, "filterPositionList")}
                         >
                             {pos.description}
                         </Checkbox>
@@ -90,13 +89,16 @@ function UserFilter({ children }: FilterFormProps) {
             <FormLabel display="flex" flexDirection="column" gap="1">
                 <Text>Status</Text>
                 <Stack direction="column">
-                    <Checkbox
-                        colorScheme="gray"
-                        isChecked={_statusList.includes("EMPLOYED")}
-                        onChange={() => handleCheckboxChange(_statusList, "EMPLOYED", "_statusList")}
-                    >
-                        Employed
-                    </Checkbox>
+                    {userStatusList.map((status) => (
+                        <Checkbox
+                            colorScheme="gray"
+                            key={status.name}
+                            isChecked={filterStatusList.includes(status.name)}
+                            onChange={() => handleCheckboxChange(filterStatusList, status.name, "filterStatusList")}
+                        >
+                            {status.description}
+                        </Checkbox>
+                    ))}
                 </Stack>
             </FormLabel>
 
@@ -105,11 +107,11 @@ function UserFilter({ children }: FilterFormProps) {
                 <Stack direction="column">
                     <Checkbox
                         colorScheme="gray"
-                        isChecked={_isEmployed === "true"}
+                        isChecked={filterIsEmployed === "true"}
                         onChange={() =>
                             setData((prevState) => ({
                                 ...prevState,
-                                _isEmployed: _isEmployed === "true" ? "" : "true",
+                                filterIsEmployed: filterIsEmployed === "true" ? "" : "true",
                             }))
                         }
                     >
@@ -117,11 +119,11 @@ function UserFilter({ children }: FilterFormProps) {
                     </Checkbox>
                     <Checkbox
                         colorScheme="gray"
-                        isChecked={_isEmployed === "false"}
+                        isChecked={filterIsEmployed === "false"}
                         onChange={() =>
                             setData((prevState) => ({
                                 ...prevState,
-                                _isEmployed: _isEmployed === "false" ? "" : "false",
+                                filterIsEmployed: filterIsEmployed === "false" ? "" : "false",
                             }))
                         }
                     >

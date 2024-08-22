@@ -27,7 +27,7 @@ function Employees() {
     const filter = useAppSelector(state => state.employees.filter)
 
     useEffect(() => {
-        const paginationRequest = { page: pagination.page || 1, pageSize: 4 }
+        const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }
         dispatch(getUsers(paginationRequest, filter));
     }, [dispatch]);
 
@@ -47,9 +47,9 @@ function Employees() {
 
     const handlePageSizeChange = (value: string) => {
         const newSize = Number(value)
-        console.log(newSize);
-        if (newSize > 0) {
+        if (newSize > 0 && newSize <= 100) {
             dispatch(getUsers({ page: 1, pageSize: newSize }, filter));
+            localStorage.setItem("pageSize", newSize.toString());
         }
     }
 
@@ -87,7 +87,7 @@ function Employees() {
                     justifyContent="space-between"
                     p="3"
                 >
-                    <NumberInput maxW="100px" defaultValue={pagination.pageSize || 4} min={1} onChange={handlePageSizeChange}>
+                    <NumberInput maxW="100px" defaultValue={pagination.pageSize || 10} min={1} max={100} onChange={handlePageSizeChange}>
                         <NumberInputField textAlign="center"/>
                         <NumberInputStepper>
                             <NumberIncrementStepper/>

@@ -4,12 +4,9 @@ import { Epic, ofType } from "redux-observable";
 import store from "@store";
 import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
 import {
-    createSuccessful,
-    deleteSuccessful,
     getUsersSuccessful,
     getUserSuccessful, setFilter,
     setLoading,
-    updateSuccessful
 } from "../employeesSlice.ts";
 import { setError } from "@features/authentication/authenticationSlice.ts";
 import {
@@ -21,6 +18,7 @@ import {
 } from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
+import { getUsers } from "@features/employees/api/actions.ts";
 
 export const createUserEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
@@ -35,7 +33,13 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
                 .pipe(
                     map(response => {
                             if (!response.errors)
-                                return createSuccessful(response.data.users.createUser)
+                                return getUsers(
+                                    {
+                                        page: store.getState().employees.pagination.page,
+                                        pageSize: store.getState().employees.pagination.pageSize
+                                    },
+                                    store.getState().employees.filter
+                                );
                             return response.errors.forEach((message: string) => console.log(message))
                         }
                     ),
@@ -52,15 +56,8 @@ export const getUsersEpic: Epic<MyAction> = (action$) =>
         ofType(GET_USERS),
         switchMap(action =>
             graphQlQuery(getUsersQuery, {
-                pagination: {
-                    page: action.payload.pagination.page,
-                    pageSize: action.payload.pagination.pageSize
-                },
-                filter: {
-                    isEmployed: action.payload.filter?.isEmployed,
-                    statusList: action.payload.filter?.statusList,
-                    positionList: action.payload.filter?.positionList,
-                }
+                pagination: action.payload.pagination,
+                filter: action.payload.filter
             })
                 .pipe(
                     map(response => getUsersSuccessful(response.data.users.users)),
@@ -78,7 +75,18 @@ export const deleteUserEpic: Epic<MyAction> = (action$) =>
                 }
             )
                 .pipe(
-                    map(() => deleteSuccessful(action.payload))
+                    map(response => {
+                            if (!response.errors)
+                                return getUsers(
+                                    {
+                                        page: store.getState().employees.pagination.page,
+                                        pageSize: store.getState().employees.pagination.pageSize
+                                    },
+                                    store.getState().employees.filter
+                                );
+                            return response.errors.forEach((message: string) => console.log(message))
+                        }
+                    )
                 )
         )
     );
@@ -102,7 +110,18 @@ export const updateUserEpic: Epic<MyAction> = (action$) =>
         switchMap(action =>
             graphQlQuery(updateUserMutation, { user: action.payload })
                 .pipe(
-                    map(response => updateSuccessful(response.data.users.updateUser)),
+                    map(response => {
+                            if (!response.errors)
+                                return getUsers(
+                                    {
+                                        page: store.getState().employees.pagination.page,
+                                        pageSize: store.getState().employees.pagination.pageSize
+                                    },
+                                    store.getState().employees.filter
+                                );
+                            return response.errors.forEach((message: string) => console.log(message))
+                        }
+                    ),
                     tap(() => store.dispatch(setLoading(false))),
                 )
         )

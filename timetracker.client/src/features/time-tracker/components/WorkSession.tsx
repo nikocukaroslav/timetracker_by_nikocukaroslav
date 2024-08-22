@@ -39,7 +39,7 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
     return (
         <Box position="relative">
             {editedAt &&
-                <StatusLabel label="Edited" icon={PiPencilSimple}/>
+                <StatusLabel label="Edited" icon={PiPencilSimple} borderColor="gray.200"/>
             }
             <Flex
                 position="relative"

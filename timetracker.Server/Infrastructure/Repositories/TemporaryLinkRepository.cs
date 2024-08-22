@@ -10,7 +10,6 @@ namespace timetracker.Server.Infrastructure.Repositories
         public TemporaryLinkRepository(ISqlConnectionFactory connectionFactory) : base(connectionFactory)
         {
         }
-
         public virtual async Task DeleteAllAsync(Guid userId)
         {
             using var connection = _connectionFactory.Create();

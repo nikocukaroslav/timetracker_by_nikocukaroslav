@@ -15,5 +15,6 @@ namespace timetracker.Server.Infrastructure.Interfaces
         Task<WorkSession> GetLastUserWorkSessionAsync(Guid id);
         Task<List<WorkSession>> GetWorkSessionsByUserIdAsync(Guid id);
         Task<List<WorkDay>> GetWorkDaysByUserIdAsync(WorkDaysRequest workDaysRequest);
+        Task<List<User>> FindUsersAsync(string input);
     }
 }

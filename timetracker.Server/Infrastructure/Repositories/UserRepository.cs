@@ -138,5 +138,30 @@ namespace timetracker.Server.Infrastructure.Repositories
 
             return workDays.ToList();
         }
+
+        public async Task<List<User>> FindUsersAsync(string input)
+        {
+            using var connection = _connectionFactory.Create();
+
+            var parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string name = parts.Length > 0 ? parts[0] : string.Empty;
+            string surname = parts.Length > 1 ? parts[1] : string.Empty;
+
+            var query = @"
+                SELECT * FROM Users 
+                WHERE (LOWER(Name) LIKE LOWER(@Name) AND LOWER(Surname) LIKE LOWER(@Surname))
+                OR LOWER(Name) LIKE LOWER(@FullName)
+                OR LOWER(Surname) LIKE LOWER(@FullName)";
+
+            var users = await connection.QueryAsync<User>(query, new
+            {
+                Name = $"%{name.ToLower()}%",
+                Surname = $"%{surname.ToLower()}%",
+                FullName = $"%{input.ToLower()}%"
+            });
+
+            return users.ToList();
+        }
+
     }
 }

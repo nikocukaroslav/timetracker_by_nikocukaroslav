@@ -6,6 +6,7 @@ using timetracker.Server.API.User.Models;
 using timetracker.Server.API.User.Types;
 using timetracker.Server.API.WorkDay.Types;
 using timetracker.Server.API.WorkSession.Types;
+using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Domain.Models;
 using timetracker.Server.Infrastructure.Interfaces;
@@ -48,6 +49,23 @@ namespace timetracker.Server.API.User
                    if (user == null) context.Errors.Add(ErrorCode.USER_NOT_FOUND);
                    return user;
                });
+
+            Field<ListGraphType<FindUsersResponseType>>("find")
+                .Arguments(new QueryArguments(new QueryArgument<StringGraphType> { Name = "input" }))
+                .ResolveAsync(async context =>
+                {
+                    var input = context.GetArgument<string>("input");
+
+                    var foundUsers = await userRepository.FindUsersAsync(input);
+
+                    if (foundUsers == null)
+                    {
+                        context.Errors.Add(ErrorCode.USER_NOT_FOUND);
+                        return null;
+                    }
+
+                    return foundUsers;
+                });
 
             Field<ListGraphType<WorkDayResponseType>>("workDays")
                 .Arguments(new QueryArguments(new QueryArgument<GetWorkDaysRequestType> { Name = "workDays" }))

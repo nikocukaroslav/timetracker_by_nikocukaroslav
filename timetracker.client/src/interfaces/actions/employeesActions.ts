@@ -1,10 +1,8 @@
 import {
-    deleteSuccessful,
     getUsersSuccessful,
     getUserSuccessful,
-    updateSuccessful
 } from "@features/employees/employeesSlice.ts";
-import { UserModel } from "../domain.ts";
+import { UserFilterModel, UserModel, UserPaginationModel } from "../domain.ts";
 import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
 
 interface CreateUserAction {
@@ -15,15 +13,8 @@ interface CreateUserAction {
 interface GetUsersAction {
     type: typeof GET_USERS;
     payload: {
-        pagination: {
-            page: number,
-            pageSize: number
-        },
-        filter?: {
-            isEmployed?: boolean,
-            statusList?: string[],
-            positionList?: string[]
-        } | undefined
+        pagination: UserPaginationModel,
+        filter?: UserFilterModel,
     }
 }
 
@@ -37,11 +28,6 @@ interface DeleteUserAction {
     payload: string;
 }
 
-interface DeleteSuccessfulAction {
-    type: typeof deleteSuccessful.type;
-    payload: string
-}
-
 interface UpdateUserAction {
     type: typeof UPDATE_USER;
     payload: {
@@ -52,11 +38,6 @@ interface UpdateUserAction {
         permissions: [];
         timeload: string;
     };
-}
-
-interface UpdateSuccessfulAction {
-    type: typeof updateSuccessful.type;
-    payload: object
 }
 
 interface GetUsersSuccessfulAction {
@@ -76,6 +57,4 @@ export type EmployeesActions =
     | GetUsersSuccessfulAction
     | GetUserSuccessfulAction
     | DeleteUserAction
-    | DeleteSuccessfulAction
     | UpdateUserAction
-    | UpdateSuccessfulAction

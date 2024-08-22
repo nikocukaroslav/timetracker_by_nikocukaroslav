@@ -5,7 +5,9 @@ import { authorizeEpic,
          loginEpic,
          logoutEpic,
          refreshTokenEpic,
-         createUserPasswordEpic
+         createUserPasswordEpic,
+         temporaryLinkValidationEpic,
+         resendCreatePasswordEmailEpic,
 } from "./features/authentication/api/epics.ts";
 import {
     createUserEpic,
@@ -41,6 +43,8 @@ const epics = [
     logoutEpic,
     refreshTokenEpic,
     createUserPasswordEpic,
+    temporaryLinkValidationEpic,
+    resendCreatePasswordEmailEpic,
     createUserEpic,
     getUsersEpic,
     getUserEpic,

@@ -10,15 +10,18 @@ export const initialState: AuthenticationState = {
     error: null,
     authenticating: true,
     loading: false,
-    setPasswordResult: false,
+    createPasswordResult: false,
+    isPageFound: true,
+    isTemporaryLinkValid: true,
+    resendCreatePasswordEmailStatus: null,
 }
 
 const authenticationSlice = createSlice({
     name: "authentication",
     initialState,
     reducers: {
-        authorizeSuccessful(state, {payload}) {
-            const {user, accessToken, refreshToken} = payload;
+        authorizeSuccessful(state, { payload }) {
+            const { user, accessToken, refreshToken } = payload;
 
             state.authenticating = false;
             state.user = user;
@@ -34,8 +37,8 @@ const authenticationSlice = createSlice({
             state.expiresAt = null;
             deleteCookie("refreshToken");
         },
-        refreshTokenSuccessful(state, {payload}) {
-            const {accessToken, refreshToken} = payload.refreshToken;
+        refreshTokenSuccessful(state, { payload }) {
+            const { accessToken, refreshToken } = payload.refreshToken;
 
             state.accessToken = accessToken.token;
             state.expiresAt = accessToken.expiresAt;
@@ -47,17 +50,38 @@ const authenticationSlice = createSlice({
             state.expiresAt = null;
             deleteCookie("refreshToken");
         },
-        setAuthenticating(state, {payload}) {
+        setAuthenticating(state, { payload }) {
             state.authenticating = payload;
         },
-        setLoading(state, {payload}) {
+        setLoading(state, { payload }) {
             state.loading = payload;
         },
-        setError(state, {payload}) {
+        setError(state, { payload }) {
             state.error = payload;
         },
-        createUserPasswordSuccessful(state, {payload}){
-            state.setPasswordResult = payload.createPassword;
+        createUserPasswordSuccessful(state, { payload }) {
+            state.createPasswordResult = payload.createPassword;
+        },
+        temporaryLinkValidationError(state, { payload }) {
+            if (payload == "ARGUMENTS_OF_CORRECT_TYPE" || payload == "LINK_NOT_FOUND" || payload == "INVALID_VALUE")
+                state.isPageFound = false;
+            if (payload == "LINK_EXPIRED")
+                state.isTemporaryLinkValid = false;
+        },
+        temporaryLinkValidationSuccessful(state) {
+            state.isPageFound = true;
+        },
+        resendCreatePasswordEmailSuccessful(state, { payload }) {
+            if (payload) {
+                state.resendCreatePasswordEmailStatus = "Successful";
+                state.error = null;
+            }
+        },
+        resendCreatePasswordEmailError(state, { payload }) {
+            state.resendCreatePasswordEmailStatus = payload.message;
+            state.error = payload.message;
+            if (payload.code == "LINK_NOT_FOUND")
+                state.isPageFound = false;
         },
     },
 })
@@ -70,7 +94,11 @@ export const {
     authorizeSuccessful,
     authorizeError,
     refreshTokenSuccessful,
-    createUserPasswordSuccessful
+    createUserPasswordSuccessful,
+    temporaryLinkValidationError,
+    temporaryLinkValidationSuccessful,
+    resendCreatePasswordEmailSuccessful,
+    resendCreatePasswordEmailError,
 } = authenticationSlice.actions;
 
 export default authenticationSlice.reducer;

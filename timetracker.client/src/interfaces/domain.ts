@@ -21,9 +21,9 @@ export interface UserPaginationModel {
 }
 
 export interface UserFilterModel {
-    isEmployed?: boolean,
-    statusList?: string[],
-    positionList?: string[],
+    isEmployed?: boolean | null,
+    statusList?: string[] | null,
+    positionList?: string[] | null,
 }
 
 export interface WorkSessionModel {

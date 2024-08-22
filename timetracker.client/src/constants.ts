@@ -1,5 +1,5 @@
-import { GrMoney, GrUserManager } from "react-icons/gr";
-import { PiCode, PiUserCircleGearLight } from "react-icons/pi";
+import { GrMoney, GrUserManager, GrUserSettings } from "react-icons/gr";
+import { PiTerminalWindowBold } from "react-icons/pi";
 
 export const BASE_URL = "https://localhost:7023/graphql";
 
@@ -30,7 +30,7 @@ export const ACCOUNT_MANAGER = "ACCOUNT_MANAGER"
 export const positionList = [
     {
         name: DEVELOPER,
-        icon: PiCode,
+        icon: PiTerminalWindowBold,
         description: "Developer",
         defaultPermissions: [MANAGE_OWN_TIME]
     },
@@ -48,10 +48,24 @@ export const positionList = [
     },
     {
         name: ACCOUNT_MANAGER,
-        icon: PiUserCircleGearLight,
+        icon: GrUserSettings,
         description: "Account manager",
         defaultPermissions: [APPROVE_REQUESTS, MANAGE_USERS]
     },
+];
+
+export const ON_SICK_LEAVE = "ON_SICK_LEAVE"
+export const ON_VACATION = "ON_VACATION"
+
+export const userStatusList = [
+    {
+        name: ON_SICK_LEAVE,
+        description: "On sick leave"
+    },
+    {
+        name: ON_VACATION,
+        description: "On vacation"
+    }
 ];
 
 export const AUTOMATIC = "AUTOMATIC"
@@ -106,6 +120,8 @@ export const GET_USER = "GET_USER"
 export const DELETE_USER = "DELETE_USER"
 export const UPDATE_USER = "UPDATE_USER"
 export const CREATE_USER_PASSWORD = "CREATE_USER_PASSWORD"
+export const TEMPORARY_LINK_VALIDATION = "TEMPORARY_LINK_VALIDATION"
+export const RESEND_CREATE_PASSWORD_EMAIL = "RESEND_CREATE_PASSWORD_EMAIL"
 
 export const START_SESSION = "START_SESSION"
 export const STOP_SESSION = "STOP_SESSION"

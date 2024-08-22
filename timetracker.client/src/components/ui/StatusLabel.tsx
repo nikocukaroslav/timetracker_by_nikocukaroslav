@@ -1,7 +1,7 @@
 import { Flex, Icon, Text } from "@chakra-ui/react";
 import { InfoLabelProps } from "@interfaces/components.ts";
 
-function  StatusLabel({label, icon, bgColor, color}: InfoLabelProps) {
+function  StatusLabel({label, icon, bgColor, borderColor, color}: InfoLabelProps) {
     return (
         <Flex
             position="absolute"
@@ -9,7 +9,7 @@ function  StatusLabel({label, icon, bgColor, color}: InfoLabelProps) {
             left="0"
             top="0"
             fontSize="0.625rem"
-            borderColor={bgColor ? bgColor : "gray.200" }
+            borderColor={borderColor}
             bg={bgColor}
             color={color}
             borderRightWidth="2px"

@@ -12,3 +12,4 @@ namespace timetracker.Server.API.Auth.Types
         }
     }
 }
+    

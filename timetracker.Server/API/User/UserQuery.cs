@@ -46,7 +46,9 @@ namespace timetracker.Server.API.User
                .ResolveAsync(async context =>
                {
                    var user = await userRepository.GetByIdAsync(context.GetArgument<Guid>("id"));
+
                    if (user == null) context.Errors.Add(ErrorCode.USER_NOT_FOUND);
+
                    return user;
                });
 
@@ -67,7 +69,7 @@ namespace timetracker.Server.API.User
                     return foundUsers;
                 });
 
-            Field<ListGraphType<WorkDayResponseType>>("workDays")
+            Field<UserWorkDaysResponseType>("workDays")
                 .Arguments(new QueryArguments(new QueryArgument<GetWorkDaysRequestType> { Name = "workDays" }))
                 .ResolveAsync(async context =>
                 {
@@ -76,13 +78,22 @@ namespace timetracker.Server.API.User
                     var workDays = await userRepository
                     .GetWorkDaysByUserIdAsync(workDaysRequest);
 
+                    var user = await userRepository
+                    .GetByIdAsync(workDaysRequest.UserId);
+
                     if (workDays == null)
                     {
                         context.Errors.Add(ErrorCode.WORK_DAY_NOT_FOUND);
                         return null;
                     }
 
-                    return workDays;
+                    var userWorkDays = new UserWorkDaysResponse()
+                    {
+                        User = user,
+                        Days = workDays
+                    };
+
+                    return userWorkDays;
                 });
 
             Field<ListGraphType<WorkSessionResponseType>>("workSessions")

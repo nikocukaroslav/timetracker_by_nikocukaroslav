@@ -150,6 +150,7 @@ namespace timetracker.Server.Infrastructure.Repositories
             var query = @"
                 SELECT * FROM Users 
                 WHERE (LOWER(Name) LIKE LOWER(@Name) AND LOWER(Surname) LIKE LOWER(@Surname))
+                OR LOWER(Email) LIKE LOWER(@Name)
                 OR LOWER(Name) LIKE LOWER(@FullName)
                 OR LOWER(Surname) LIKE LOWER(@FullName)";
 

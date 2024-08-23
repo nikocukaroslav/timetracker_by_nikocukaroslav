@@ -2,7 +2,6 @@
 using System.Net.Mail;
 using timetracker.Server.Application.Interfaces;
 using timetracker.Server.Domain.Entities;
-using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.Application.Services
@@ -17,7 +16,7 @@ namespace timetracker.Server.Application.Services
             _configuration = configuration;
         }
  
-        public Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
             string fromEmail = "timetrackersana@gmail.com";
             string fromPassword = "ddss ldya nusv suzm";
@@ -29,7 +28,7 @@ namespace timetracker.Server.Application.Services
                 Credentials = new NetworkCredential(fromEmail, fromPassword)
             };
 
-            return client.SendMailAsync(
+            await client.SendMailAsync(
                 new MailMessage(
                     from: fromEmail,
                     to: email,
@@ -44,7 +43,7 @@ namespace timetracker.Server.Application.Services
             var expires = DateTime.Now.AddDays(1);
             var expiresAtTimeStamp = new DateTimeOffset(expires).ToUnixTimeMilliseconds();
 
-            var temporaryLink = new Domain.Entities.TemporaryLink()
+            var temporaryLink = new TemporaryLink()
             {
                 ExpiresAt = expiresAtTimeStamp,
                 UserId = createdUser.Id,

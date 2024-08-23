@@ -14,8 +14,7 @@ namespace timetracker.Server.API.User
     public class UserMutation : ObjectGraphType
     {
         public UserMutation(IUserRepository userRepository,
-            ITemporaryLinkRepository temporaryLinkRepository,
-            IEmailSender emailSender, IConfiguration configuration)
+            ITemporaryLinkRepository temporaryLinkRepository)
         {
             Field<UserResponseType>("createUser")
                 .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
@@ -30,8 +29,7 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    var emailRegex = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-                    if (!emailRegex.IsMatch(userInput.Email))
+                    if (!DataValidator.IsEmailValid(userInput.Email))
                     {
                         context.Errors.Add(ErrorCode.INVALID_EMAIL_FORMAT);
                         return null;
@@ -57,12 +55,6 @@ namespace timetracker.Server.API.User
                     var createdUser = await userRepository.CreateAsync(user);
 
                     var emailSender = context.RequestServices.GetRequiredService<IEmailSender>();
-
-                    if (emailSender == null)
-                    {
-                        context.Errors.Add(ErrorCode.LINK_NOT_CREATED);
-                        return null;
-                    }
 
                     await emailSender.SendCreatePasswordEmailAsync(createdUser);
 
@@ -125,8 +117,7 @@ namespace timetracker.Server.API.User
                 {
                     var updateInput = context.GetArgument<CreatePasswordRequest>("user");
 
-                    var temporaryLink = await temporaryLinkRepository
-                    .GetByIdAsync(updateInput.TemporaryLinkId);
+                    var temporaryLink = await temporaryLinkRepository.GetByIdAsync(updateInput.TemporaryLinkId);
 
                     if (temporaryLink == null)
                     {
@@ -134,14 +125,13 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    if (temporaryLink.ExpiresAt < new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds())
+                    if (!DataValidator.IsTimeInFuture(temporaryLink.ExpiresAt))
                     {
                         context.Errors.Add(ErrorCode.LINK_EXPIRED);
                         return null;
                     }
 
-                    if (updateInput.Password is null || updateInput.Password.Length < 8
-                    || updateInput.Password.Length > 20)
+                    if (!DataValidator.IsPasswordValid(updateInput.Password))
                     {
                         context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
                         return null;
@@ -172,8 +162,7 @@ namespace timetracker.Server.API.User
              {
                  var tokenId = context.GetArgument<Guid>("tokenId");
 
-                 var temporaryLink = await temporaryLinkRepository
-                  .GetByIdAsync(tokenId);
+                 var temporaryLink = await temporaryLinkRepository.GetByIdAsync(tokenId);
 
                  if (temporaryLink == null)
                  {
@@ -192,12 +181,6 @@ namespace timetracker.Server.API.User
                  await temporaryLinkRepository.DeleteAllAsync(temporaryLink.UserId);
 
                  var emailSender = context.RequestServices.GetRequiredService<IEmailSender>();
-
-                 if (emailSender == null)
-                 {
-                     context.Errors.Add(ErrorCode.LINK_NOT_CREATED);
-                     return null;
-                 }
 
                  await emailSender.SendCreatePasswordEmailAsync(createdUser);
 

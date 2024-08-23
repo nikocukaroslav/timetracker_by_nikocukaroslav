@@ -16,8 +16,7 @@ namespace timetracker.Server.API.WorkSession
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                 .ResolveAsync(async context =>
                 {
-                    var workSession = await workSessionRepository
-                    .GetByIdAsync(context.GetArgument<Guid>("id"));
+                    var workSession = await workSessionRepository.GetByIdAsync(context.GetArgument<Guid>("id"));
 
                     if (workSession == null)
                     {

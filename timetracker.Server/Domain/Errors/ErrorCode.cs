@@ -16,6 +16,12 @@ namespace timetracker.Server.Domain.Errors
 
         public static readonly ValidationError WORK_SESSION_ALREADY_STOPPED = new Error("Work session is already stopped");
 
+        public static readonly ValidationError WORK_SESSION_IN_FUTURE = new Error("Work session cannot be set in the future");
+
+        public static readonly ValidationError WORK_SESSION_TIME_CONFLICT = new Error("Work session time overlaps with an existing one");
+
+        public static readonly ValidationError WORK_SESSION_INVALID_TIME_RANGE = new Error("End time cannot be earlier than start time");
+
         public static readonly ValidationError WORK_DAY_NOT_FOUND = new Error("Work day is not found");
 
         public static readonly ValidationError EMAIL_EXIST = new Error("This email is already registered");

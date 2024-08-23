@@ -1,6 +1,5 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using timetracker.Server.API.Auth.Types;
 using timetracker.Server.Application.Services;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
@@ -28,7 +27,7 @@ namespace timetracker.Server.API.Auth
                         return null;
                     }
 
-                    if (temporaryLink.ExpiresAt < new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds())
+                    if (!DataValidator.IsTimeInFuture(temporaryLink.ExpiresAt))
                     {
                         context.Errors.Add(ErrorCode.LINK_EXPIRED);
                         return null;

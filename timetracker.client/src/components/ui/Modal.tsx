@@ -1,6 +1,5 @@
-import { cloneElement, isValidElement } from "react";
+import {cloneElement, isValidElement} from "react";
 import {
-    Divider,
     Modal as BaseModal,
     ModalBody,
     ModalCloseButton,
@@ -9,6 +8,7 @@ import {
     ModalOverlay,
     useDisclosure
 } from "@chakra-ui/react";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function Modal({ title, triggerBtn, children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,7 +25,7 @@ function Modal({ title, triggerBtn, children }) {
                     <ModalHeader>{title}</ModalHeader>
                     <ModalCloseButton/>
 
-                    <Divider borderColor="gray.300" borderWidth="1.5px"/>
+                    <CustomHorizontalDivider/>
 
                     <ModalBody>
                         {children}

@@ -1,7 +1,6 @@
-import { cloneElement, FormEvent, isValidElement } from "react";
+import {cloneElement, FormEvent, isValidElement} from "react";
 import {
     Button,
-    Divider,
     Flex,
     Modal,
     ModalBody,
@@ -13,7 +12,8 @@ import {
     Text,
 } from "@chakra-ui/react";
 
-import { ModalFormProps } from "@interfaces/components.ts";
+import {ModalFormProps} from "@interfaces/components.ts";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function ModalForm(props: ModalFormProps) {
     const {
@@ -58,7 +58,7 @@ function ModalForm(props: ModalFormProps) {
                     </ModalHeader>
                     <ModalCloseButton/>
 
-                    <Divider borderColor="gray.300" borderWidth="1.5px"/>
+                    <CustomHorizontalDivider/>
 
                     <ModalBody>
                         <Flex direction="column" gap="2">

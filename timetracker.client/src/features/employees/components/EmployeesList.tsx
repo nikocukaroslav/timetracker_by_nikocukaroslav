@@ -12,13 +12,8 @@ function EmployeesList() {
         <List
             display="flex"
             flexDirection="column"
-            sx={{
-                '::-webkit-scrollbar': {
-                    display: 'none',
-                },
-            }}
-            overflowY="auto"
-            overflowX={{ md: "hidden", base: "auto" }}>
+            overflowX="hidden"
+        >
             {
                 employees.map((employee: UserModel) =>
                     <Employee employee={employee} key={employee.id}/>

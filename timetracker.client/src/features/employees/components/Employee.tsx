@@ -29,6 +29,7 @@ import { EmployeeProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
 import { UserModel } from "@interfaces/domain.ts";
 import { timeConverter } from "@utils/formatters.ts";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function Employee({ employee }: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
@@ -63,9 +64,9 @@ function Employee({ employee }: EmployeeProps) {
                 position="relative"
                 display="flex"
                 alignItems="center"
-                px="5"
-                py="4"
+                p="5"
                 rounded="md"
+                overflow="hidden"
             >
                 {!isEmployed &&
                     <StatusLabel label="Terminated" bgColor="red.500" borderColor="red.500" color="gray.50"/>
@@ -129,7 +130,6 @@ function Employee({ employee }: EmployeeProps) {
                             </Flex>
                         </>
                     )}
-                    <CustomVerticalDivider/>
                 </Flex>
                 <Spacer/>
                 {!itsYou &&
@@ -161,7 +161,7 @@ function Employee({ employee }: EmployeeProps) {
                     </ActionMenu>
                 }
             </ListItem>
-            <Divider borderColor="gray.300" borderWidth="1.5px"/>
+            <CustomHorizontalDivider/>
         </>
     );
 }

@@ -1,16 +1,4 @@
-import {
-    Box,
-    Button,
-    Divider,
-    Flex,
-    FormLabel,
-    Icon,
-    Img,
-    InputGroup,
-    InputRightElement,
-    Text,
-    useToast
-} from '@chakra-ui/react';
+import { Box, Button, Flex, FormLabel, Icon, InputGroup, InputRightElement, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiKey } from "react-icons/pi";
@@ -26,6 +14,7 @@ import {
     temporaryLinkValidation
 } from "@features/authentication/api/actions.ts";
 import { useNavigate, useParams } from "react-router-dom";
+import AuthForm from "@features/authentication/components/AuthForm.tsx";
 
 function SetPassword() {
     const { temporaryLinkId } = useParams();
@@ -75,8 +64,7 @@ function SetPassword() {
                         window.close();
                     },
                 });
-            }
-            else {
+            } else {
                 toast({
                     title: 'Error',
                     description: `An error occurred: ${resendCreatePasswordEmailStatus}`,
@@ -109,99 +97,81 @@ function SetPassword() {
     }, [navigate, dispatch, createPasswordResult]);
 
     return (
-        <Flex as="main" align="center" justify="center" bg="gray.100" overflow="hidden" h="100dvh" color="gray.700">
-            <Box
-                w="25%" minW="420px" bg="gray.50" rounded="md"
-                boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)">
-
-                <Flex p="5" direction="column" gap="5" h="full">
-                    <Box>
-                        <Flex align="center" gap="3" justify="center" mb="2">
-                            <Img src="/favicon-by-cake.ico" w="44px" h="44px"/>
-                            <Text fontSize="xl" letterSpacing="0.5px">Time Tracker</Text>
+        <AuthForm>
+            {isTemporaryLinkValid ?
+                (<>
+                    <FormLabel>
+                        <Flex gap="2" mb="2">
+                            <Icon as={PiKey} w="24px" h="24px"/>
+                            <Text>Password</Text>
                         </Flex>
-                        <Text align="center" fontSize="sm" color="gray.500" letterSpacing="1px">
-                            Welcome to the company
-                        </Text>
-                    </Box>
-                    <Divider borderColor="gray.300" borderWidth="1px"/>
-                    {isTemporaryLinkValid &&
-                        <>
-                            <FormLabel>
-                                <Flex gap="2" mb="2">
-                                    <Icon as={PiKey} w="24px" h="24px"/>
-                                    <Text>Password</Text>
-                                </Flex>
-                                <InputGroup>
-                                    <CustomInput
-                                        type={showPassword ? "text" : "password"}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                    />
-                                    <InputRightElement>
-                                        <Box w="24px" onClick={handleClick}>
-                                            {showPassword ? (
-                                                <BiHide size="24px"/>
-                                            ) : (
-                                                <BiShow size="24px"/>
-                                            )}
-                                        </Box>
-                                    </InputRightElement>
-                                </InputGroup>
-                            </FormLabel>
-                            <FormLabel display="flex" flexDirection="column" gap="1">
-                                <Flex gap="2" mb="2">
-                                    <Icon as={PiKey} w="24px" h="24px"/>
-                                    <Text>Repeat password</Text>
-                                </Flex>
-                                <InputGroup>
-                                    <CustomInput
-                                        type={showPassword ? "text" : "password"}
-                                        onChange={(e) => setPasswordRepeat(e.target.value)}
-                                        required
-                                    />
-                                    <InputRightElement>
-                                        <Box w="24px" onClick={handleClick}>
-                                            {showPassword ? (
-                                                <BiHide size="24px"/>
-                                            ) : (
-                                                <BiShow size="24px"/>
-                                            )}
-                                        </Box>
-                                    </InputRightElement>
-                                </InputGroup>
-                            </FormLabel>
-                            <Text color="red.500">{error}</Text>
-                            <Button
-                                onClick={handleCreatePassword}
-                                mt="auto"
-                                borderColor="gray.300" borderWidth="2px"
-                                _hover={{ borderColor: "gray.500", bg: "gray.50" }}
-                                isLoading={loading}
-                            >
-                                Continue
-                            </Button>
-                        </>
-                    }
-                    {!isTemporaryLinkValid &&
-                        <>
-                            <Text align="center" fontSize="sm" color="gray.500" letterSpacing="1px">
-                                The link is no longer available
-                            </Text>
-                            <Button
-                                onClick={handleResendCreatePasswordEmail}
-                                mt="auto"
-                                borderColor="gray.300" borderWidth="2px"
-                                _hover={{ borderColor: "gray.500", bg: "gray.50" }}
-                                isLoading={loading}
-                            >
-                                Submit a new link
-                            </Button>
-                        </>
-                    }
-                </Flex>
-            </Box>
-        </Flex>
+                        <InputGroup>
+                            <CustomInput
+                                type={showPassword ? "text" : "password"}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            <InputRightElement>
+                                <Box w="24px" onClick={handleClick}>
+                                    {showPassword ? (
+                                        <BiHide size="24px"/>
+                                    ) : (
+                                        <BiShow size="24px"/>
+                                    )}
+                                </Box>
+                            </InputRightElement>
+                        </InputGroup>
+                    </FormLabel>
+                    <FormLabel display="flex" flexDirection="column" gap="1">
+                        <Flex gap="2" mb="2">
+                            <Icon as={PiKey} w="24px" h="24px"/>
+                            <Text>Repeat password</Text>
+                        </Flex>
+                        <InputGroup>
+                            <CustomInput
+                                type={showPassword ? "text" : "password"}
+                                onChange={(e) => setPasswordRepeat(e.target.value)}
+                                required
+                            />
+                            <InputRightElement>
+                                <Box w="24px" onClick={handleClick}>
+                                    {showPassword ? (
+                                        <BiHide size="24px"/>
+                                    ) : (
+                                        <BiShow size="24px"/>
+                                    )}
+                                </Box>
+                            </InputRightElement>
+                        </InputGroup>
+                    </FormLabel>
+                    <Text color="red.500">{error}</Text>
+                    <Button
+                        onClick={handleCreatePassword}
+                        mt="auto"
+                        borderColor="gray.300" borderWidth="2px"
+                        _hover={{ borderColor: "gray.500", bg: "gray.50" }}
+                        isLoading={loading}
+                    >
+                        Continue
+                    </Button>
+                </>)
+                :
+                (<>
+                    <Text align="center" fontSize="sm" color="gray.500" letterSpacing="1px">
+                        The link is no longer available
+                    </Text>
+                    <Button
+                        onClick={handleResendCreatePasswordEmail}
+                        mt="auto"
+                        borderColor="gray.300" borderWidth="2px"
+                        _hover={{ borderColor: "gray.500", bg: "gray.50" }}
+                        isLoading={loading}
+                    >
+                        Submit a new link
+                    </Button>
+                </>)
+            }
+        </AuthForm>
     )
 }
 

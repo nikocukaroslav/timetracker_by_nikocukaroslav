@@ -1,6 +1,6 @@
 import { cloneElement, FormEvent, isValidElement } from "react";
 import {
-    Button, Divider,
+    Button,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 import { FilterDrawerProps } from "@interfaces/components.ts";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function FilterDrawer({ children, triggerBtn, isOpen, onOpen, onClose, onSubmit, onClear }: FilterDrawerProps) {
 
@@ -34,25 +35,25 @@ function FilterDrawer({ children, triggerBtn, isOpen, onOpen, onClose, onSubmit,
             >
                 <DrawerOverlay/>
                 <DrawerContent>
-                        <DrawerCloseButton/>
-                        <DrawerHeader>Filter</DrawerHeader>
-                        <Divider borderColor="gray.300" borderWidth="1.5px"/>
+                    <DrawerCloseButton/>
+                    <DrawerHeader>Filter</DrawerHeader>
+                    <CustomHorizontalDivider/>
                     <DrawerBody>
                         <form id="filterForm" onSubmit={handleSubmit}>
                             {children}
                         </form>
                     </DrawerBody>
-                    <Divider borderColor="gray.300" borderWidth="1.5px"/>
-                        <DrawerFooter justifyContent="space-between">
-                            <Button
-                                colorScheme="red"
-                                variant="outline"
-                                onClick={onClear}
-                            >
-                                Clear Filters
-                            </Button>
-                            <Button type="submit" form="filterForm">Filter</Button>
-                        </DrawerFooter>
+                    <CustomHorizontalDivider/>
+                    <DrawerFooter justifyContent="space-between">
+                        <Button
+                            colorScheme="red"
+                            variant="outline"
+                            onClick={onClear}
+                        >
+                            Clear Filters
+                        </Button>
+                        <Button type="submit" form="filterForm">Filter</Button>
+                    </DrawerFooter>
                 </DrawerContent>
             </Drawer>
         </>

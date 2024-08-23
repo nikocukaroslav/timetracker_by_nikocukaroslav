@@ -1,16 +1,19 @@
-import { cloneElement, isValidElement, RefObject, useRef } from "react";
-import { PiInfo } from "react-icons/pi";
+import {cloneElement, isValidElement, RefObject, useRef} from "react";
+import {PiInfo} from "react-icons/pi";
 import {
+    Flex,
     Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
     ModalBody,
     ModalCloseButton,
-    useDisclosure, Text, Flex, Divider,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    Text,
+    useDisclosure
 } from "@chakra-ui/react";
 
-import { InfoWindowProps } from "@interfaces/components.ts";
+import {InfoWindowProps} from "@interfaces/components.ts";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function InfoWindow({ info, children }: InfoWindowProps) {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,7 +40,7 @@ function InfoWindow({ info, children }: InfoWindowProps) {
                         </Flex>
                     </ModalHeader>
                     <ModalCloseButton/>
-                    <Divider borderColor="gray.300" borderWidth="1.5px"/>
+                    <CustomHorizontalDivider/>
 
                     <ModalBody pb="5">
                         <Flex direction="column" gap="2">

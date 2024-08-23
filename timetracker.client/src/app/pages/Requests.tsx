@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { PiPencilSimple } from "react-icons/pi";
-import { Button, Divider, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 
 import NewRequestForm from "@features/requests/components/NewRequestForm.tsx";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function Requests() {
     const [active, setActive] = useState(false);
@@ -31,7 +32,7 @@ function Requests() {
                         <Text ml="1">New request</Text>
                     </Button>
                 </Flex>
-                <Divider borderColor="gray.300" borderWidth="1.5px"/>
+                <CustomHorizontalDivider/>
                 <Flex py="4" align="center" gap="5" px="5"></Flex>
             </Flex>
             <NewRequestForm isOpen={active} onClose={handleActive}/>

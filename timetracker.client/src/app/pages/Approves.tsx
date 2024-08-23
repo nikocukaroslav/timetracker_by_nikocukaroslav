@@ -1,4 +1,5 @@
-import { Divider, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function Approves() {
     return (
@@ -17,8 +18,7 @@ function Approves() {
                 <Text fontSize="2xl">Requests (0)</Text>
 
             </Flex>
-            <Divider borderColor="gray.300" borderWidth="1.5px"/>
-
+            <CustomHorizontalDivider/>
         </Flex>
     );
 }

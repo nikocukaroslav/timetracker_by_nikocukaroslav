@@ -26,7 +26,7 @@ namespace timetracker.Server.API.Auth
                 {
                     var email = context.GetArgument<string>("email");
 
-                    if (!DataValidator.ValidateEmail(email))
+                    if (!DataValidator.IsEmailValid(email))
                     {
                         context.Errors.Add(ErrorCode.INVALID_EMAIL_FORMAT);
                         return null;
@@ -34,7 +34,7 @@ namespace timetracker.Server.API.Auth
 
                     var password = context.GetArgument<string>("password");
 
-                    if (!DataValidator.ValidatePassword(password))
+                    if (!DataValidator.IsPasswordValid(password))
                     {
                         context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
                         return null;

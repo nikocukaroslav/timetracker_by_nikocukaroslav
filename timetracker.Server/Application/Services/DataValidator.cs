@@ -1,16 +1,23 @@
-﻿namespace timetracker.Server.Application.Services
+﻿using System.Text.RegularExpressions;
+
+namespace timetracker.Server.Application.Services
 {
     public static class DataValidator
     {
-        public static bool ValidateEmail(string email)
+        public static bool IsEmailValid(string email)
         {
-            var emailRegex = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
             return emailRegex.IsMatch(email);
         }
 
-        public static bool ValidatePassword(string password)
+        public static bool IsPasswordValid(string password)
         {
             return !(password is null || password.Length < 8 || password.Length > 20);
+        }
+
+        public static bool IsTimeInFuture(long? time)
+        {
+            return time > new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
         }
     }
 }

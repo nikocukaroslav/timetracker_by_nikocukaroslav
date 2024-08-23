@@ -16,10 +16,10 @@ namespace timetracker.Server.API.User
         public UserMutation(IUserRepository userRepository,
             ITemporaryLinkRepository temporaryLinkRepository)
         {
-            base.Field<UserResponseType>("createUser")
-                .AuthorizeWithPolicy<object, object>(Permission.MANAGE_USERS.ToString())
+            Field<UserResponseType>("createUser")
+                .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
                 .Arguments(new QueryArguments(new QueryArgument<CreateUserRequestType> { Name = "user" }))
-                .ResolveAsync((Func<IResolveFieldContext<object>, Task<object?>>)(async context =>
+                .ResolveAsync(async context =>
                 {
                     var userInput = context.GetArgument<CreateUserRequest>("user");
 
@@ -29,7 +29,7 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    if (!DataValidator.ValidateEmail(userInput.Email))
+                    if (!DataValidator.IsEmailValid(userInput.Email))
                     {
                         context.Errors.Add(ErrorCode.INVALID_EMAIL_FORMAT);
                         return null;
@@ -55,10 +55,11 @@ namespace timetracker.Server.API.User
                     var createdUser = await userRepository.CreateAsync(user);
 
                     var emailSender = context.RequestServices.GetRequiredService<IEmailSender>();
+
                     await emailSender.SendCreatePasswordEmailAsync(createdUser);
 
                     return createdUser;
-                }));
+                });
 
             Field<UserResponseType>("updateUser")
                  .AuthorizeWithPolicy(Permission.MANAGE_USERS.ToString())
@@ -124,13 +125,13 @@ namespace timetracker.Server.API.User
                         return null;
                     }
 
-                    if (temporaryLink.ExpiresAt < new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds())
+                    if (!DataValidator.IsTimeInFuture(temporaryLink.ExpiresAt))
                     {
                         context.Errors.Add(ErrorCode.LINK_EXPIRED);
                         return null;
                     }
 
-                    if (!DataValidator.ValidatePassword(updateInput.Password))
+                    if (!DataValidator.IsPasswordValid(updateInput.Password))
                     {
                         context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
                         return null;

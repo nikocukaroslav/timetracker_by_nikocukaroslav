@@ -1,6 +1,7 @@
 ﻿using GraphQL;
 using GraphQL.Types;
 using timetracker.Server.API.WorkSession.Types;
+using timetracker.Server.Application.Services;
 using timetracker.Server.Domain.Enums;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
@@ -19,6 +20,25 @@ namespace timetracker.Server.API.WorkSession
                  .ResolveAsync(async context =>
                  {
                      var inputSession = context.GetArgument<WorkSessionModel>("session");
+
+                     if (inputSession.StartTime > inputSession.EndTime)
+                     {
+                         context.Errors.Add(ErrorCode.WORK_SESSION_INVALID_TIME_RANGE);
+                         return null;
+                     }
+
+                     if (DataValidator.IsTimeInFuture(inputSession.EndTime))
+                     {
+                         context.Errors.Add(ErrorCode.WORK_SESSION_IN_FUTURE);
+                         return null;
+                     }
+
+                     if (!(await workSessionRepository.IsSessionTimeAvailable(inputSession)))
+                     {
+                         context.Errors.Add(ErrorCode.WORK_SESSION_TIME_CONFLICT);
+                         return null;
+                     }
+
                      inputSession.SetBy = SetBy.MANUALLY.ToString();
 
                      return await workSessionRepository.CreateAsync(inputSession);
@@ -29,6 +49,25 @@ namespace timetracker.Server.API.WorkSession
                 .ResolveAsync(async context =>
                 {
                     var inputSession = context.GetArgument<WorkSessionModel>("session");
+
+                    if (inputSession.StartTime > inputSession.EndTime)
+                    {
+                        context.Errors.Add(ErrorCode.WORK_SESSION_INVALID_TIME_RANGE);
+                        return null;
+                    }
+
+                    if (DataValidator.IsTimeInFuture(inputSession.EndTime))
+                    {
+                        context.Errors.Add(ErrorCode.WORK_SESSION_IN_FUTURE);
+                        return null;
+                    }
+
+                    if (!await workSessionRepository.IsSessionTimeAvailable(inputSession))
+                    {
+                        context.Errors.Add(ErrorCode.WORK_SESSION_TIME_CONFLICT);
+                        return null;
+                    }
+
                     var session = await workSessionRepository.GetByIdAsync(inputSession.Id);
 
                     if (session is null)

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using timetracker.Server.API.Auth.Models;
 using timetracker.Server.API.Auth.Types;
 using timetracker.Server.Application.Interfaces;
+using timetracker.Server.Application.Services;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 
@@ -14,10 +15,9 @@ namespace timetracker.Server.API.Auth
         public AuthMutation(
             IUserRepository userRepository,
             IJwtTokenUtils jwtTokenUtils,
-            IPasswordHasher passwordHasher,
-            IHttpContextAccessor httpContextAccessor)
+            IPasswordHasher passwordHasher)
         {
-            Field<LoginResponseType>("login")
+            base.Field<LoginResponseType>("login")
                 .Arguments(new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "email" },
                     new QueryArgument<StringGraphType> { Name = "password" }
@@ -25,7 +25,20 @@ namespace timetracker.Server.API.Auth
                 .ResolveAsync(async context =>
                 {
                     var email = context.GetArgument<string>("email");
+
+                    if (!DataValidator.ValidateEmail(email))
+                    {
+                        context.Errors.Add(ErrorCode.INVALID_EMAIL_FORMAT);
+                        return null;
+                    }
+
                     var password = context.GetArgument<string>("password");
+
+                    if (!DataValidator.ValidatePassword(password))
+                    {
+                        context.Errors.Add(ErrorCode.INVALID_PASSWORD_LENGTH);
+                        return null;
+                    }
 
                     var user = await userRepository.GetUserByEmailAsync(email);
 
@@ -34,6 +47,7 @@ namespace timetracker.Server.API.Auth
                         context.Errors.Add(ErrorCode.INVALID_CREDENTIALS);
                         return null;
                     }
+
                     if (!user.IsEmployed)
                     {
                         context.Errors.Add(ErrorCode.ACCOUNT_SUSPENDED);

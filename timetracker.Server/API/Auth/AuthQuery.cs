@@ -1,7 +1,5 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using timetracker.Server.API.Auth.Types;
-using timetracker.Server.Application.Services;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Infrastructure.Interfaces;
 

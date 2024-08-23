@@ -4,9 +4,7 @@ using timetracker.Server.API.Pagination.Models;
 using timetracker.Server.API.Pagination.Types;
 using timetracker.Server.API.User.Models;
 using timetracker.Server.API.User.Types;
-using timetracker.Server.API.WorkDay.Types;
 using timetracker.Server.API.WorkSession.Types;
-using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Errors;
 using timetracker.Server.Domain.Models;
 using timetracker.Server.Infrastructure.Interfaces;
@@ -35,8 +33,7 @@ namespace timetracker.Server.API.User
 
                    var sort = context.GetArgument<Sort>("sort");
 
-                   var paginatedUsers = await userRepository
-                   .GetPaginatedUserListAsync(pagination.Page, pagination.PageSize, filter, sort);
+                   var paginatedUsers = await userRepository.GetPaginatedUserListAsync(pagination.Page, pagination.PageSize, filter, sort);
 
                    return paginatedUsers;
                });
@@ -47,7 +44,11 @@ namespace timetracker.Server.API.User
                {
                    var user = await userRepository.GetByIdAsync(context.GetArgument<Guid>("id"));
 
-                   if (user == null) context.Errors.Add(ErrorCode.USER_NOT_FOUND);
+                   if (user == null)
+                   {
+                       context.Errors.Add(ErrorCode.USER_NOT_FOUND);
+                       return null;
+                   }
 
                    return user;
                });
@@ -75,17 +76,15 @@ namespace timetracker.Server.API.User
                 {
                     var workDaysRequest = context.GetArgument<WorkDaysRequest>("workDays");
 
-                    var workDays = await userRepository
-                    .GetWorkDaysByUserIdAsync(workDaysRequest);
-
-                    var user = await userRepository
-                    .GetByIdAsync(workDaysRequest.UserId);
+                    var workDays = await userRepository.GetWorkDaysByUserIdAsync(workDaysRequest);
 
                     if (workDays == null)
                     {
                         context.Errors.Add(ErrorCode.WORK_DAY_NOT_FOUND);
                         return null;
                     }
+
+                    var user = await userRepository.GetByIdAsync(workDaysRequest.UserId);
 
                     var userWorkDays = new UserWorkDaysResponse()
                     {
@@ -100,8 +99,7 @@ namespace timetracker.Server.API.User
                 .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                 .ResolveAsync(async context =>
                 {
-                    var workSessions = await userRepository
-                    .GetWorkSessionsByUserIdAsync(context.GetArgument<Guid>("id"));
+                    var workSessions = await userRepository.GetWorkSessionsByUserIdAsync(context.GetArgument<Guid>("id"));
                     return workSessions;
                 });
 
@@ -109,9 +107,12 @@ namespace timetracker.Server.API.User
                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
                .ResolveAsync(async context =>
                {
-                   var workSession = await userRepository
-                   .GetLastUserWorkSessionAsync(context.GetArgument<Guid>("id"));
-                   if (workSession is null) context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
+                   var workSession = await userRepository.GetLastUserWorkSessionAsync(context.GetArgument<Guid>("id"));
+                   if (workSession is null)
+                   {
+                       context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
+                       return null;
+                   }
                    return workSession;
                });
         }

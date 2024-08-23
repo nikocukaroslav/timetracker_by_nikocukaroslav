@@ -25,20 +25,20 @@ namespace timetracker.Server.API.WorkDay
 
                     var addedWorkDays = new List<WorkDayModel>();
 
-                        foreach (var day in workDaysInput.Days)
+                    foreach (var day in workDaysInput.Days)
+                    {
+                        var workDay = new WorkDayModel
                         {
-                            var workDay = new WorkDayModel
-                            {
-                                Day = DateTimeFormatter.DateOnlyToDateTime(day),
-                                StartTime = workDaysInput.StartTime.ToTimeSpan(),
-                                EndTime = workDaysInput.EndTime.ToTimeSpan(),
-                                UserId = workDaysInput.UserId
-                            };
+                            Day = DateTimeFormatter.DateOnlyToDateTime(day),
+                            StartTime = workDaysInput.StartTime.ToTimeSpan(),
+                            EndTime = workDaysInput.EndTime.ToTimeSpan(),
+                            UserId = workDaysInput.UserId
+                        };
 
-                            var addedWorkDay = await workDayRepository.CreateAsync(workDay);
-                            addedWorkDays.Add(addedWorkDay);
-                        }
-     
+                        var addedWorkDay = await workDayRepository.CreateAsync(workDay);
+                        addedWorkDays.Add(addedWorkDay);
+                    }
+
                     return addedWorkDays;
                 });
 

@@ -30,11 +30,13 @@ namespace timetracker.Server.API.WorkSession
                 {
                     var inputSession = context.GetArgument<WorkSessionModel>("session");
                     var session = await workSessionRepository.GetByIdAsync(inputSession.Id);
+
                     if (session is null)
                     {
                         context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
                         return null;
                     }
+
                     session.StartTime = inputSession.StartTime;
                     session.EndTime = inputSession.EndTime;
                     session.EditorId = inputSession.EditorId;
@@ -49,11 +51,13 @@ namespace timetracker.Server.API.WorkSession
                 {
                     Guid id = context.GetArgument<Guid>("id");
                     var workSession = await workSessionRepository.GetByIdAsync(id);
+
                     if (workSession is null)
                     {
                         context.Errors.Add(ErrorCode.WORK_SESSION_NOT_FOUND);
                         return null;
                     }
+
                     await workSessionRepository.DeleteAsync(id);
 
                     return true;
@@ -77,11 +81,13 @@ namespace timetracker.Server.API.WorkSession
                 {
                     var inputSession = context.GetArgument<WorkSessionModel>("session");
                     var session = await workSessionRepository.GetByIdAsync(inputSession.Id);
+
                     if (session.EndTime != null)
                     {
                         context.Errors.Add(ErrorCode.WORK_SESSION_ALREADY_STOPPED);
                         return null;
                     }
+
                     session.EndTime = inputSession.EndTime;
 
                     return await workSessionRepository.UpdateAsync(session);

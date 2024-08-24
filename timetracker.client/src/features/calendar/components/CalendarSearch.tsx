@@ -22,8 +22,10 @@ import { request } from "@utils/request.ts";
 import { findEmployeesQuery } from "@features/calendar/api/requests.ts";
 import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
 import { CalendarContextType } from "@features/calendar/types/calendar.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function CalendarSearch() {
+    const accountId = useAppSelector(state => state.authentication.user?.id);
     const { setUserId, setShowMode } = useContext(CalendarContext) as CalendarContextType;
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ function CalendarSearch() {
 
                 if (response.ok) {
                     const json = await response.json();
-                    const users = json.data.users.find;
+                    const users = json.data.users.find.filter(({ id }: { id: string }) => id != accountId);
 
                     setUsers(users);
                 } else {

@@ -79,9 +79,10 @@ function CalendarCell({
         if (!showMode && !workDay) {
             ref.current?.addEventListener('mousedown', mouseDown);
             ref.current?.addEventListener('mouseover', mouseOver);
-            ref.current?.addEventListener('mouseup', onEndSelect);
         }
 
+        ref.current?.addEventListener('mouseup', onEndSelect);
+        
         return () => {
             ref.current?.removeEventListener('mousedown', mouseDown);
             ref.current?.removeEventListener('mouseover', mouseOver);

@@ -23,7 +23,13 @@ namespace timetracker.Server.API.WorkSession
 
                      if (inputSession.StartTime > inputSession.EndTime)
                      {
-                         context.Errors.Add(ErrorCode.WORK_SESSION_INVALID_TIME_RANGE);
+                         context.Errors.Add(ErrorCode.INVALID_TIME_RANGE);
+                         return null;
+                     }
+
+                     if (DataValidator.IsSessionDurationValid(inputSession.StartTime, inputSession.EndTime))
+                     {
+                         context.Errors.Add(ErrorCode.WORK_SESSION_TOO_LONG);
                          return null;
                      }
 
@@ -52,7 +58,13 @@ namespace timetracker.Server.API.WorkSession
 
                     if (inputSession.StartTime > inputSession.EndTime)
                     {
-                        context.Errors.Add(ErrorCode.WORK_SESSION_INVALID_TIME_RANGE);
+                        context.Errors.Add(ErrorCode.INVALID_TIME_RANGE);
+                        return null;
+                    }
+
+                    if(DataValidator.IsSessionDurationValid(inputSession.StartTime, inputSession.EndTime))
+                    {
+                        context.Errors.Add(ErrorCode.WORK_SESSION_TOO_LONG);
                         return null;
                     }
 

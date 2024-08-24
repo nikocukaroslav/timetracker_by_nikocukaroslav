@@ -23,6 +23,14 @@ namespace timetracker.Server.API.WorkDay
                 {
                     var workDaysInput = context.GetArgument<CreateWorkDaysRequest>("workDays");
 
+                    var startTime = workDaysInput.StartTime.ToTimeSpan();
+                    var endTime = workDaysInput.EndTime.ToTimeSpan();
+                    if(startTime > endTime)
+                    {
+                        context.Errors.Add(ErrorCode.INVALID_TIME_RANGE);
+                        return null;
+                    }
+
                     var addedWorkDays = new List<WorkDayModel>();
 
                     foreach (var day in workDaysInput.Days)
@@ -30,8 +38,8 @@ namespace timetracker.Server.API.WorkDay
                         var workDay = new WorkDayModel
                         {
                             Day = DateTimeFormatter.DateOnlyToDateTime(day),
-                            StartTime = workDaysInput.StartTime.ToTimeSpan(),
-                            EndTime = workDaysInput.EndTime.ToTimeSpan(),
+                            StartTime = startTime,
+                            EndTime = endTime,
                             UserId = workDaysInput.UserId
                         };
 
@@ -47,6 +55,15 @@ namespace timetracker.Server.API.WorkDay
                 .ResolveAsync(async context =>
                 {
                     var inputWorkDay = context.GetArgument<UpdateWorkDayRequest>("workDay");
+
+                    var startTime = inputWorkDay.StartTime.ToTimeSpan();
+                    var endTime = inputWorkDay.EndTime.ToTimeSpan();
+                    if (startTime > endTime)
+                    {
+                        context.Errors.Add(ErrorCode.INVALID_TIME_RANGE);
+                        return null;
+                    }
+
                     var workDay = await workDayRepository.GetByIdAsync(inputWorkDay.Id);
 
                     if (workDay == null)
@@ -56,8 +73,8 @@ namespace timetracker.Server.API.WorkDay
                     }
 
                     workDay.Day = DateTimeFormatter.DateOnlyToDateTime(inputWorkDay.Day);
-                    workDay.StartTime = inputWorkDay.StartTime.ToTimeSpan();
-                    workDay.EndTime = inputWorkDay.EndTime.ToTimeSpan();
+                    workDay.StartTime = startTime;
+                    workDay.EndTime = endTime;
 
                     return await workDayRepository.UpdateAsync(workDay);
                 });

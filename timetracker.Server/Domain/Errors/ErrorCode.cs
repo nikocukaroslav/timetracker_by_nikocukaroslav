@@ -20,7 +20,9 @@ namespace timetracker.Server.Domain.Errors
 
         public static readonly ValidationError WORK_SESSION_TIME_CONFLICT = new Error("Work session time overlaps with an existing one");
 
-        public static readonly ValidationError WORK_SESSION_INVALID_TIME_RANGE = new Error("End time cannot be earlier than start time");
+        public static readonly ValidationError WORK_SESSION_TOO_LONG = new Error("Work session cannot be longer than 24 hours");
+
+        public static readonly ValidationError INVALID_TIME_RANGE = new Error("End time cannot be earlier than start time");
 
         public static readonly ValidationError WORK_DAY_NOT_FOUND = new Error("Work day is not found");
 

@@ -19,5 +19,15 @@ namespace timetracker.Server.Application.Services
         {
             return time > new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
         }
+
+        public static bool IsSessionDurationValid(long startTime, long? endTime)
+        {
+            if (endTime == null) return true;
+
+            long sessionDurationInMilliseconds = endTime.Value - startTime;
+            var sessionDuration = TimeSpan.FromMilliseconds(sessionDurationInMilliseconds);
+
+            return sessionDuration.TotalHours >= 24;
+        }
     }
 }

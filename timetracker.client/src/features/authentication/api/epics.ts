@@ -5,35 +5,36 @@ import store from "@store";
 import {
     authorizeError,
     authorizeSuccessful,
+    createUserPasswordSuccessful,
     logoutSuccessful,
     refreshTokenSuccessful,
+    resendCreatePasswordEmailError,
+    resendCreatePasswordEmailSuccessful,
     setError,
     setLoading,
-    createUserPasswordSuccessful,
     temporaryLinkValidationError,
     temporaryLinkValidationSuccessful,
-    resendCreatePasswordEmailSuccessful,
-    resendCreatePasswordEmailError,
 } from "../authenticationSlice.ts";
 import {
     authorizeMutation,
+    createUserPasswordMutation,
     loginMutation,
     logoutMutation,
     refreshTokenMutation,
-    createUserPasswordMutation,
-    temporaryLinkValidationQuery, resendCreatePasswordEmailMutation,
+    resendCreatePasswordEmailMutation,
+    temporaryLinkValidationQuery,
 } from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import { getCookie } from "@utils/cookieHandlers.ts";
 import {
     AUTHORIZE,
+    CREATE_USER_PASSWORD,
     LOGIN,
     LOGOUT,
     REFRESH_TOKEN,
-    CREATE_USER_PASSWORD,
-    TEMPORARY_LINK_VALIDATION,
-    RESEND_CREATE_PASSWORD_EMAIL
+    RESEND_CREATE_PASSWORD_EMAIL,
+    TEMPORARY_LINK_VALIDATION
 } from "@constants";
 
 export const loginEpic: Epic<MyAction> = (action$) =>
@@ -80,14 +81,12 @@ export const authorizeEpic: Epic<MyAction> = (action$) =>
 export const logoutEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(LOGOUT),
-        tap(() => store.dispatch(setLoading(true))),
         tap(() => store.dispatch(setError(""))),
         switchMap(() =>
             graphQlQuery(logoutMutation, { refreshToken: getCookie("refreshToken") })
                 .pipe(
                     map(() => logoutSuccessful()),
                     catchError((error) => of(setError(error.message))),
-                    tap(() => store.dispatch(setLoading(false))),
                 )
         )
     )
@@ -158,7 +157,10 @@ export const resendCreatePasswordEmailEpic: Epic<MyAction> = (action$) =>
                     map(response => {
                         if (!response.errors)
                             return resendCreatePasswordEmailSuccessful(response.data.users.resendCreatePasswordEmail)
-                        return resendCreatePasswordEmailError( {message: response.errors[0].message, code: response.errors[0].extensions.code})
+                        return resendCreatePasswordEmailError({
+                            message: response.errors[0].message,
+                            code: response.errors[0].extensions.code
+                        })
                     }),
                     catchError((error) => of(setError(error.message))),
                 )

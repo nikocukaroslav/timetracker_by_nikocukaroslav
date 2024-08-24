@@ -44,10 +44,7 @@ const authenticationSlice = createSlice({
             state.expiresAt = accessToken.expiresAt;
             setCookie("refreshToken", refreshToken.token, refreshToken.expiresAt)
         },
-        logoutSuccessful(state) {
-            state.user = null;
-            state.accessToken = null;
-            state.expiresAt = null;
+        logoutSuccessful() {
             deleteCookie("refreshToken");
         },
         setAuthenticating(state, { payload }) {

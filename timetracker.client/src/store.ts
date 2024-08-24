@@ -1,13 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
 
-import { authorizeEpic,
-         loginEpic,
-         logoutEpic,
-         refreshTokenEpic,
-         createUserPasswordEpic,
-         temporaryLinkValidationEpic,
-         resendCreatePasswordEmailEpic,
+import {
+    authorizeEpic,
+    createUserPasswordEpic,
+    loginEpic,
+    logoutEpic,
+    refreshTokenEpic,
+    resendCreatePasswordEmailEpic,
+    temporaryLinkValidationEpic,
 } from "./features/authentication/api/epics.ts";
 import {
     createUserEpic,
@@ -19,11 +20,11 @@ import {
 import {
     createWorkSessionEpic,
     deleteWorkSessionEpic,
-    updateWorkSessionEpic,
     getLastWorkSessionEpic,
     getWorkSessionsEpic,
     startSessionEpic,
     stopSessionEpic,
+    updateWorkSessionEpic,
 } from "./features/time-tracker/api/epics.ts";
 import {
     createWorkDaysEpic,
@@ -65,13 +66,23 @@ const epics = [
 
 const epicMiddleware = createEpicMiddleware();
 
+const appReducer = combineReducers({
+    authentication: authenticationReducer,
+    employees: employeesReducer,
+    timeTracker: timeTrackerReducer,
+    calendar: calendarReducer
+});
+
+const rootReducer = (state, action) => {
+    if (action.type === 'RESET') {
+        return appReducer(undefined, action)
+    }
+
+    return appReducer(state, action)
+};
+
 const store = configureStore({
-    reducer: {
-        authentication: authenticationReducer,
-        employees: employeesReducer,
-        timeTracker: timeTrackerReducer,
-        calendar: calendarReducer
-    },
+    reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(epicMiddleware),
 });

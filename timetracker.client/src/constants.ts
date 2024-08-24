@@ -113,6 +113,7 @@ export const LOGIN = "LOGIN"
 export const AUTHORIZE = "AUTHORIZE"
 export const LOGOUT = "LOGOUT"
 export const REFRESH_TOKEN = "REFRESH_TOKEN"
+export const RESET = "RESET"
 
 export const CREATE_USER = "CREATE_USER"
 export const GET_USERS = "GET_USERS"

@@ -6,16 +6,20 @@ import CalendarControls from "@features/calendar/components/CalendarControls.tsx
 import CalendarHeader from "@features/calendar/components/CalendarHeader.tsx";
 import CalendarBody from "@features/calendar/components/CalendarBody";
 import CalendarSearch from "@features/calendar/components/CalendarSearch.tsx";
-import TitledText from "@components/ui/TitledText.tsx";
 
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { getWorkDays } from "@features/calendar/api/actions.ts";
 import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts";
 import { convertDateToISODate } from "@utils/formatters.ts";
+import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
+import CalendarHeading from "@features/calendar/components/CalendarHeading.tsx";
 
 function Calendar() {
-    const userId = useAppSelector(state => state.authentication.user?.id);
+    const accountId = useAppSelector(state => state.authentication.user?.id);
+
     const [currentDate, setCurrentDate] = useState<Date>(new Date());
+    const [showMode, setShowMode] = useState<boolean>(false);
+    const [userId, setUserId] = useState<string>(accountId as string);
 
     const dispatch = useDispatch();
 
@@ -25,24 +29,31 @@ function Calendar() {
         const workDays = {
             startDate: convertDateToISODate(startDate),
             endDate: convertDateToISODate(endDate),
-            userId: userId as string
+            userId: userId
         }
 
         dispatch(getWorkDays(workDays));
-    }, [currentDate])
+    }, [currentDate, userId]);
 
     return (
-        <Stack gap={0} h="full">
-            <HStack gap={4} justifyContent="space-between" mb={4}>
-                <TitledText title="Your calendar" fontSize={24} fontWeight="bold">
-                    Your calendar
-                </TitledText>
-                <CalendarControls currentDate={currentDate} setCurrentDate={setCurrentDate}/>
-                <CalendarSearch/>
-            </HStack>
-            <CalendarHeader/>
-            <CalendarBody currentDate={currentDate}/>
-        </Stack>
+        <CalendarContext.Provider value={{
+            currentDate,
+            setCurrentDate,
+            showMode,
+            setShowMode,
+            userId,
+            setUserId
+        }}>
+            <Stack gap={0} h="full">
+                <HStack gap={4} justifyContent="space-between" mb={4}>
+                    <CalendarHeading/>
+                    <CalendarControls/>
+                    <CalendarSearch/>
+                </HStack>
+                <CalendarHeader/>
+                <CalendarBody/>
+            </Stack>
+        </CalendarContext.Provider>
     );
 }
 

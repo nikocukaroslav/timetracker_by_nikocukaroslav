@@ -1,6 +1,5 @@
 import { ChangeEvent, ReactElement, ReactNode } from "react";
 import { IconType } from "react-icons";
-import { UseDisclosureProps } from "@chakra-ui/react";
 
 import { UserModel } from "./domain.ts";
 
@@ -85,22 +84,6 @@ export interface CreateEditMemberFormProps extends CreateEditFormProps {
 export interface CreateEditWorkSessionFormProps extends CreateEditFormProps {
     formData?: {
         id?: string;
-        startTime: string;
-        endTime: string;
-    },
-}
-
-export interface CreateEditWorkDayFormProps extends CreateEditFormProps {
-    disclosure?: UseDisclosureProps,
-    onCreate?: ({ startTime, endTime }: {
-        startTime: string;
-        endTime: string;
-    }) => void,
-    onUpdate?: ({ startTime, endTime }: {
-        startTime: string;
-        endTime: string;
-    }) => void,
-    formData?: {
         startTime: string;
         endTime: string;
     },

@@ -1,4 +1,5 @@
-import { UserFilterModel, UserModel, UserPaginationModel, WorkDayModel, WorkSessionModel } from "./domain.ts";
+import { UserFilterModel, UserModel, UserPaginationModel, WorkSessionModel } from "./domain.ts";
+import { CalendarState } from "@features/calendar/types/state.ts";
 
 export interface EmployeesState {
     loading: boolean;
@@ -27,16 +28,6 @@ export interface TimeTrackerState {
     isTracking: boolean;
     searchingLastSession: boolean;
     currentTime: number;
-}
-
-export interface CalendarState {
-    workDays: WorkDayModel[];
-    user: {
-        id: string,
-        name: string,
-        surname: string
-    } | null,
-    loading: boolean;
 }
 
 export interface State {

@@ -1,13 +1,13 @@
+import { useContext } from "react";
 import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
 import { Button, Heading, HStack } from "@chakra-ui/react";
 
 import dateConverter from "@utils/formatters.ts";
+import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
+import { CalendarContextType } from "@features/calendar/types/calendar.ts";
 
-function CalendarControls({ currentDate, setCurrentDate }: {
-    currentDate: Date,
-    setCurrentDate: (date: Date) => void
-}) {
-
+function CalendarControls() {
+    const { currentDate, setCurrentDate } = useContext(CalendarContext) as CalendarContextType;
     const formattedDate = dateConverter(currentDate, "MMMM yyyy");
 
     function prevMonth() {

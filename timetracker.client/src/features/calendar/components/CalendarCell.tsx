@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useContext, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { PiClock, PiPencilSimple, PiTrash } from "react-icons/pi";
 import { Center, HStack, Stack, Text, useDisclosure } from "@chakra-ui/react";
@@ -9,6 +9,8 @@ import ConfirmWindow from "@components/ui/ConfirmWindow.tsx";
 import { convertDateToISODate, timeConverter } from "@utils/formatters.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { deleteWorkDay, updateWorkDay } from "@features/calendar/api/actions.ts";
+import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
+import { CalendarContextType } from "@features/calendar/types/calendar.ts";
 
 function CalendarCell({
                           selecting,
@@ -41,6 +43,7 @@ function CalendarCell({
 
     const dispatch = useDispatch();
     const disclosure = useDisclosure();
+    const { showMode } = useContext(CalendarContext) as CalendarContextType;
 
     const { onOpen } = disclosure;
 
@@ -73,12 +76,11 @@ function CalendarCell({
             }
         }
 
-        if (!workDay) {
+        if (!showMode && !workDay) {
             ref.current?.addEventListener('mousedown', mouseDown);
             ref.current?.addEventListener('mouseover', mouseOver);
+            ref.current?.addEventListener('mouseup', onEndSelect);
         }
-
-        ref.current?.addEventListener('mouseup', onEndSelect);
 
         return () => {
             ref.current?.removeEventListener('mousedown', mouseDown);
@@ -97,7 +99,7 @@ function CalendarCell({
             borderColor="gray.300"
             bg={cellBg}
             userSelect="none"
-            cursor="pointer"
+            cursor={showMode ? "default" : "pointer"}
             p={1}
             spacing={1}
             sx={{
@@ -121,34 +123,38 @@ function CalendarCell({
                         <PiClock size={20}/>
                         <Text>{tooltipLabel}</Text>
                     </Center>
-                    <HStack
-                        position="absolute"
-                        display="none"
-                        right={1}
-                        bottom={1}
-                        spacing={1}
-                        _groupHover={{
-                            display: "flex"
-                        }}
-                    >
-                        <Center onClick={onOpen} _hover={{ bg: "gray.200" }} p={1.5} rounded="md">
-                            <PiPencilSimple size={20} title="Edit"/>
-                        </Center>
-                        <ConfirmWindow onConfirm={handleDelete} text="Delete this work day?">
-                            <Center _hover={{ bg: "red.100" }} p={1.5} rounded="md">
-                                <PiTrash title="Delete" color="red" size={20}/>
-                            </Center>
-                        </ConfirmWindow>
-                    </HStack>
-                    <CreateEditWorkDayForm
-                        disclosure={disclosure}
-                        formData={{
-                            startTime: startTime as string,
-                            endTime: endTime as string
-                        }}
-                        onUpdate={handleUpdate}
-                        isEditing
-                    />
+                    {!showMode && (
+                        <>
+                            <HStack
+                                position="absolute"
+                                display="none"
+                                right={1}
+                                bottom={1}
+                                spacing={1}
+                                _groupHover={{
+                                    display: "flex"
+                                }}
+                            >
+                                <Center onClick={onOpen} _hover={{ bg: "gray.200" }} p={1.5} rounded="md">
+                                    <PiPencilSimple size={20} title="Edit"/>
+                                </Center>
+                                <ConfirmWindow onConfirm={handleDelete} text="Delete this work day?">
+                                    <Center _hover={{ bg: "red.100" }} p={1.5} rounded="md">
+                                        <PiTrash title="Delete" color="red" size={20}/>
+                                    </Center>
+                                </ConfirmWindow>
+                            </HStack>
+                            <CreateEditWorkDayForm
+                                disclosure={disclosure}
+                                formData={{
+                                    startTime: startTime as string,
+                                    endTime: endTime as string
+                                }}
+                                onUpdate={handleUpdate}
+                                isEditing
+                            />
+                        </>
+                    )}
                 </>
             }
         </Stack>

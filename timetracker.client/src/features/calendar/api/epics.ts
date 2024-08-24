@@ -16,7 +16,12 @@ import {
 } from "@features/calendar/calendarSlice.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
-import { CREATE_WORK_DAYS, DELETE_WORK_DAYS, GET_WORK_DAYS, UPDATE_WORK_DAYS } from "@constants";
+import {
+    CREATE_WORK_DAYS,
+    DELETE_WORK_DAYS,
+    GET_WORK_DAYS,
+    UPDATE_WORK_DAYS
+} from "@features/calendar/types/actions.ts";
 import store from "@store";
 
 export const getWorkDaysEpic: Epic<MyAction> = (action$) =>

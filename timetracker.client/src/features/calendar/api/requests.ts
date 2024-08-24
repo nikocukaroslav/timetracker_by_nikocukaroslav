@@ -18,6 +18,18 @@ query GetWorkDays($workDays: GetWorkDaysRequestType) {
 }
 `;
 
+export const findEmployeesQuery = `
+query FindEmployees($input: String!) {
+  users {
+    find(input: $input) {
+      id
+      name
+      surname
+      email
+    }
+  }
+}`
+
 export const createWorkDaysMutation = `
 mutation CreateWorkDays($workDays: CreateWorkDaysRequestType) {
   workDays {

@@ -1,8 +1,8 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { PiMagnifyingGlass } from "react-icons/pi";
 import {
+    AbsoluteCenter,
     Flex,
-    Img,
     InputGroup,
     InputLeftElement,
     Popover,
@@ -11,15 +11,24 @@ import {
     PopoverCloseButton,
     PopoverContent,
     PopoverHeader,
-    Stack,
-    Text,
+    Spinner,
     useDisclosure
 } from "@chakra-ui/react";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
+import CalendarSearchList from "@features/calendar/components/CalendarSearchList.tsx";
+
+import { request } from "@utils/request.ts";
+import { findEmployeesQuery } from "@features/calendar/api/requests.ts";
+import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
+import { CalendarContextType } from "@features/calendar/types/calendar.ts";
 
 function CalendarSearch() {
+    const { setUserId, setShowMode } = useContext(CalendarContext) as CalendarContextType;
     const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [users, setUsers] = useState([]);
+
     const disclosure = useDisclosure();
     const { isOpen, onOpen, onClose } = disclosure;
 
@@ -31,36 +40,43 @@ function CalendarSearch() {
         }
     }
 
-    useEffect(() => {
-        if (search) {
-            return onOpen();
-        }
+    function handleSelectUser(id: string) {
+        setUserId(id);
+        setShowMode(true);
         onClose();
-    }, [search])
+    }
 
-    const User = () => <Flex
-        align="center"
-        gap="3"
-        p={2}
-        rounded="md"
-        cursor="pointer"
-        _hover={{
-            bg: "gray.100"
-        }}
-    >
-        <Img
-            w="28px"
-            h="28px"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
-            alt="user-img"
-        />
-        <Flex direction="column">
-            <Text>Miha Moskal</Text>
-            <Text fontSize="sm" color="gray.500">
-                mihamoskal@gmail.com
-            </Text>
-        </Flex>
-    </Flex>
+    useEffect(() => {
+        const searchUsers = setTimeout(async () => {
+            if (search) {
+                setLoading(true);
+
+                const response = await request(findEmployeesQuery, {
+                    input: search
+                });
+
+                setLoading(false);
+
+                if (response.ok) {
+                    const json = await response.json();
+                    const users = json.data.users.find;
+
+                    setUsers(users);
+                } else {
+                    console.error("Unknown error");
+                }
+            }
+        }, 300);
+
+        if (search) {
+            setLoading(true);
+            onOpen();
+        } else {
+            onClose();
+        }
+
+        return () => clearTimeout(searchUsers);
+    }, [search])
 
     return (
         <Flex>
@@ -81,12 +97,17 @@ function CalendarSearch() {
                 <PopoverContent>
                     <PopoverHeader>Employees</PopoverHeader>
                     <PopoverCloseButton/>
-                    <PopoverBody>
-                        <Stack>
-                            <User/>
-                            <User/>
-                            <User/>
-                        </Stack>
+                    <PopoverBody position="relative" overflow="auto" minH={10} maxH={300}>
+                        {loading
+                            ? (
+                                <AbsoluteCenter>
+                                    <Spinner display="flex"/>
+                                </AbsoluteCenter>
+                            )
+                            : <CalendarSearchList
+                                users={users}
+                                handleSelectUser={handleSelectUser}/>
+                        }
                     </PopoverBody>
                 </PopoverContent>
             </Popover>

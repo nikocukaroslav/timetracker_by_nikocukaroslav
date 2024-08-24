@@ -5,7 +5,10 @@ import {
     updateWorkDaySuccessful
 } from "@features/calendar/calendarSlice.ts";
 
-import { CREATE_WORK_DAYS, DELETE_WORK_DAYS, GET_WORK_DAYS, UPDATE_WORK_DAYS } from "@constants";
+export const GET_WORK_DAYS = "GET_WORK_DAYS"
+export const CREATE_WORK_DAYS = "CREATE_WORK_DAYS"
+export const UPDATE_WORK_DAYS = "UPDATE_WORK_DAYS"
+export const DELETE_WORK_DAYS = "DELETE_WORK_DAYS"
 
 interface GetWorkDaysAction {
     type: typeof GET_WORK_DAYS,
@@ -47,7 +50,7 @@ interface DeleteWorkDaysSuccessfulAction {
     payload: boolean
 }
 
-export type CalendarActions =
+export type WorkDayActions =
     GetWorkDaysAction
     | GetWorkDaysSuccessfulAction
     | CreateWorkDaysAction

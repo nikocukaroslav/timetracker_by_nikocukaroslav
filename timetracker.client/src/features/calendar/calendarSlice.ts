@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { CalendarState } from "@interfaces/state.ts";
+import { CalendarState } from "@features/calendar/types/state.ts";
 
 const initialState: CalendarState = {
     workDays: [],
@@ -45,7 +45,7 @@ export const {
     createWorkDaysSuccessful,
     updateWorkDaySuccessful,
     deleteWorkDaySuccessful,
-    setLoading
+    setLoading,
 } = calendarSlice.actions;
 
 export default calendarSlice.reducer;

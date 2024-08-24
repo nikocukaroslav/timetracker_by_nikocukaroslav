@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AbsoluteCenter, SimpleGrid, useDisclosure } from "@chakra-ui/react";
 
@@ -10,8 +10,12 @@ import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts
 import { timeConverter } from "@utils/formatters.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { createWorkDays } from "@features/calendar/api/actions.ts";
+import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
+import { CalendarContextType } from "@features/calendar/types/calendar.ts";
 
-function CalendarBody({ currentDate }: { currentDate: Date }) {
+function CalendarBody() {
+    const { currentDate } = useContext(CalendarContext) as CalendarContextType;
+
     const isLoading = useAppSelector((state) => state.calendar.loading);
     const userId = useAppSelector((state) => state.authentication.user?.id);
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -84,7 +88,6 @@ function CalendarBody({ currentDate }: { currentDate: Date }) {
                     <Spinner/>
                 </AbsoluteCenter>
             }
-
         </SimpleGrid>
     );
 }

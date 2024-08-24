@@ -5,7 +5,7 @@ import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
 
 import { useForm } from "@hooks/useForm.ts";
-import { CreateEditWorkDayFormProps } from "@interfaces/components.ts";
+import { CreateEditWorkDayFormProps } from "@features/calendar/types/components.ts";
 
 const defaultFormData = {
     startTime: "",
@@ -58,7 +58,7 @@ function CreateEditWorkDayForm({
                     type="time"
                     onChange={(e) => handleChangeInput(e, "startTime")}
                     value={startTime}
-                    required
+                    isRequired
                 />
             </FormLabel>
             <FormLabel display="flex" flexDirection="column" gap="1">
@@ -67,7 +67,7 @@ function CreateEditWorkDayForm({
                     type="time"
                     onChange={(e) => handleChangeInput(e, "endTime")}
                     value={endTime}
-                    required
+                    isRequired
                 />
             </FormLabel>
         </ModalForm>

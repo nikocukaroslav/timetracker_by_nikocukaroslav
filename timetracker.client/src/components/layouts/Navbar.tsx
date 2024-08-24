@@ -6,8 +6,12 @@ import CustomNavbarDivider from "@components/ui/CustomNavbarDivider.tsx";
 import PermissionChecker from "./PermissionChecker.tsx";
 
 import { APPROVE_REQUESTS, MANAGE_USERS } from "@constants";
+import { useTimer } from "@hooks/useTimer.ts";
+import { formatTime } from "@utils/formatters.ts";
 
 function Navbar() {
+    const { isActive, time } = useTimer();
+
     return (
         <Flex
             direction="column"
@@ -36,7 +40,7 @@ function Navbar() {
                 <NavigationLink
                     to="time-tracker"
                     icon={PiClock}
-                    label="Time Tracker"
+                    label={isActive ? formatTime(time) : "Time Tracker"}
                 />
                 <NavigationLink
                     to="calendar"

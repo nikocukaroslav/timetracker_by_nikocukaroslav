@@ -8,7 +8,7 @@ const initialState: TimeTrackerState = {
     sessionId: null,
     isTracking: false,
     searchingLastSession: false,
-    currentTime: 0,
+    timeStart: null,
 }
 
 const timeTrackerSlice = createSlice({
@@ -24,11 +24,14 @@ const timeTrackerSlice = createSlice({
         getWorkSessionsSuccessful(state, action) {
             state.workSessions = action.payload
         },
-        getLastWorkSessionSuccessful(state, action) {
+        getLastWorkSessionSuccessful(state, { payload }) {
             state.searchingLastSession = false;
-            if (!action.payload) return
-            state.sessionId = action.payload.id;
-            state.currentTime = Math.floor((Date.now() - action.payload.startTime) / 1000);
+            if (!payload) return
+
+            const { id, startTime } = payload;
+
+            state.sessionId = id;
+            state.timeStart = startTime;
             state.isTracking = true;
         },
         getLastWorkSessionError(state) {
@@ -37,8 +40,8 @@ const timeTrackerSlice = createSlice({
         createWorkSessionSuccessful(state, action) {
             state.workSessions.unshift(action.payload);
         },
-        updateWorkSessionSuccessful(state, {payload}) {
-            const {id, startTime, endTime, editedAt, editor} = payload;
+        updateWorkSessionSuccessful(state, { payload }) {
+            const { id, startTime, endTime, editedAt, editor } = payload;
 
             const session: WorkSessionModel | undefined = state.workSessions.find((session) => session.id === id);
 
@@ -51,9 +54,6 @@ const timeTrackerSlice = createSlice({
         },
         deleteWorkSessionSuccessful(state, action) {
             state.workSessions = state.workSessions.filter(workSession => workSession.id !== action.payload)
-        },
-        setTime(state, action) {
-            state.currentTime = action.payload;
         },
         setIsTracking(state, action) {
             state.isTracking = action.payload
@@ -74,7 +74,6 @@ export const {
     updateWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
     setIsTracking,
-    setTime,
     setSearchingLastSession
 } = timeTrackerSlice.actions;
 

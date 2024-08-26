@@ -2,8 +2,8 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { PiMagnifyingGlass } from "react-icons/pi";
 import {
     AbsoluteCenter,
+    Box,
     Flex,
-    InputGroup,
     InputLeftElement,
     Popover,
     PopoverAnchor,
@@ -84,17 +84,20 @@ function CalendarSearch() {
         <Flex>
             <Popover isOpen={isOpen} onClose={onClose} placement='bottom-end' isLazy>
                 <PopoverAnchor>
-                    <InputGroup w={64}>
-                        <InputLeftElement pointerEvents="none">
-                            <PiMagnifyingGlass color="gray.300"/>
-                        </InputLeftElement>
+                    <Box>
                         <CustomInput
                             pl={10}
                             type="text"
                             placeholder="Search сalendar"
                             onChange={handleSearchChange}
-                            value={search}/>
-                    </InputGroup>
+                            value={search}
+                            children={
+                                <InputLeftElement pointerEvents="none">
+                                    <PiMagnifyingGlass color="gray.300"/>
+                                </InputLeftElement>
+                            }
+                        />
+                    </Box>
                 </PopoverAnchor>
                 <PopoverContent>
                     <PopoverHeader>Employees</PopoverHeader>

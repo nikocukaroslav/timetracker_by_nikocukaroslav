@@ -60,15 +60,22 @@ export interface FilterDrawerProps {
 }
 
 export interface ModalFormProps {
+    initialValues: object;
+    validationSchema: object;
     title?: string;
     titleIcon?: ReactNode;
     isOpen: boolean;
     onOpen: () => void;
     onClose: () => void;
-    onSubmit: () => void;
+    onSubmit: (values, actions) => void;
     triggerBtn?: ReactNode;
     submitBtnLoading?: boolean;
     submitBtnText: string;
+    children: ReactNode;
+}
+
+export interface AuthFormProps {
+    onSubmit: () => void;
     children: ReactNode;
 }
 

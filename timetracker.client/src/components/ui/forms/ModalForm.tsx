@@ -1,4 +1,4 @@
-import {cloneElement, FormEvent, isValidElement} from "react";
+import { cloneElement, isValidElement } from "react";
 import {
     Button,
     Flex,
@@ -12,8 +12,9 @@ import {
     Text,
 } from "@chakra-ui/react";
 
-import {ModalFormProps} from "@interfaces/components.ts";
+import { ModalFormProps } from "@interfaces/components.ts";
 import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
+import { Form, Formik } from "formik";
 
 function ModalForm(props: ModalFormProps) {
     const {
@@ -29,12 +30,6 @@ function ModalForm(props: ModalFormProps) {
         children
     } = props;
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        onSubmit();
-        onClose();
-    }
-
     const TriggerButton = () =>
         isValidElement(triggerBtn) ? cloneElement(triggerBtn, { onClick: onOpen } as { onClick: () => void }) : null;
 
@@ -49,7 +44,7 @@ function ModalForm(props: ModalFormProps) {
                 size="xl"
             >
                 <ModalOverlay/>
-                <ModalContent as="form" onSubmit={handleSubmit}>
+                <ModalContent>
                     <ModalHeader>
                         <Flex gap="2" align="center">
                             {titleIcon}
@@ -57,20 +52,26 @@ function ModalForm(props: ModalFormProps) {
                         </Flex>
                     </ModalHeader>
                     <ModalCloseButton/>
-
                     <CustomHorizontalDivider/>
+                    <Formik
+                        initialValues={props.initialValues}
+                        validationSchema={props.validationSchema}
+                        onSubmit={onSubmit}
 
-                    <ModalBody>
-                        <Flex direction="column" gap="2">
-                            {children}
-                        </Flex>
-                    </ModalBody>
-
-                    <ModalFooter>
-                        <Button w="16" isLoading={submitBtnLoading} type="submit">
-                            {submitBtnText}
-                        </Button>
-                    </ModalFooter>
+                    >
+                        <Form>
+                            <ModalBody>
+                                <Flex direction="column" gap="2">
+                                    {children}
+                                </Flex>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button w="16" isLoading={submitBtnLoading} type="submit">
+                                    {submitBtnText}
+                                </Button>
+                            </ModalFooter>
+                        </Form>
+                    </Formik>
                 </ModalContent>
             </Modal>
         </>

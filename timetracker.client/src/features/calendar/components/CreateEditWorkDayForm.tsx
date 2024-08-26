@@ -1,5 +1,4 @@
 import { PiTimer } from "react-icons/pi";
-import { FormLabel, Text } from "@chakra-ui/react";
 
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
@@ -52,24 +51,22 @@ function CreateEditWorkDayForm({
             onSubmit={isEditing ? handleUpdate : handleCreate}
             submitBtnText={isEditing ? "Edit" : "Add"}
         >
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Work start</Text>
-                <CustomInput
-                    type="time"
-                    onChange={(e) => handleChangeInput(e, "startTime")}
-                    value={startTime}
-                    isRequired
-                />
-            </FormLabel>
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Work end</Text>
-                <CustomInput
-                    type="time"
-                    onChange={(e) => handleChangeInput(e, "endTime")}
-                    value={endTime}
-                    isRequired
-                />
-            </FormLabel>
+            <CustomInput
+                name="workStart"
+                label="Work start"
+                type="time"
+                onChange={(e) => handleChangeInput(e, "startTime")}
+                value={startTime}
+                isRequired
+            />
+            <CustomInput
+                name="workEnd"
+                label="Work end"
+                type="time"
+                onChange={(e) => handleChangeInput(e, "endTime")}
+                value={endTime}
+                isRequired
+            />
         </ModalForm>
     );
 }

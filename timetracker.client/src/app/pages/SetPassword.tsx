@@ -1,8 +1,7 @@
-import { Box, Button, Flex, FormLabel, Icon, InputGroup, InputRightElement, Text, useToast } from '@chakra-ui/react';
+import { Button, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiKey } from "react-icons/pi";
-import { BiHide, BiShow } from "react-icons/bi";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 
@@ -15,6 +14,7 @@ import {
 } from "@features/authentication/api/actions.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthForm from "@features/authentication/components/AuthForm.tsx";
+import HandlePasswordVisibilityButton from "@features/authentication/components/HandlePasswordVisibilityButton.tsx";
 
 function SetPassword() {
     const { temporaryLinkId } = useParams();
@@ -76,7 +76,8 @@ function SetPassword() {
         }
     }, [resendCreatePasswordEmailStatus, isTemporaryLinkValid]);
 
-    const isPageFound: boolean = useAppSelector(state => state.authentication.isPageFound);
+    const isPageFound = useAppSelector(state => state.authentication.isPageFound);
+
     useEffect(() => {
         if (temporaryLinkId != undefined) {
             dispatch(setError(null));
@@ -97,56 +98,30 @@ function SetPassword() {
     }, [navigate, dispatch, createPasswordResult]);
 
     return (
-        <AuthForm>
+        <AuthForm onSubmit={isTemporaryLinkValid ? handleCreatePassword : handleResendCreatePasswordEmail}>
             {isTemporaryLinkValid ?
                 (<>
-                    <FormLabel>
-                        <Flex gap="2" mb="2">
-                            <Icon as={PiKey} w="24px" h="24px"/>
-                            <Text>Password</Text>
-                        </Flex>
-                        <InputGroup>
-                            <CustomInput
-                                type={showPassword ? "text" : "password"}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                            <InputRightElement>
-                                <Box w="24px" onClick={handleClick}>
-                                    {showPassword ? (
-                                        <BiHide size="24px"/>
-                                    ) : (
-                                        <BiShow size="24px"/>
-                                    )}
-                                </Box>
-                            </InputRightElement>
-                        </InputGroup>
-                    </FormLabel>
-                    <FormLabel display="flex" flexDirection="column" gap="1">
-                        <Flex gap="2" mb="2">
-                            <Icon as={PiKey} w="24px" h="24px"/>
-                            <Text>Repeat password</Text>
-                        </Flex>
-                        <InputGroup>
-                            <CustomInput
-                                type={showPassword ? "text" : "password"}
-                                onChange={(e) => setPasswordRepeat(e.target.value)}
-                                required
-                            />
-                            <InputRightElement>
-                                <Box w="24px" onClick={handleClick}>
-                                    {showPassword ? (
-                                        <BiHide size="24px"/>
-                                    ) : (
-                                        <BiShow size="24px"/>
-                                    )}
-                                </Box>
-                            </InputRightElement>
-                        </InputGroup>
-                    </FormLabel>
+                    <CustomInput
+                        name="newPassword"
+                        label="New password"
+                        icon={PiKey}
+                        type={showPassword ? "text" : "password"}
+                        onChange={(e) => setPassword(e.target.value)}
+                        children={<HandlePasswordVisibilityButton onClick={handleClick} showPassword={showPassword}/>}
+                        isRequired
+                    />
+                    <CustomInput
+                        name="repeatPassword"
+                        label="Repeat password"
+                        icon={PiKey}
+                        type={showPassword ? "text" : "password"}
+                        onChange={(e) => setPasswordRepeat(e.target.value)}
+                        isRequired
+                        children={<HandlePasswordVisibilityButton onClick={handleClick} showPassword={showPassword}/>}
+                    />
                     <Text color="red.500">{error}</Text>
                     <Button
-                        onClick={handleCreatePassword}
+                        type="submit"
                         mt="auto"
                         borderColor="gray.300" borderWidth="2px"
                         _hover={{ borderColor: "gray.500", bg: "gray.50" }}
@@ -161,13 +136,13 @@ function SetPassword() {
                         The link is no longer available
                     </Text>
                     <Button
-                        onClick={handleResendCreatePasswordEmail}
+                        type="submit"
                         mt="auto"
                         borderColor="gray.300" borderWidth="2px"
                         _hover={{ borderColor: "gray.500", bg: "gray.50" }}
                         isLoading={loading}
                     >
-                        Submit a new link
+                        Send a new link
                     </Button>
                 </>)
             }

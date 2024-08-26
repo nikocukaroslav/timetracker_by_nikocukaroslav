@@ -6,7 +6,7 @@ import { Center, HStack, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkDayForm.tsx";
 import ConfirmWindow from "@components/ui/ConfirmWindow.tsx";
 
-import { convertDateToISODate, timeConverter } from "@utils/formatters.ts";
+import { convertDateToISODate, convertTime } from "@utils/formatters.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { deleteWorkDay, updateWorkDay } from "@features/calendar/api/actions.ts";
 import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
@@ -30,7 +30,7 @@ function CalendarCell({
     const ref = useRef<HTMLDivElement>(null);
 
     const { id, day, startTime, endTime } = workDay || {};
-    const tooltipLabel = workDay && `${timeConverter(startTime as string, "hh:mm")} - ${timeConverter(endTime as string, "hh:mm")}`;
+    const tooltipLabel = workDay && `${convertTime(startTime as string, "hh:mm")} - ${convertTime(endTime as string, "hh:mm")}`;
 
     const today = date.getTime() == new Date(new Date().toDateString()).getTime();
     const textBg = today ? "gray.800" : undefined;
@@ -51,8 +51,8 @@ function CalendarCell({
         const updatedWorkDay = {
             id: id as string,
             day: day as string,
-            startTime: timeConverter(startTime),
-            endTime: timeConverter(endTime),
+            startTime: convertTime(startTime),
+            endTime: convertTime(endTime),
         }
 
         dispatch(updateWorkDay(updatedWorkDay))
@@ -82,7 +82,7 @@ function CalendarCell({
         }
 
         ref.current?.addEventListener('mouseup', onEndSelect);
-        
+
         return () => {
             ref.current?.removeEventListener('mousedown', mouseDown);
             ref.current?.removeEventListener('mouseover', mouseOver);

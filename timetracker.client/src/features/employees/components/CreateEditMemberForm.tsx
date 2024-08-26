@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
 import { useDispatch } from "react-redux";
 import { PiUser } from "react-icons/pi";
-import { FormLabel, List, Select, Text, } from "@chakra-ui/react";
+import { FormLabel, List, Select, Text, useDisclosure, } from "@chakra-ui/react";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
@@ -13,7 +13,8 @@ import { useForm } from "@hooks/useForm.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
-import { timeConverter } from "@utils/formatters.ts";
+import { convertTime } from "@utils/formatters.ts";
+import { schemas } from "@utils/inputHelpers.ts";
 
 const defaultFormData = {
     name: "",
@@ -27,13 +28,24 @@ const defaultFormData = {
 function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMemberFormProps) {
     const {
         data,
-        isOpen,
-        onOpen,
-        onClose,
         setData,
         handleChangeInput,
     } = useForm<typeof defaultFormData, typeof formData>(defaultFormData, formData);
-    const { name, surname, email, position, permissions, timeload } = data;
+    const { name, surname, position, permissions, timeload } = data;
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    function handleSubmit(values, actions) {
+        const completeValues = {
+            ...values,
+            timeload: convertTime(timeload),
+        };
+
+        isEditing ? handleUpdate() : dispatch(createUser(completeValues));
+
+        actions.resetForm();
+        onClose();
+    }
 
     const loading = useAppSelector(state => state.employees.loading)
     const dispatch = useDispatch();
@@ -45,24 +57,10 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
             surname,
             position,
             permissions,
-            timeload: timeConverter(timeload),
+            timeload: convertTime(timeload),
         };
 
         dispatch(updateUser(newUserData))
-    }
-
-    function handleAdd() {
-        const newUser = {
-            name,
-            surname,
-            email,
-            position,
-            permissions,
-            timeload: timeConverter(timeload),
-        };
-
-        dispatch(createUser(newUser));
-        setData(defaultFormData);
     }
 
     function handleChangePermissions(e: ChangeEvent<HTMLInputElement>, permission: string) {
@@ -76,7 +74,7 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
 
     function handleChangePosition(e: ChangeEvent<HTMLSelectElement>) {
         const position = e.target.value;
-        const { defaultPermissions } = positionList.find(({ name }) => name == position);
+        const defaultPermissions = positionList.find(({ name }) => name === position)?.defaultPermissions || [];
 
         setData(prevState => ({
             ...prevState,
@@ -92,39 +90,29 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
-            onSubmit={isEditing ? handleUpdate : handleAdd}
+            onSubmit={handleSubmit}
             submitBtnLoading={loading}
             submitBtnText={isEditing ? "Edit" : "Add"}
             triggerBtn={children}
+            validationSchema={schemas.createEditMemberFormSchema}
+            initialValues={defaultFormData}
         >
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Name</Text>
-                <CustomInput
-                    type="text"
-                    onChange={(e) => handleChangeInput(e, "name")}
-                    value={name}
-                    required
-                />
-            </FormLabel>
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Surname</Text>
-                <CustomInput
-                    type="text"
-                    onChange={(e) => handleChangeInput(e, "surname")}
-                    value={surname}
-                    required
-                />
-            </FormLabel>
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Email</Text>
-                <CustomInput
-                    type="email"
-                    onChange={(e) => handleChangeInput(e, "email")}
-                    value={email}
-                    isDisabled={isEditing}
-                    required
-                />
-            </FormLabel>
+            <CustomInput
+                label="Name"
+                name="name"
+                type="text"
+            />
+            <CustomInput
+                label="Surname"
+                name="surname"
+                type="text"
+            />
+            <CustomInput
+                label="Email"
+                name="email"
+                type="email"
+                isDisabled={isEditing}
+            />
             <FormLabel display="flex" flexDirection="column" gap="1">
                 <Text>Position</Text>
                 <Select
@@ -146,7 +134,6 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
                 <TimeSelect
                     onChange={(e) => handleChangeInput(e, "timeload")}
                     value={timeload}
-                    isRequired
                 />
             </FormLabel>
             <FormLabel m="0">
@@ -158,7 +145,7 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
                 gap="4"
                 lineHeight="1"
                 borderWidth="1px"
-                p="3"
+                p="2"
                 rounded="md"
             >
                 {permissionList.map((permission) =>

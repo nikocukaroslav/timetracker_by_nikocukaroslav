@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate, NavLink } from "react-router-dom";
-import { Box, Button, Flex, FormLabel, Icon, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
+import { Button, Icon, Text } from "@chakra-ui/react";
 import { PiKey, PiSignIn, PiUser } from "react-icons/pi";
-import { BiHide, BiShow } from "react-icons/bi";
 
 import CustomInput from "@components/ui/CustomInput";
 
 import { login } from "@features/authentication/api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import AuthForm from "@features/authentication/components/AuthForm.tsx";
+import HandlePasswordVisibilityButton from "@features/authentication/components/HandlePasswordVisibilityButton.tsx";
 
 function SignIn() {
     const [email, setEmail] = useState("");
@@ -34,45 +34,31 @@ function SignIn() {
         return <Navigate to="/time-tracker"/>;
 
     return (
-        <AuthForm>
-            <FormLabel>
-                <Flex gap="2" mb="2">
-                    <Icon as={PiUser} w="24px" h="24px"/>
-                    <Text>Login</Text>
-                </Flex>
-                <CustomInput
-                    type="text"
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            </FormLabel>
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Flex gap="2" mb="2">
-                    <Icon as={PiKey} w="24px" h="24px"/>
-                    <Text>Password</Text>
-                </Flex>
-                <InputGroup>
-                    <CustomInput
-                        type={showPassword ? "text" : "password"}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <InputRightElement>
-                        <Box w="24px" onClick={handleClick}>
-                            {showPassword ? (
-                                <BiHide size="24px"/>
-                            ) : (
-                                <BiShow size="24px"/>
-                            )}
-                        </Box>
-                    </InputRightElement>
-                </InputGroup>
-                <NavLink to="password-recovery">
-                    <Text mt="1" fontSize="sm" textColor="gray.500"
-                          _hover={{ textDecoration: "underline" }}>
-                        Forgot password</Text>
-                </NavLink>
-            </FormLabel>
+        <AuthForm onSubmit={handleLogin}>
+            <CustomInput
+                name="login"
+                icon={PiUser}
+                label="Login"
+                type="text"
+                onChange={(e) => setEmail(e.target.value)}
+                isRequired
+            />
+            <CustomInput
+                children={
+                    <HandlePasswordVisibilityButton onClick={handleClick} showPassword={showPassword}/>
+                }
+                name="password"
+                icon={PiKey}
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                onChange={(e) => setPassword(e.target.value)}
+                isRequired
+            />
+            <NavLink to="password-recovery">
+                <Text mt="-5" fontSize="sm" textColor="gray.500"
+                      _hover={{ textDecoration: "underline" }}>
+                    Forgot password</Text>
+            </NavLink>
             <Text color="red.500">{error}</Text>
             <Button
                 onClick={handleLogin}

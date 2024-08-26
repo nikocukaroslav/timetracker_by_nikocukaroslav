@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import { PiTimer } from "react-icons/pi";
-import { FormLabel, Text } from "@chakra-ui/react";
 
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
@@ -15,7 +14,7 @@ const defaultFormData = {
     endTime: "",
 }
 
-function CreateEditWorkSessionForm({formData, isEditing, children}: CreateEditWorkSessionFormProps) {
+function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEditWorkSessionFormProps) {
     const userId = useAppSelector((state) => state.authentication.user?.id);
     const {
         data,
@@ -25,7 +24,7 @@ function CreateEditWorkSessionForm({formData, isEditing, children}: CreateEditWo
         setData,
         handleChangeInput
     } = useForm<typeof defaultFormData, typeof formData>(defaultFormData, formData);
-    const {startTime, endTime} = data;
+    const { startTime, endTime } = data;
 
     const dispatch = useDispatch();
 
@@ -70,26 +69,24 @@ function CreateEditWorkSessionForm({formData, isEditing, children}: CreateEditWo
             submitBtnText={isEditing ? "Edit" : "Add"}
             triggerBtn={children}
         >
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Time start</Text>
-                <CustomInput
-                    type="datetime-local"
-                    step={1}
-                    onChange={(e) => handleChangeInput(e, "startTime")}
-                    value={startTime}
-                    required
-                />
-            </FormLabel>
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Time end</Text>
-                <CustomInput
-                    type="datetime-local"
-                    step={1}
-                    onChange={(e) => handleChangeInput(e, "endTime")}
-                    value={endTime}
-                    required
-                />
-            </FormLabel>
+            <CustomInput
+                name="timeStart"
+                label="Time start"
+                type="datetime-local"
+                step={1}
+                onChange={(e) => handleChangeInput(e, "startTime")}
+                value={startTime}
+                isRequired
+            />
+            <CustomInput
+                name="timeEnd"
+                label="Time end"
+                type="datetime-local"
+                step={1}
+                onChange={(e) => handleChangeInput(e, "endTime")}
+                value={endTime}
+                isRequired
+            />
         </ModalForm>
     );
 }

@@ -65,7 +65,8 @@ export const getWorkSessionsEpic: Epic<MyAction> = (action$) =>
         ofType(GET_WORK_SESSIONS),
         switchMap(action =>
             graphQlQuery(getWorkSessionsQuery, {
-                    id: action.payload
+                    id: action.payload.userId,
+                    pagination: action.payload.pagination,
                 }
             ).pipe(
                 map(response => getWorkSessionsSuccessful(response.data.users.workSessions)),

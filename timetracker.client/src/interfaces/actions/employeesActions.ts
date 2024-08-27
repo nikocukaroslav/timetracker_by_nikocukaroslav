@@ -2,7 +2,7 @@ import {
     getUsersSuccessful,
     getUserSuccessful,
 } from "@features/employees/employeesSlice.ts";
-import { UserFilterModel, UserModel, UserPaginationModel } from "../domain.ts";
+import { UserFilterModel, UserModel, PaginationModel } from "../domain.ts";
 import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
 
 interface CreateUserAction {
@@ -13,7 +13,7 @@ interface CreateUserAction {
 interface GetUsersAction {
     type: typeof GET_USERS;
     payload: {
-        pagination: UserPaginationModel,
+        pagination: PaginationModel,
         filter?: UserFilterModel,
     }
 }

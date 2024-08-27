@@ -1,31 +1,33 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Flex, Icon } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, Icon } from "@chakra-ui/react";
+import { PiPlus } from "react-icons/pi";
 
 import TimeTrackerHeader from "@features/time-tracker/components/TimeTrackerHeader.tsx";
 import WorkSessionsList from "@features/time-tracker/components/WorkSessionsList.tsx";
 import PermissionChecker from "@components/layouts/PermissionChecker.tsx";
 import CreateEditWorkSessionForm from "@features/time-tracker/components/CreateEditWorkSessionForm.tsx";
+import TimeTrackerFooter from "@features/time-tracker/components/TimeTrackerFooter.tsx";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
-import { getWorkSessions } from "@features/time-tracker/api/actions.ts";
 import { MANAGE_OWN_TIME } from "@constants";
-import { useAppSelector } from "@hooks/useAppSelector.ts";
-import { PiPlus } from "react-icons/pi";
 
 function TimeTracker() {
-    const userId = useAppSelector(state => state.authentication.user?.id)
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getWorkSessions(userId))
-    }, [dispatch, userId]);
-
     return (
-        <Flex direction="column" gap="4">
-            <PermissionChecker permissions={[MANAGE_OWN_TIME]}>
-                <TimeTrackerHeader/>
-            </PermissionChecker>
-            <WorkSessionsList/>
+        <Grid
+            templateRows="auto 1fr auto"
+            height="85dvh"
+        >
+            <GridItem pl="1" pr="1" pb="2">
+                <PermissionChecker permissions={[MANAGE_OWN_TIME]}>
+                    <TimeTrackerHeader/>
+                </PermissionChecker>
+            </GridItem>
+            <GridItem pl="1" pr="1" overflow="auto">
+                <WorkSessionsList/>
+            </GridItem>
+            <GridItem bg="gray.50" ml="1" mr="1" rounded="md">
+                <CustomHorizontalDivider/>
+                <TimeTrackerFooter/>
+            </GridItem>
             <CreateEditWorkSessionForm>
                 <Flex
                     title="Add session"
@@ -38,12 +40,12 @@ function TimeTracker() {
                     boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
                     transition="all 0.2s"
                     cursor="pointer"
-                    _hover={{bg: "gray.200"}}
+                    _hover={{ bg: "gray.200" }}
                 >
                     <Icon as={PiPlus} boxSize={8}/>
                 </Flex>
             </CreateEditWorkSessionForm>
-        </Flex>
+        </Grid>
     );
 }
 

@@ -4,46 +4,47 @@ import { useDispatch } from "react-redux";
 import PaginationFooter from "@components/ui/PaginationFooter.tsx";
 
 import { useAppSelector } from "@hooks/useAppSelector.ts";
-import { getUsers } from "@features/employees/api/actions.ts";
+import { getWorkSessions } from "@features/time-tracker/api/actions.ts";
 
-function EmployeesFooter() {
+function TimeTrackerFooter() {
     const dispatch = useDispatch()
-    const pagination = useAppSelector(state => state.employees.pagination)
-    const filter = useAppSelector(state => state.employees.filter)
+    const pagination = useAppSelector(state => state.timeTracker.pagination)
+    const userId = useAppSelector(state => state.authentication.user?.id)
 
     useEffect(() => {
         const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }
-        dispatch(getUsers(paginationRequest, filter));
+        dispatch(getWorkSessions(userId, paginationRequest));
     }, [dispatch]);
 
     function prevPage() {
         if (pagination.page) {
             const paginationRequest = { page: pagination.page - 1, pageSize: pagination.pageSize }
-            dispatch(getUsers(paginationRequest, filter));
+            dispatch(getWorkSessions(userId, paginationRequest));
         }
     }
 
     function nextPage() {
         if (pagination.page) {
             const paginationRequest = { page: pagination.page + 1, pageSize: pagination.pageSize }
-            dispatch(getUsers(paginationRequest, filter));
+            dispatch(getWorkSessions(userId, paginationRequest));
         }
     }
 
     const handlePageSizeChange = (value: string) => {
         const newSize = Number(value)
         if (newSize > 0 && newSize <= 100) {
-            dispatch(getUsers({ page: 1, pageSize: newSize }, filter));
-            localStorage.setItem("employeesPageSize", newSize.toString());
+            dispatch(getWorkSessions(userId, { page: 1, pageSize: newSize }));
+            localStorage.setItem("trackerPageSize", newSize.toString());
         }
     }
 
     return (
-        <PaginationFooter pagination={pagination}
-                          onPageSizeChange={handlePageSizeChange}
-                          prevPage={prevPage}
-                          nextPage={nextPage}/>
+        <PaginationFooter
+            pagination={pagination}
+            onPageSizeChange={handlePageSizeChange}
+            prevPage={prevPage}
+            nextPage={nextPage}/>
     );
 }
 
-export default EmployeesFooter;
+export default TimeTrackerFooter;

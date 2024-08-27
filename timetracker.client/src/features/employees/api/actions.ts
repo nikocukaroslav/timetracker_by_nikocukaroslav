@@ -1,10 +1,10 @@
-import { UserFilterModel, UserModel, UserPaginationModel } from "@interfaces/domain.ts";
+import { UserFilterModel, UserModel, PaginationModel } from "@interfaces/domain.ts";
 import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
 
 export const createUser = (newUser: UserModel) => ({ type: CREATE_USER, payload: newUser })
 export const getUsers =
     (
-        pagination: UserPaginationModel,
+        pagination: PaginationModel,
         filter: UserFilterModel | null
     ) => ({ type: GET_USERS, payload: { pagination, filter } })
 export const getUser = (userId: string) => ({ type: GET_USER, payload: userId })

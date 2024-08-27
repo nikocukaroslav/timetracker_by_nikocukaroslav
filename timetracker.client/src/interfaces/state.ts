@@ -1,11 +1,11 @@
-import { UserFilterModel, UserModel, UserPaginationModel, WorkSessionModel } from "./domain.ts";
+import { UserFilterModel, UserModel, PaginationModel, WorkSessionModel } from "./domain.ts";
 import { CalendarState } from "@features/calendar/types/state.ts";
 
 export interface EmployeesState {
     loading: boolean;
     user: UserModel;
     users: UserModel[];
-    pagination: UserPaginationModel;
+    pagination: PaginationModel;
     filter: UserFilterModel | null;
 }
 
@@ -28,6 +28,7 @@ export interface TimeTrackerState {
     isTracking: boolean;
     searchingLastSession: boolean;
     timeStart: number | null;
+    pagination: PaginationModel;
 }
 
 export interface State {

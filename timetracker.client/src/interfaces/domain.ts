@@ -11,7 +11,7 @@ export interface UserModel {
     isEmployed?: boolean,
 }
 
-export interface UserPaginationModel {
+export interface PaginationModel {
     totalCount?: number,
     pageSize?: number,
     page?: number,

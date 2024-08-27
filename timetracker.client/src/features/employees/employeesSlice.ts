@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 import { EmployeesState } from "@interfaces/state.ts";
 
 export const initialState: EmployeesState = {
@@ -6,7 +7,7 @@ export const initialState: EmployeesState = {
     users: [],
     loading: false,
     pagination: {
-        pageSize: Number(localStorage.getItem("pageSize")) || 10,
+        pageSize: Number(localStorage.getItem("employeesPageSize")) || 10,
     },
     filter: null,
 }

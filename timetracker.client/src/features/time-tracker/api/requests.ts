@@ -62,21 +62,29 @@ export const deleteSessionMutation = `
 `
 
 export const getWorkSessionsQuery = `
-query GetWorkSessions($id: Guid) {
+query GetWorkSessions($id: Guid, $pagination: PaginationRequestType) {
   users {
-    workSessions(id: $id) {
-      id
-      startTime
-      endTime
-      setBy
-      editedAt
-      editor {
+    workSessions(id: $id, pagination: $pagination) {
+      items {
         id
-        name
-        surname
-        email
-        position
+        startTime
+        endTime
+        setBy
+        editedAt
+        editor {
+          id
+          name
+          surname
+          email
+          position
+        }
       }
+      totalCount
+      pageSize
+      page
+      hasNextPage
+      hasPreviousPage
+      totalPages
     }
   }
 }

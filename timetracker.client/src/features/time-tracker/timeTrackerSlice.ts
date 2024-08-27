@@ -9,6 +9,9 @@ const initialState: TimeTrackerState = {
     isTracking: false,
     searchingLastSession: false,
     timeStart: null,
+    pagination: {
+        pageSize: Number(localStorage.getItem("trackerPageSize")) || 20,
+    }
 }
 
 const timeTrackerSlice = createSlice({
@@ -22,7 +25,13 @@ const timeTrackerSlice = createSlice({
             state.workSessions.unshift(action.payload)
         },
         getWorkSessionsSuccessful(state, action) {
-            state.workSessions = action.payload
+            state.workSessions = action.payload.items;
+            state.pagination.page = action.payload.page;
+            state.pagination.pageSize = action.payload.pageSize
+            state.pagination.totalCount = action.payload.totalCount
+            state.pagination.totalPages = action.payload.totalPages
+            state.pagination.hasNextPage = action.payload.hasNextPage
+            state.pagination.hasPreviousPage = action.payload.hasPreviousPage
         },
         getLastWorkSessionSuccessful(state, { payload }) {
             state.searchingLastSession = false;

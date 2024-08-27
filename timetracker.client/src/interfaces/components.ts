@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactElement, ReactNode } from "react";
 import { IconType } from "react-icons";
 
-import { UserModel } from "./domain.ts";
+import { UserModel, PaginationModel } from "./domain.ts";
 
 export interface CheckboxProps {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -130,4 +130,11 @@ export interface InfoLabelProps {
     bgColor?: string;
     borderColor?: string;
     color?: string;
+}
+
+export interface PaginationFooterProps {
+    pagination: PaginationModel,
+    onPageSizeChange: (value: string) => void,
+    prevPage: () => void,
+    nextPage: () => void
 }

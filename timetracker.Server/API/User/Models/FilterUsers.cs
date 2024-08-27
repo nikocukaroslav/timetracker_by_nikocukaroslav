@@ -1,6 +1,6 @@
-﻿namespace timetracker.Server.Domain.Models
+﻿namespace timetracker.Server.API.User.Models
 {
-    public class Filter
+    public class FilterUsers
     {
         public bool? IsEmployed { get; set; }
         public List<string>? StatusList { get; set; }

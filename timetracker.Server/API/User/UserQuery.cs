@@ -1,6 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using timetracker.Server.API.Pagination.Models;
+using PaginationModel = timetracker.Server.Domain.Models.Pagination;
 using timetracker.Server.API.Pagination.Types;
 using timetracker.Server.API.User.Models;
 using timetracker.Server.API.User.Types;
@@ -19,21 +19,18 @@ namespace timetracker.Server.API.User
             this.Authorize();
 
             Field<PaginationResponseType<UserResponseType, UserModel>>("users")
-               .Arguments(
-                new QueryArguments(
+               .Arguments(new QueryArguments(
                     new QueryArgument<PaginationRequestType> { Name = "pagination" },
                     new QueryArgument<FilterUsersRequestType> { Name = "filter" },
                     new QueryArgument<SortRequestType> { Name = "sort" }
                ))
                .ResolveAsync(async context =>
                {
-                   var pagination = context.GetArgument<PaginationRequest>("pagination");
-
-                   var filter = context.GetArgument<Filter>("filter");
-
+                   var pagination = context.GetArgument<PaginationModel>("pagination");
+                   var filter = context.GetArgument<FilterUsers>("filter");
                    var sort = context.GetArgument<Sort>("sort");
 
-                   var paginatedUsers = await userRepository.GetPaginatedUserListAsync(pagination.Page, pagination.PageSize, filter, sort);
+                   var paginatedUsers = await userRepository.GetPaginatedUserListAsync(pagination, filter, sort);
 
                    return paginatedUsers;
                });
@@ -100,6 +97,7 @@ namespace timetracker.Server.API.User
                 .ResolveAsync(async context =>
                 {
                     var workSessions = await userRepository.GetWorkSessionsByUserIdAsync(context.GetArgument<Guid>("id"));
+
                     return workSessions;
                 });
 

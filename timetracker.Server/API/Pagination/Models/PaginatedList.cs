@@ -1,4 +1,6 @@
-﻿namespace timetracker.Server.API.Pagination.Models
+﻿using PaginationModel = timetracker.Server.Domain.Models.Pagination;
+
+namespace timetracker.Server.API.Pagination.Models
 {
     public class PaginatedList<T>
     {
@@ -9,12 +11,12 @@
         public bool HasNextPage => Page < TotalPages;
         public bool HasPreviousPage => Page > 1;
         public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
-        public PaginatedList(List<T> items, int count, int pageNumber, int pageSize)
+        public PaginatedList(List<T> items, int count, PaginationModel pagination)
         {
             Items = items;
             TotalCount = count;
-            Page = pageNumber;
-            PageSize = pageSize;
+            Page = pagination.Page;
+            PageSize = pagination.PageSize;
         }
     }
 }

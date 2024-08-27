@@ -7,8 +7,7 @@ namespace timetracker.Server.Infrastructure.Interfaces
 {
     public interface IUserRepository : IRepository<User>
     {
-        Task<PaginatedList<User>> GetPaginatedUserListAsync(int page, int pageSize, 
-            Filter? filter = null, Sort? sort = null); 
+        Task<PaginatedList<User>> GetPaginatedUserListAsync(Pagination pagintaion, FilterUsers? filter, Sort? sort); 
         Task<string> GetUserPermissionsByEmailAsync(string email);
         Task<User> GetUserByEmailAsync(string email);
         Task<IDictionary<Guid?, User>> GetUsersByIdAsync(IEnumerable<Guid?> ids);

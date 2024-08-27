@@ -15,7 +15,7 @@ namespace timetracker.Server.Infrastructure.Repositories
         {
         }
 
-        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(int page, int pageSize, Filter? filter, Sort? sort){
+        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(Pagination pagination, FilterUsers? filter, Sort? sort){
             using var connection = _connectionFactory.Create();
 
             var sqlQuery = new QueryBuilder("SELECT * FROM Users")
@@ -26,14 +26,14 @@ namespace timetracker.Server.Infrastructure.Repositories
                     sort?.SortBy ?? "Name",
                     sort?.Ascending ?? true
                 )
-                .AddPagination(page, pageSize)
+                .AddPagination(pagination)
                 .Create();
 
             var totalCount = await connection.ExecuteScalarAsync<int>(sqlQuery.TotalCountQuery, sqlQuery.Parameters);
 
             var users = await connection.QueryAsync<User>(sqlQuery.Query, sqlQuery.Parameters);
 
-            return new PaginatedList<User>(users.ToList(), totalCount, page, pageSize);
+            return new PaginatedList<User>(users.ToList(), totalCount, pagination);
         }
 
         public async Task<string> GetUserPermissionsByEmailAsync(string email)

@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using timetracker.Server.Domain.Entities;
-using timetracker.Server.Domain.Models;
 using timetracker.Server.Infrastructure.Database;
 using timetracker.Server.Infrastructure.Interfaces;
 
@@ -10,7 +9,6 @@ namespace timetracker.Server.Infrastructure.Repositories
     {
         public WorkSessionRepository(ISqlConnectionFactory connectionFactory) : base(connectionFactory)
         {
-
         }
 
         public async Task<bool> IsSessionTimeAvailable(WorkSession session)

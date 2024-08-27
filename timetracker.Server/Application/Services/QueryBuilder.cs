@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Text;
 using timetracker.Server.Application.Models;
+using timetracker.Server.Domain.Models;
 
 namespace timetracker.Server.Application.Services
 {
@@ -44,12 +45,12 @@ namespace timetracker.Server.Application.Services
             return this;
         }
 
-        public QueryBuilder AddPagination(int page, int pageSize)
+        public QueryBuilder AddPagination(Pagination pagination)
         {
             PaginationQuery = "OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
 
-            Parameters.Add("Offset", (page - 1) * pageSize);
-            Parameters.Add("PageSize", pageSize);
+            Parameters.Add("Offset", (pagination.Page - 1) * pagination.PageSize);
+            Parameters.Add("PageSize", pagination.PageSize);
 
             return this;
         }
@@ -90,7 +91,7 @@ namespace timetracker.Server.Application.Services
                 }
             }   
 
-            return new QueryResponse()
+            return new QueryCreateResponse()
             {
                 Query = sqlQuery.ToString(),
                 TotalCountQuery = sqlTotalCountQuery.ToString(),

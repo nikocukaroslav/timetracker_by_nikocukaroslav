@@ -12,7 +12,7 @@ namespace timetracker.Server.Infrastructure.Interfaces
         Task<User> GetUserByEmailAsync(string email);
         Task<IDictionary<Guid?, User>> GetUsersByIdAsync(IEnumerable<Guid?> ids);
         Task<WorkSession> GetLastUserWorkSessionAsync(Guid id);
-        Task<List<WorkSession>> GetWorkSessionsByUserIdAsync(Guid id);
+        Task<PaginatedList<WorkSession>> GetPaginatedWorkSessionsByUserIdAsync(Guid id, Pagination pagination);
         Task<List<WorkDay>> GetWorkDaysByUserIdAsync(WorkDaysRequest workDaysRequest);
         Task<List<User>> FindUsersAsync(string input);
     }

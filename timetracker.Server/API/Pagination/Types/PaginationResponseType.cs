@@ -3,11 +3,13 @@ using timetracker.Server.API.Pagination.Models;
 
 namespace timetracker.Server.API.Pagination.Types
 {
-    public class PaginationResponseType<TGraphType, TEntitiy>
-        : ObjectGraphType<PaginatedList<TEntitiy>> where TGraphType : IGraphType
+    public class PaginationResponseType<TGraphType, TEntity>
+        : ObjectGraphType<PaginatedList<TEntity>> where TGraphType : IGraphType
     {
         public PaginationResponseType()
         {
+            Name = $"{typeof(TEntity).Name}PaginationResponse";
+
             Field<ListGraphType<TGraphType>>("items");
             Field<IntGraphType>("totalCount");
             Field<IntGraphType>("pageSize");

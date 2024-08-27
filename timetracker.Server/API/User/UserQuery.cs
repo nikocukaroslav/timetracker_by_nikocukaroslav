@@ -9,6 +9,7 @@ using timetracker.Server.Domain.Errors;
 using timetracker.Server.Domain.Models;
 using timetracker.Server.Infrastructure.Interfaces;
 using UserModel = timetracker.Server.Domain.Entities.User;
+using WorkSessionModel = timetracker.Server.Domain.Entities.WorkSession;
 
 namespace timetracker.Server.API.User
 {
@@ -29,6 +30,12 @@ namespace timetracker.Server.API.User
                    var pagination = context.GetArgument<PaginationModel>("pagination");
                    var filter = context.GetArgument<FilterUsers>("filter");
                    var sort = context.GetArgument<Sort>("sort");
+
+                   if (pagination == null)
+                   {
+                       context.Errors.Add(ErrorCode.INVALID_PAGINATION_SETTINGS);
+                       return null;
+                   }
 
                    var paginatedUsers = await userRepository.GetPaginatedUserListAsync(pagination, filter, sort);
 
@@ -92,11 +99,23 @@ namespace timetracker.Server.API.User
                     return userWorkDays;
                 });
 
-            Field<ListGraphType<WorkSessionResponseType>>("workSessions")
-                .Arguments(new QueryArguments(new QueryArgument<GuidGraphType> { Name = "id" }))
+            Field<PaginationResponseType<WorkSessionResponseType, WorkSessionModel>>("workSessions")
+                .Arguments(new QueryArguments(
+                    new QueryArgument<GuidGraphType> { Name = "id" },
+                    new QueryArgument<PaginationRequestType> { Name = "pagination" }
+                ))
                 .ResolveAsync(async context =>
                 {
-                    var workSessions = await userRepository.GetWorkSessionsByUserIdAsync(context.GetArgument<Guid>("id"));
+                    var id = context.GetArgument<Guid>("id");
+                    var pagination = context.GetArgument<PaginationModel>("pagination");
+
+                    if (pagination == null)
+                    {
+                        context.Errors.Add(ErrorCode.INVALID_PAGINATION_SETTINGS);
+                        return null;
+                    }
+
+                    var workSessions = await userRepository.GetPaginatedWorkSessionsByUserIdAsync(id, pagination);
 
                     return workSessions;
                 });

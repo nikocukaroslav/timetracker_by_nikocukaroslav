@@ -39,6 +39,8 @@ namespace timetracker.Server.Domain.Errors
         public static readonly ValidationError LINK_EXPIRED = new Error("Link expired");
 
         public static readonly ValidationError LINK_NOT_FOUND = new Error("Link not found");
+
+        public static readonly ValidationError INVALID_PAGINATION_SETTINGS = new Error("Invalid pagination settings");
     }
 
 }

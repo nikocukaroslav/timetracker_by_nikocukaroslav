@@ -17,7 +17,7 @@ namespace timetracker.Server.API.Auth
             IJwtTokenUtils jwtTokenUtils,
             IPasswordHasher passwordHasher)
         {
-            base.Field<LoginResponseType>("login")
+            Field<LoginResponseType>("login")
                 .Arguments(new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "email" },
                     new QueryArgument<StringGraphType> { Name = "password" }

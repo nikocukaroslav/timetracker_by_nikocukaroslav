@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using timetracker.Server.API.Pagination.Models;
 using timetracker.Server.API.User.Models;
+using timetracker.Server.Application.Services;
 using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Models;
 using timetracker.Server.Infrastructure.Database;
@@ -13,58 +14,24 @@ namespace timetracker.Server.Infrastructure.Repositories
         public UserRepository(ISqlConnectionFactory connectionFactory) : base(connectionFactory)
         {
         }
-        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(int page,
-            int pageSize, Filter? filter, Sort? sort)
-        {
+
+        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(int page, int pageSize, Filter? filter, Sort? sort){
             using var connection = _connectionFactory.Create();
 
-            var totalCountQuery = @"SELECT COUNT(*) FROM Users";
+            var sqlQuery = new QueryBuilder("SELECT * FROM Users")
+                .AddFilter("IsEmployed", filter?.IsEmployed)
+                .AddFilter("Status", filter?.StatusList)
+                .AddFilter("Position", filter?.PositionList)
+                .AddSort(
+                    sort?.SortBy ?? "Name",
+                    sort?.Ascending ?? true
+                )
+                .AddPagination(page, pageSize)
+                .Create();
 
-            var query = @"SELECT * FROM Users";
+            var totalCount = await connection.ExecuteScalarAsync<int>(sqlQuery.TotalCountQuery, sqlQuery.Parameters);
 
-            var whereConditions = new List<string>();
-
-            if (filter != null)
-            {
-                if (filter.IsEmployed != null) whereConditions.Add("IsEmployed = @IsEmployed");
-
-                if (filter.StatusList != null)
-                    foreach (var status in filter.StatusList)
-                    {
-                        whereConditions.Add("Status in @StatusList");
-                    }
-
-                if (filter.PositionList != null)
-                    foreach (var status in filter.PositionList)
-                    {
-                        whereConditions.Add("Position in @PositionList");
-                    }
-            }
-
-            if (whereConditions.Any())
-            {
-                var whereClause = " WHERE " + string.Join(" AND ", whereConditions);
-                totalCountQuery += whereClause;
-                query += whereClause;
-            }
-
-            if (sort != null)
-                query += $" ORDER BY {sort.SortBy} {(sort.Ascending ? "ASC" : "DESC")} ";
-            else
-                query += " ORDER BY Name";
-
-            query += " OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
-
-            var totalCount = await connection.ExecuteScalarAsync<int>(totalCountQuery, filter);
-
-            var users = await connection.QueryAsync<User>(query, new
-            {
-                Offset = (page - 1) * pageSize,
-                PageSize = pageSize,
-                IsEmployed = filter?.IsEmployed,
-                StatusList = filter?.StatusList,
-                PositionList = filter?.PositionList,
-            });
+            var users = await connection.QueryAsync<User>(sqlQuery.Query, sqlQuery.Parameters);
 
             return new PaginatedList<User>(users.ToList(), totalCount, page, pageSize);
         }
@@ -104,6 +71,7 @@ namespace timetracker.Server.Infrastructure.Repositories
 
             return users.ToDictionary(x => (Guid?)x.Id);
         }
+
         public async Task<WorkSession> GetLastUserWorkSessionAsync(Guid id)
         {
             using var connection = _connectionFactory.Create();
@@ -124,6 +92,7 @@ namespace timetracker.Server.Infrastructure.Repositories
 
             return workSessions.ToList();
         }
+
         public async Task<List<WorkDay>> GetWorkDaysByUserIdAsync(WorkDaysRequest workDaysRequest)
         {
             using var connection = _connectionFactory.Create();

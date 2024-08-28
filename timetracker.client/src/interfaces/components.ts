@@ -3,13 +3,6 @@ import { IconType } from "react-icons";
 
 import { UserModel } from "./domain.ts";
 
-export interface CheckboxProps {
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-    disabled?: boolean;
-    checked?: boolean;
-    readOnly?: boolean;
-}
-
 export interface StackProps {
     label: string,
 }
@@ -75,7 +68,9 @@ export interface ModalFormProps {
 }
 
 export interface AuthFormProps {
-    onSubmit: () => void;
+    initialValues: object;
+    validationSchema?: object;
+    onSubmit: (values, actions) => void;
     children: ReactNode;
 }
 

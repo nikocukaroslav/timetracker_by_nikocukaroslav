@@ -15,11 +15,15 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import AuthForm from "@features/authentication/components/AuthForm.tsx";
 import HandlePasswordVisibilityButton from "@features/authentication/components/HandlePasswordVisibilityButton.tsx";
+import { schemas } from "@utils/inputHelpers.ts";
+
+const defaultFormData = {
+    password: "",
+    passwordRepeat: "",
+}
 
 function SetPassword() {
     const { temporaryLinkId } = useParams();
-    const [password, setPassword] = useState("");
-    const [passwordRepeat, setPasswordRepeat] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const toast = useToast();
 
@@ -33,13 +37,18 @@ function SetPassword() {
         setShowPassword(!showPassword);
     }
 
-    function handleCreatePassword() {
+    function handleCreatePassword(values) {
+        const { password, passwordRepeat } = values;
+
         if (password === passwordRepeat && temporaryLinkId != undefined) {
+            console.log("Dispatching createUserPassword action");
             dispatch(createUserPassword(password, temporaryLinkId));
         } else {
+            console.log("Passwords do not match");
             dispatch(setError("Passwords do not match"));
         }
     }
+
 
     const isTemporaryLinkValid: boolean = useAppSelector(state => state.authentication.isTemporaryLinkValid);
 
@@ -98,25 +107,24 @@ function SetPassword() {
     }, [navigate, dispatch, createPasswordResult]);
 
     return (
-        <AuthForm onSubmit={isTemporaryLinkValid ? handleCreatePassword : handleResendCreatePasswordEmail}>
+        <AuthForm onSubmit={temporaryLinkId ? handleCreatePassword : handleResendCreatePasswordEmail}
+                  initialValues={defaultFormData}
+                  validationSchema={schemas.resetPasswordSchema}
+        >
             {isTemporaryLinkValid ?
                 (<>
                     <CustomInput
-                        name="newPassword"
+                        name="password"
                         label="New password"
                         icon={PiKey}
                         type={showPassword ? "text" : "password"}
-                        onChange={(e) => setPassword(e.target.value)}
                         children={<HandlePasswordVisibilityButton onClick={handleClick} showPassword={showPassword}/>}
-                        isRequired
                     />
                     <CustomInput
-                        name="repeatPassword"
+                        name="passwordRepeat"
                         label="Repeat password"
                         icon={PiKey}
                         type={showPassword ? "text" : "password"}
-                        onChange={(e) => setPasswordRepeat(e.target.value)}
-                        isRequired
                         children={<HandlePasswordVisibilityButton onClick={handleClick} showPassword={showPassword}/>}
                     />
                     <Text color="red.500">{error}</Text>

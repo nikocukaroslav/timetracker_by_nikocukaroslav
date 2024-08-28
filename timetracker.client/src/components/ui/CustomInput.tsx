@@ -14,7 +14,6 @@ function CustomInput({ label, name, icon, children, ...props }: CustomInputProps
     const { errors, touched } = useFormikContext();
     const isError: boolean = errors[name] && touched[name];
 
-    console.log(errors)
     return (
         <FormLabel display="flex" flexDirection="column" gap="1">
             <Flex gap="2">

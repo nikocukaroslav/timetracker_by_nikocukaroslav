@@ -14,8 +14,6 @@ import {
     Spinner,
     useDisclosure
 } from "@chakra-ui/react";
-
-import CustomInput from "@components/ui/CustomInput.tsx";
 import CalendarSearchList from "@features/calendar/components/CalendarSearchList.tsx";
 
 import { request } from "@utils/request.ts";
@@ -23,6 +21,7 @@ import { findEmployeesQuery } from "@features/calendar/api/requests.ts";
 import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
 import { CalendarContextType } from "@features/calendar/types/calendar.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
+import SearchInput from "@components/ui/SearchInput.tsx";
 
 function CalendarSearch() {
     const accountId = useAppSelector(state => state.authentication.user?.id);
@@ -85,7 +84,7 @@ function CalendarSearch() {
             <Popover isOpen={isOpen} onClose={onClose} placement='bottom-end' isLazy>
                 <PopoverAnchor>
                     <Box>
-                        <CustomInput
+                        <SearchInput
                             pl={10}
                             type="text"
                             placeholder="Search сalendar"

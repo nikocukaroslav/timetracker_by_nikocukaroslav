@@ -56,8 +56,11 @@ function ModalForm(props: ModalFormProps) {
                     <Formik
                         initialValues={props.initialValues}
                         validationSchema={props.validationSchema}
-                        onSubmit={onSubmit}
-
+                        onSubmit={(values, actions) => {
+                            onSubmit(values, actions);
+                            actions.setSubmitting(false);
+                            onClose();
+                        }}
                     >
                         <Form>
                             <ModalBody>

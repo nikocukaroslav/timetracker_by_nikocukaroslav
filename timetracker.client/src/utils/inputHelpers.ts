@@ -15,5 +15,35 @@ export const schemas = {
         email: Yup.string().email("Invalid email format").required("Email is required"),
         position: Yup.string().required("Position is required"),
         timeload: Yup.string().required("Timeload is required"),
+    }),
+    createEditWorkDayFormSchema: Yup.object().shape({
+        startTime: Yup.string()
+            .required("Work start is required")
+            .test("is-workStart-before-workEnd", "Work start must be before Work end", function (value) {
+                const { workEnd } = this.parent;
+                return !workEnd || new Date(`1970-01-01T${value}:00Z`) <= new Date(`1970-01-01T${workEnd}:00Z`);
+            }),
+        endTime: Yup.string().required("Work end is required"),
+    }),
+    createEditWorkSessionFormSchema: Yup.object().shape({
+        startTime: Yup.date()
+            .test("is-startTime-before-endTime", "Start time must be before end time", function (value) {
+                const { endTime } = this.parent;
+                return !endTime || value <= endTime;
+            })
+            .required("Work Start is required"),
+        endTime: Yup.date().required("End time is required"),
+    }),
+    signInSchema: Yup.object().shape({
+        email: Yup.string().required("Login is required"),
+        password: Yup.string().required("Password is required"),
+    }),
+    resetPasswordSchema: Yup.object().shape({
+        password: Yup.string()
+            .min(8, "Password must be at least 8 characters")
+            .required("Password is required"),
+        passwordRepeat: Yup.string()
+            .oneOf([Yup.ref('password'), null], "Passwords must match")
+            .required("Repeat password is required"),
     })
 };

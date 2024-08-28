@@ -65,7 +65,7 @@ const dateConverter = (date: Date | number | string, format?: string) => {
     return new Intl.DateTimeFormat("en-US", options).format(dateValue);
 };
 
-export const timeConverter = (time: string | number, format?: string) => {
+export const convertTime = (time: string | number, format?: string) => {
     const dateValue = typeof time === "string"
         ? new Date("1970-01-01T" + time)
         : new Date(time);

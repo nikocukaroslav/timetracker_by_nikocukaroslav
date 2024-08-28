@@ -1,45 +1,34 @@
 import { PiTimer } from "react-icons/pi";
-import { FormLabel, Text } from "@chakra-ui/react";
 
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
-
-import { useForm } from "@hooks/useForm.ts";
 import { CreateEditWorkDayFormProps } from "@features/calendar/types/components.ts";
+import { schemas } from "@utils/inputHelpers.ts";
 
 const defaultFormData = {
     startTime: "",
     endTime: "",
 }
 
-function CreateEditWorkDayForm({
-                                   disclosure,
-                                   onCreate,
-                                   onUpdate,
-                                   formData,
-                                   isEditing
-                               }: CreateEditWorkDayFormProps) {
-    const {
-        data,
-        isOpen,
-        onOpen,
-        onClose,
-        setData,
-        handleChangeInput
-    } = useForm<typeof defaultFormData, typeof formData>(defaultFormData, formData, disclosure);
-    const { startTime, endTime } = data;
+function CreateEditWorkDayForm({ disclosure, onCreate, onUpdate, isEditing, formData }: CreateEditWorkDayFormProps) {
+    const { isOpen, onOpen, onClose } = disclosure;
 
-    function handleUpdate() {
+    const initialValues = {
+        startTime: formData?.startTime,
+        endTime: formData?.endTime,
+    }
+
+    function handleUpdate(values) {
         if (onUpdate) {
-            onUpdate(data);
+            onUpdate(values);
         }
     }
 
-    function handleCreate() {
+    function handleCreate(values, actions) {
         if (onCreate) {
-            onCreate(data);
+            onCreate(values);
         }
-        setData(defaultFormData);
+        actions.resetForm();
     }
 
     return (
@@ -51,25 +40,19 @@ function CreateEditWorkDayForm({
             onClose={onClose}
             onSubmit={isEditing ? handleUpdate : handleCreate}
             submitBtnText={isEditing ? "Edit" : "Add"}
+            validationSchema={schemas.createEditWorkDayFormSchema}
+            initialValues={formData ? initialValues : defaultFormData}
         >
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Work start</Text>
-                <CustomInput
-                    type="time"
-                    onChange={(e) => handleChangeInput(e, "startTime")}
-                    value={startTime}
-                    isRequired
-                />
-            </FormLabel>
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Work end</Text>
-                <CustomInput
-                    type="time"
-                    onChange={(e) => handleChangeInput(e, "endTime")}
-                    value={endTime}
-                    isRequired
-                />
-            </FormLabel>
+            <CustomInput
+                name="startTime"
+                label="Work start"
+                type="time"
+            />
+            <CustomInput
+                name="endTime"
+                label="Work end"
+                type="time"
+            />
         </ModalForm>
     );
 }

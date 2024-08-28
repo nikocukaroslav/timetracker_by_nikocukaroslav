@@ -3,13 +3,6 @@ import { IconType } from "react-icons";
 
 import { UserModel, PaginationModel } from "./domain.ts";
 
-export interface CheckboxProps {
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-    disabled?: boolean;
-    checked?: boolean;
-    readOnly?: boolean;
-}
-
 export interface StackProps {
     label: string,
 }
@@ -60,15 +53,24 @@ export interface FilterDrawerProps {
 }
 
 export interface ModalFormProps {
+    initialValues: object;
+    validationSchema: object;
     title?: string;
     titleIcon?: ReactNode;
     isOpen: boolean;
     onOpen: () => void;
     onClose: () => void;
-    onSubmit: () => void;
+    onSubmit: (values, actions) => void;
     triggerBtn?: ReactNode;
     submitBtnLoading?: boolean;
     submitBtnText: string;
+    children: ReactNode;
+}
+
+export interface AuthFormProps {
+    initialValues: object;
+    validationSchema?: object;
+    onSubmit: (values, actions) => void;
     children: ReactNode;
 }
 

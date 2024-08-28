@@ -7,7 +7,7 @@ import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkD
 import Spinner from "@components/ui/Spinner.tsx";
 
 import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts";
-import { timeConverter } from "@utils/formatters.ts";
+import { convertTime } from "@utils/formatters.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { createWorkDays } from "@features/calendar/api/actions.ts";
 import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
@@ -47,8 +47,8 @@ function CalendarBody() {
     function handleCreate({ startTime, endTime }: { startTime: string; endTime: string }) {
         const newWorkDays = {
             days: selectedItemsRef.current,
-            startTime: timeConverter(startTime),
-            endTime: timeConverter(endTime),
+            startTime: convertTime(startTime),
+            endTime: convertTime(endTime),
             userId: userId as string,
         }
 

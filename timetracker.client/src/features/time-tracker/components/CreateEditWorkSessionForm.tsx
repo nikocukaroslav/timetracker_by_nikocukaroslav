@@ -1,61 +1,53 @@
 import { useDispatch } from "react-redux";
 import { PiTimer } from "react-icons/pi";
-import { FormLabel, Text } from "@chakra-ui/react";
 
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
 
 import { createWorkSession, updateWorkSession } from "@features/time-tracker/api/actions.ts";
-import { useForm } from "@hooks/useForm.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditWorkSessionFormProps } from "@interfaces/components.ts";
+import { schemas } from "@utils/inputHelpers.ts";
+import { useDisclosure } from "@chakra-ui/react";
 
 const defaultFormData = {
     startTime: "",
     endTime: "",
 }
 
-function CreateEditWorkSessionForm({formData, isEditing, children}: CreateEditWorkSessionFormProps) {
+function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEditWorkSessionFormProps) {
     const userId = useAppSelector((state) => state.authentication.user?.id);
-    const {
-        data,
-        isOpen,
-        onOpen,
-        onClose,
-        setData,
-        handleChangeInput
-    } = useForm<typeof defaultFormData, typeof formData>(defaultFormData, formData);
-    const {startTime, endTime} = data;
 
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const dispatch = useDispatch();
 
-    function handleUpdate() {
-        const startTimeTimestamp = new Date(startTime).getTime();
-        const endTimeTimestamp = new Date(endTime).getTime();
-
-        const newSessionData = {
-            id: formData?.id,
-            startTime: startTimeTimestamp,
-            endTime: endTimeTimestamp,
-            editedAt: new Date().getTime(),
-            editorId: userId,
-        };
-
-        dispatch(updateWorkSession(newSessionData))
+    const initialValues = {
+        startTime: formData?.startTime,
+        endTime: formData?.endTime,
     }
 
-    function handleAdd() {
-        const startTimeTimestamp = new Date(startTime).getTime();
-        const endTimeTimestamp = new Date(endTime).getTime();
+    function handleAddUpdate(values) {
+        const startTimeTimestamp = new Date(values.startTime).getTime();
+        const endTimeTimestamp = new Date(values.endTime).getTime();
 
-        const newSession = {
-            startTime: startTimeTimestamp,
-            endTime: endTimeTimestamp,
-            userId
-        };
+        if (!isEditing) {
+            const newSession = {
+                startTime: startTimeTimestamp,
+                endTime: endTimeTimestamp,
+                userId
+            };
+            dispatch(createWorkSession(newSession));
+        } else {
+            const newSessionData = {
+                id: formData?.id,
+                startTime: startTimeTimestamp,
+                endTime: endTimeTimestamp,
+                editedAt: new Date().getTime(),
+                editorId: userId,
+            };
 
-        dispatch(createWorkSession(newSession));
-        setData(defaultFormData);
+            dispatch(updateWorkSession(newSessionData))
+        }
     }
 
     return (
@@ -65,31 +57,25 @@ function CreateEditWorkSessionForm({formData, isEditing, children}: CreateEditWo
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
-            onSubmit={isEditing ? handleUpdate : handleAdd}
+            onSubmit={handleAddUpdate}
             submitBtnLoading={false}
             submitBtnText={isEditing ? "Edit" : "Add"}
             triggerBtn={children}
+            validationSchema={schemas.createEditWorkSessionFormSchema}
+            initialValues={formData ? initialValues : defaultFormData}
         >
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Time start</Text>
-                <CustomInput
-                    type="datetime-local"
-                    step={1}
-                    onChange={(e) => handleChangeInput(e, "startTime")}
-                    value={startTime}
-                    required
-                />
-            </FormLabel>
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Time end</Text>
-                <CustomInput
-                    type="datetime-local"
-                    step={1}
-                    onChange={(e) => handleChangeInput(e, "endTime")}
-                    value={endTime}
-                    required
-                />
-            </FormLabel>
+            <CustomInput
+                name="startTime"
+                label="Start time"
+                type="datetime-local"
+                step={1}
+            />
+            <CustomInput
+                name="endTime"
+                label="End time"
+                type="datetime-local"
+                step={1}
+            />
         </ModalForm>
     );
 }

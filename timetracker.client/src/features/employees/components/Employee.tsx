@@ -28,7 +28,7 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
 import { permissionList, positionList } from "@constants";
 import { UserModel } from "@interfaces/domain.ts";
-import { timeConverter } from "@utils/formatters.ts";
+import { convertTime } from "@utils/formatters.ts";
 import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function Employee({ employee }: EmployeeProps) {
@@ -53,7 +53,7 @@ function Employee({ employee }: EmployeeProps) {
     }
 
     const fullName = `${name} ${surname} ${itsYou ? "(you)" : ""}`;
-    const timeloadString = timeload ? timeConverter(timeload, "hh:mm") : "";
+    const timeloadString = timeload ? convertTime(timeload, "hh:mm") : "";
 
     const positionTitle = useBreakpointValue({ base: positionName, xl: "" });
     const timeloadTitle = useBreakpointValue({ base: timeloadString, lg: "" });
@@ -66,7 +66,6 @@ function Employee({ employee }: EmployeeProps) {
                 alignItems="center"
                 p="5"
                 rounded="md"
-                overflow="hidden"
             >
                 {!isEmployed &&
                     <StatusLabel label="Terminated" bgColor="red.500" borderColor="red.500" color="gray.50"/>
@@ -138,7 +137,7 @@ function Employee({ employee }: EmployeeProps) {
                             <CreateEditMemberForm
                                 formData={{
                                     ...employee,
-                                    timeload: timeConverter(employee.timeload as string, "hh:mm")
+                                    timeload: convertTime(employee.timeload as string, "hh:mm")
                                 }}
                                 isEditing
                             >

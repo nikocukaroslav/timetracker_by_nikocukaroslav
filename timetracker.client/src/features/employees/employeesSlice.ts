@@ -10,6 +10,7 @@ export const initialState: EmployeesState = {
         pageSize: Number(localStorage.getItem("employeesPageSize")) || 10,
     },
     filter: null,
+    error: null,
 }
 
 const employeesSlice = createSlice({
@@ -33,6 +34,9 @@ const employeesSlice = createSlice({
         },
         setFilter(state, action) {
             state.filter = action.payload
+        },
+        setError(state, action) {
+            state.error = action.payload
         }
     },
 })
@@ -42,6 +46,7 @@ export const {
     setLoading,
     setFilter,
     getUserSuccessful,
+    setError,
 } = employeesSlice.actions;
 
 export default employeesSlice.reducer;

@@ -8,7 +8,7 @@ import { createWorkSession, updateWorkSession } from "@features/time-tracker/api
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditWorkSessionFormProps } from "@interfaces/components.ts";
 import { schemas } from "@utils/inputHelpers.ts";
-import { useDisclosure } from "@chakra-ui/react";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 
 const defaultFormData = {
     startTime: "",
@@ -17,16 +17,30 @@ const defaultFormData = {
 
 function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEditWorkSessionFormProps) {
     const userId = useAppSelector((state) => state.authentication.user?.id);
+    const error = useAppSelector((state) => state.timeTracker.error)
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const dispatch = useDispatch();
+    const toast = useToast();
 
     const initialValues = {
         startTime: formData?.startTime,
         endTime: formData?.endTime,
     }
 
+
     function handleAddUpdate(values) {
+        if (error) {
+            toast({
+                title: "An error occurred",
+                description: error,
+                status: "error",
+                duration: 15000,
+                isClosable: true,
+            });
+            return;
+        }
+
         const startTimeTimestamp = new Date(values.startTime).getTime();
         const endTimeTimestamp = new Date(values.endTime).getTime();
 
@@ -48,6 +62,7 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
 
             dispatch(updateWorkSession(newSessionData))
         }
+        onClose();
     }
 
     return (

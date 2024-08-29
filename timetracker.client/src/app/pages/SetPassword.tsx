@@ -49,7 +49,6 @@ function SetPassword() {
         }
     }
 
-
     const isTemporaryLinkValid: boolean = useAppSelector(state => state.authentication.isTemporaryLinkValid);
 
     function handleResendCreatePasswordEmail() {
@@ -75,7 +74,7 @@ function SetPassword() {
                 });
             } else {
                 toast({
-                    title: 'Error',
+                    title: "An error occurred",
                     description: `An error occurred: ${resendCreatePasswordEmailStatus}`,
                     status: 'error',
                     duration: 5000,

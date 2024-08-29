@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiUser } from "react-icons/pi";
-import { FormLabel, List, Text, useDisclosure, } from "@chakra-ui/react";
+import { FormLabel, List, Text, useDisclosure, useToast, } from "@chakra-ui/react";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
@@ -29,8 +29,11 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
 
     const [permissions, setPermissions] = useState(formData?.permissions || [])
 
-    const loading = useAppSelector(state => state.employees.loading)
+    const error = useAppSelector((state) => state.employees.error);
+    const loading = useAppSelector((state) => state.employees.loading);
+
     const dispatch = useDispatch();
+    const toast = useToast();
 
     useEffect(() => {
         const defaultPermissions = positionList.find(({ name }) => name === "DEVELOPER")?.defaultPermissions || [];
@@ -49,19 +52,32 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
     }
 
     function handleSubmit(values, actions) {
-        const { email, ...rest } = values;
+        if (error) {
+            toast({
+                title: "An error occurred",
+                description: error,
+                status: "error",
+                duration: 15000,
+                isClosable: true,
+            });
+            return;
+        }
 
-        const data = isEditing ? rest : values
+        const { email, ...rest } = values;
+        const data = isEditing ? rest : values;
 
         const completeValues = {
             ...data,
             timeload: convertTime(values.timeload),
-            permissions: permissions
+            permissions: permissions,
         };
 
-        isEditing ? dispatch(updateUser(completeValues)) : dispatch(createUser(completeValues));
+        (isEditing && !error)
+            ? dispatch(updateUser(completeValues))
+            : dispatch(createUser(completeValues));
 
         actions.resetForm();
+        onClose();
     }
 
     function handleChangePermissions(e: ChangeEvent<HTMLInputElement>, permission: string) {

@@ -27,12 +27,21 @@ export const schemas = {
     }),
     createEditWorkSessionFormSchema: Yup.object().shape({
         startTime: Yup.date()
+            .max(new Date(), "Start time cannot be in the future")
             .test("is-startTime-before-endTime", "Start time must be before end time", function (value) {
                 const { endTime } = this.parent;
                 return !endTime || value <= endTime;
             })
             .required("Work Start is required"),
-        endTime: Yup.date().required("End time is required"),
+        endTime: Yup.date()
+            .max(new Date(), "End time cannot be in the future")
+            .required("End time is required")
+            .test("is-duration-valid", "Work session cannot exceed 24 hours", function (value) {
+                const { startTime } = this.parent;
+                if (!startTime || !value) return true;
+                const duration = (new Date(value) - new Date(startTime)) / (1000 * 60 * 60);
+                return duration < 24;
+            }),
     }),
     signInSchema: Yup.object().shape({
         email: Yup.string().required("Login is required"),

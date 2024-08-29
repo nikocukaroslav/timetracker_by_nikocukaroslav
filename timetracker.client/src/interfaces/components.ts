@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactElement, ReactNode } from "react";
 import { IconType } from "react-icons";
 
-import { UserModel, PaginationModel } from "./domain.ts";
+import { PaginationModel, UserModel } from "./domain.ts";
 
 export interface StackProps {
     label: string,

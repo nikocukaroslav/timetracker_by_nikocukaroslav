@@ -3,19 +3,8 @@ import { Epic, ofType } from "redux-observable";
 
 import store from "@store";
 import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
-import {
-    getUsersSuccessful,
-    getUserSuccessful, setFilter,
-    setLoading,
-} from "../employeesSlice.ts";
-import { setError } from "@features/authentication/authenticationSlice.ts";
-import {
-    createUserMutation,
-    deleteUserMutation,
-    getUserQuery,
-    getUsersQuery,
-    updateUserMutation
-} from "./requests.ts";
+import { getUsersSuccessful, getUserSuccessful, setError, setFilter, setLoading } from "../employeesSlice.ts";
+import { createUserMutation, deleteUserMutation, getUserQuery, getUsersQuery, updateUserMutation } from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import { getUsers } from "@features/employees/api/actions.ts";
@@ -40,11 +29,11 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
                                     },
                                     store.getState().employees.filter
                                 );
-                            return response.errors.forEach((message: string) => console.log(message))
+                            return setError(response.errors[0].message)
                         }
                     ),
                     catchError((error) =>
-                        of(setError(error.message))
+                        of(setError(error))
                     ),
                     tap(() => store.dispatch(setLoading(false))),
                 )

@@ -59,7 +59,6 @@ function ModalForm(props: ModalFormProps) {
                         onSubmit={(values, actions) => {
                             onSubmit(values, actions);
                             actions.setSubmitting(false);
-                            onClose();
                         }}
                     >
                         <Form>

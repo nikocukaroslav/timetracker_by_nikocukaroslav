@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { FormLabel, Checkbox, Stack, Text } from "@chakra-ui/react";
+import { Stack, Text, useDisclosure } from "@chakra-ui/react";
 
 import FilterDrawer from "@components/ui/FilterDrawer.tsx";
 
@@ -8,6 +8,7 @@ import { positionList, userStatusList } from "@constants";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { getUsers } from "@features/employees/api/actions.ts";
+import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
 
 function UserFilter({ children }: FilterFormProps) {
     const filter = useAppSelector((state) => state.employees.filter);
@@ -27,12 +28,11 @@ function UserFilter({ children }: FilterFormProps) {
 
     const {
         data,
-        isOpen,
-        onOpen,
-        onClose,
         setData
     } = useForm<typeof defaultFilterData, typeof filterData>(defaultFilterData, filterData);
     const { filterIsEmployed, filterStatusList, filterPositionList } = data;
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const dispatch = useDispatch();
 
@@ -70,67 +70,61 @@ function UserFilter({ children }: FilterFormProps) {
             onClear={() => setData(defaultFilterData)}
             triggerBtn={children}
         >
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Position</Text>
-                <Stack direction="column">
-                    {positionList.map((pos) => (
-                        <Checkbox
-                            colorScheme="gray"
-                            key={pos.name}
-                            isChecked={filterPositionList.includes(pos.name)}
-                            onChange={() => handleCheckboxChange(filterPositionList, pos.name, "filterPositionList")}
-                        >
-                            {pos.description}
-                        </Checkbox>
-                    ))}
+            <Stack>
+                <Stack gap="1">
+                    <Text fontWeight="500">Position</Text>
+                    <Stack>
+                        {positionList.map((pos) => (
+                            <CustomCheckbox
+                                label={pos.description}
+                                key={pos.name}
+                                isChecked={filterPositionList.includes(pos.name)}
+                                onChange={() => handleCheckboxChange(filterPositionList, pos.name, "filterPositionList")}
+                            />
+                        ))}
+                    </Stack>
                 </Stack>
-            </FormLabel>
 
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Status</Text>
-                <Stack direction="column">
-                    {userStatusList.map((status) => (
-                        <Checkbox
-                            colorScheme="gray"
-                            key={status.name}
-                            isChecked={filterStatusList.includes(status.name)}
-                            onChange={() => handleCheckboxChange(filterStatusList, status.name, "filterStatusList")}
-                        >
-                            {status.description}
-                        </Checkbox>
-                    ))}
+                <Stack gap="1">
+                    <Text fontWeight="500">Status</Text>
+                    <Stack>
+                        {userStatusList.map((status) => (
+                            <CustomCheckbox
+                                label={status.description}
+                                key={status.name}
+                                isChecked={filterStatusList.includes(status.name)}
+                                onChange={() => handleCheckboxChange(filterStatusList, status.name, "filterStatusList")}
+                            />
+                        ))}
+                    </Stack>
                 </Stack>
-            </FormLabel>
 
-            <FormLabel display="flex" flexDirection="column" gap="1">
-                <Text>Employment</Text>
-                <Stack direction="column">
-                    <Checkbox
-                        colorScheme="gray"
-                        isChecked={filterIsEmployed === "true"}
-                        onChange={() =>
-                            setData((prevState) => ({
-                                ...prevState,
-                                filterIsEmployed: filterIsEmployed === "true" ? "" : "true",
-                            }))
-                        }
-                    >
-                        Employed
-                    </Checkbox>
-                    <Checkbox
-                        colorScheme="gray"
-                        isChecked={filterIsEmployed === "false"}
-                        onChange={() =>
-                            setData((prevState) => ({
-                                ...prevState,
-                                filterIsEmployed: filterIsEmployed === "false" ? "" : "false",
-                            }))
-                        }
-                    >
-                        Terminated
-                    </Checkbox>
+                <Stack gap="1">
+                    <Text fontWeight="500">Employment</Text>
+                    <Stack>
+                        <CustomCheckbox
+                            label="Employed"
+                            isChecked={filterIsEmployed === "true"}
+                            onChange={() =>
+                                setData((prevState) => ({
+                                    ...prevState,
+                                    filterIsEmployed: filterIsEmployed === "true" ? "" : "true",
+                                }))
+                            }
+                        />
+                        <CustomCheckbox
+                            label="Terminated"
+                            isChecked={filterIsEmployed === "false"}
+                            onChange={() =>
+                                setData((prevState) => ({
+                                    ...prevState,
+                                    filterIsEmployed: filterIsEmployed === "false" ? "" : "false",
+                                }))
+                            }
+                        />
+                    </Stack>
                 </Stack>
-            </FormLabel>
+            </Stack>
         </FilterDrawer>
     );
 }

@@ -1,10 +1,9 @@
-import { Flex, Heading, Button, Text } from '@chakra-ui/react';
+import { Button, Heading, Stack, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 function NotFound() {
     return (
-        <Flex
-            flexDirection="column"
+        <Stack
             justifyContent="center"
             alignItems="center"
             textAlign="center"
@@ -23,7 +22,7 @@ function NotFound() {
                     Back to Time Tracker
                 </Button>
             </Link>
-        </Flex>
+        </Stack>
     );
 }
 

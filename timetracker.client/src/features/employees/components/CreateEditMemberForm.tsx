@@ -41,15 +41,22 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
     const initialValues = {
         id: formData?.id,
         name: formData?.name,
+        email: formData?.email,
         surname: formData?.surname,
         position: formData?.position,
         timeload: formData?.timeload,
+        permissions: formData?.permissions,
     }
 
     function handleSubmit(values, actions) {
+        const { email, ...rest } = values;
+
+        const data = isEditing ? rest : values
+
         const completeValues = {
-            ...values,
+            ...data,
             timeload: convertTime(values.timeload),
+            permissions: permissions
         };
 
         isEditing ? dispatch(updateUser(completeValues)) : dispatch(createUser(completeValues));

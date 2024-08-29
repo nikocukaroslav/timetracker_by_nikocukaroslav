@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { PiTimer } from "react-icons/pi";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
@@ -8,7 +9,6 @@ import { createWorkSession, updateWorkSession } from "@features/time-tracker/api
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditWorkSessionFormProps } from "@interfaces/components.ts";
 import { schemas } from "@utils/inputHelpers.ts";
-import { useDisclosure, useToast } from "@chakra-ui/react";
 
 const defaultFormData = {
     startTime: "",
@@ -27,7 +27,6 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
         startTime: formData?.startTime,
         endTime: formData?.endTime,
     }
-
 
     function handleAddUpdate(values) {
         if (error) {

@@ -39,7 +39,12 @@ const CustomSelect = ({ label, name, icon, options, onChange, ...props }: Custom
             </Field>
             <ErrorMessage
                 name={name}
-                render={(errorMessage) => <Box color="red.500" h={1} mt="-1" fontSize="sm">{errorMessage}</Box>}/>
+                render={(errorMessage) => (
+                    <Box color="red.500" h={1} mt="-1" fontSize="sm" fontWeight="normal">
+                        {errorMessage}
+                    </Box>
+                )}
+            />
         </FormLabel>
     );
 };

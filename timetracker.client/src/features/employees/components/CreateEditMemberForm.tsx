@@ -1,9 +1,11 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiUser } from "react-icons/pi";
-import { FormLabel, List, Text, useDisclosure, useToast, } from "@chakra-ui/react";
+import { FormLabel, List, Text, useDisclosure, useToast } from "@chakra-ui/react";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
+import CustomSelect from "@components/ui/CustomSelect.tsx";
+import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 
 import { createUser, updateUser } from "../api/actions.ts";
@@ -12,8 +14,6 @@ import { CreateEditMemberFormProps } from "@interfaces/components.ts";
 import { permissionList, positionList, workTime } from "@constants";
 import { convertTime } from "@utils/formatters.ts";
 import { schemas } from "@utils/inputHelpers.ts";
-import CustomSelect from "@components/ui/CustomSelect.tsx";
-import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
 
 const defaultFormData = {
     name: "",
@@ -25,21 +25,14 @@ const defaultFormData = {
 }
 
 function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMemberFormProps) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
-    const [permissions, setPermissions] = useState(formData?.permissions || [])
-
     const error = useAppSelector((state) => state.employees.error);
     const loading = useAppSelector((state) => state.employees.loading);
 
+    const [permissions, setPermissions] = useState(formData?.permissions || [])
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const dispatch = useDispatch();
     const toast = useToast();
-
-    useEffect(() => {
-        const defaultPermissions = positionList.find(({ name }) => name === "DEVELOPER")?.defaultPermissions || [];
-        setPermissions(defaultPermissions);
-        return;
-    }, [formData?.permissions, isOpen])
 
     const initialValues = {
         id: formData?.id,
@@ -50,6 +43,15 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
         timeload: formData?.timeload,
         permissions: formData?.permissions,
     }
+    const workTimeList = workTime.map(time => ({
+        name: time,
+        description: time
+    }));
+
+    useEffect(() => {
+        const defaultPermissions = positionList.find(({ name }) => name === "DEVELOPER")?.defaultPermissions || [];
+        setPermissions(defaultPermissions);
+    }, [formData?.permissions, isOpen])
 
     function handleSubmit(values, actions) {
         if (error) {
@@ -92,11 +94,6 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
 
         setPermissions(defaultPermissions);
     }
-
-    const workTimeList = workTime.map(time => ({
-        name: time,
-        description: time
-    }));
 
     return (
         <ModalForm

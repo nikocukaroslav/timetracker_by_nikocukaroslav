@@ -14,14 +14,16 @@ import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { setByList } from "@constants";
 
 function WorkSession({ data }: { data: WorkSessionModel }) {
-    const dispatch = useDispatch();
     const userId = useAppSelector(state => state.authentication.user?.id);
-    const { id, startTime, endTime, editedAt, editor, setBy } = data;
+
+    const dispatch = useDispatch();
+
+    const { id, startTime = 0, endTime = 0, editedAt, editor, setBy } = data;
     const {
         description: descriptionSetBy
     } = setByList.find(SetBy => SetBy.name === setBy) || {};
 
-    const totalTime: number = Math.floor((endTime - startTime) / 1000);
+    const totalTime = Math.floor((endTime - startTime) / 1000);
     const workingTime = `${convertTime(startTime)} - ${convertTime(endTime)}`;
 
     const editMessage = editedAt && `Edited by ${editor?.id == userId ? "you" : `${editor?.name} ${editor?.surname}`}, ${dateConverter(editedAt, "full")}`;
@@ -68,16 +70,8 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
                 <ActionMenu>
                     <ActionMenuInfoBtn info={
                         <Box>
-                            {descriptionSetBy && (
-                                <Text>
-                                    Set {descriptionSetBy}
-                                </Text>
-                            )}
-                            {editMessage && (
-                                <Text mt={1}>
-                                    {editMessage}
-                                </Text>
-                            )}
+                            {descriptionSetBy && <Text>Set {descriptionSetBy}</Text>}
+                            {editMessage && <Text mt={1}>{editMessage}</Text>}
                         </Box>
                     }/>
                     <Divider/>

@@ -15,10 +15,11 @@ namespace timetracker.Server.Infrastructure.Repositories
         {
         }
 
-        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(Pagination pagination, FilterUsers? filter, Sort? sort){
+        public async Task<PaginatedList<User>> GetPaginatedUserListAsync(Pagination pagination, FilterUsers? filter, Sort? sort)
+        {
             using var connection = _connectionFactory.Create();
 
-            var sqlQuery = new QueryBuilder("SELECT * FROM Users")
+            var sqlQuery = new QueryBuilder()
                 .AddFilter("IsEmployed", filter?.IsEmployed)
                 .AddFilter("Status", filter?.StatusList)
                 .AddFilter("Position", filter?.PositionList)
@@ -27,7 +28,7 @@ namespace timetracker.Server.Infrastructure.Repositories
                     sort?.Ascending ?? true
                 )
                 .AddPagination(pagination)
-                .Create();
+                .Create("SELECT * FROM Users");
 
             var totalCount = await connection.ExecuteScalarAsync<int>(sqlQuery.TotalCountQuery, sqlQuery.Parameters);
 
@@ -88,18 +89,40 @@ namespace timetracker.Server.Infrastructure.Repositories
         {
             using var connection = _connectionFactory.Create();
 
-            var sqlQuery = new QueryBuilder("SELECT * FROM WorkSessions")
+            var withQuery = new QueryBuilder()
+                 .AddPagination(pagination)
+                 .AddSort("Item", false)
+                 .AddFilter("UserId", id)
+                 .CreateWithPart("FROM WorkSessions", "startTime");
+
+            var sqlQuery = new QueryBuilder(withQuery.Parameters)
+                .AddWithPartFilter("startTime", true)
+                .AddSort("StartTime", false)
+                .Create(withQuery.Query + " SELECT * FROM WorkSessions");
+
+            var totalCount = await connection.ExecuteScalarAsync<int>(withQuery.TotalCountQuery, withQuery.Parameters);
+
+            var workSessions = await connection.QueryAsync<WorkSession>(sqlQuery.Query, sqlQuery.Parameters);
+
+            return new PaginatedList<WorkSession>(workSessions.ToList(), totalCount, pagination);
+        }
+
+        /*public async Task<PaginatedList<WorkSession>> GetPaginatedWorkSessionsByUserIdAsync(Guid id, Pagination pagination)
+        {
+            using var connection = _connectionFactory.Create();
+
+            var sqlQuery = new QueryBuilder()
                 .AddFilter("UserId", id)
                 .AddSort("StartTime", false)
                 .AddPagination(pagination)
-                .Create();
+                .Create("SELECT * FROM WorkSessions");
 
             var totalCount = await connection.ExecuteScalarAsync<int>(sqlQuery.TotalCountQuery, sqlQuery.Parameters);
 
             var workSessions = await connection.QueryAsync<WorkSession>(sqlQuery.Query, sqlQuery.Parameters);
 
             return new PaginatedList<WorkSession>(workSessions.ToList(), totalCount, pagination);
-        }
+        }*/
 
         public async Task<List<WorkDay>> GetWorkDaysByUserIdAsync(WorkDaysRequest workDaysRequest)
         {

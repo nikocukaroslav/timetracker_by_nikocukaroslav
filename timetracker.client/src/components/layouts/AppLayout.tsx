@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem } from "@chakra-ui/react";
 
 import Navbar from "./Navbar.tsx";
 
@@ -24,7 +24,7 @@ function AppLayout() {
                 <GridItem>
                     <Navbar/>
                 </GridItem>
-                <GridItem position="relative" p={4}>
+                <GridItem as={Flex} flexDirection="column" position="relative" overflowY="auto" p={4}>
                     <Outlet/>
                 </GridItem>
             </Grid>

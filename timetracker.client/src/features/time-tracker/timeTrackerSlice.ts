@@ -8,7 +8,7 @@ const initialState: TimeTrackerState = {
     sessionId: null,
     isTracking: false,
     searchingLastSession: false,
-    timeStart: null,
+    startTime: null,
     pagination: {
         pageSize: Number(localStorage.getItem("trackerPageSize")) || 20,
     },
@@ -41,7 +41,7 @@ const timeTrackerSlice = createSlice({
             const { id, startTime } = payload;
 
             state.sessionId = id;
-            state.timeStart = startTime;
+            state.startTime = startTime;
             state.isTracking = true;
         },
         getLastWorkSessionError(state) {
@@ -65,8 +65,13 @@ const timeTrackerSlice = createSlice({
         deleteWorkSessionSuccessful(state, action) {
             state.workSessions = state.workSessions.filter(workSession => workSession.id !== action.payload)
         },
-        setIsTracking(state, action) {
-            state.isTracking = action.payload
+        setStartTracking(state, { payload }) {
+            state.isTracking = true;
+            state.startTime = payload;
+        },
+        setStopTracking(state) {
+            state.isTracking = false;
+            state.startTime = null;
         },
         setSearchingLastSession(state, action) {
             state.searchingLastSession = action.payload
@@ -86,7 +91,8 @@ export const {
     createWorkSessionSuccessful,
     updateWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
-    setIsTracking,
+    setStartTracking,
+    setStopTracking,
     setSearchingLastSession,
     setError
 } = timeTrackerSlice.actions;

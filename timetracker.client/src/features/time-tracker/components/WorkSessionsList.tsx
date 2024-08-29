@@ -18,7 +18,7 @@ function WorkSessionsList() {
     const daysGroup: [string, WorkSessionModel[]][] = Object.entries(workSessionGroups);
 
     return (
-        <Accordion as={Stack} allowMultiple reduceMotion sx={{
+        <Accordion as={Stack} mt={2} allowMultiple reduceMotion sx={{
             ".chakra-collapse": {
                 overflow: "initial !important"
             }

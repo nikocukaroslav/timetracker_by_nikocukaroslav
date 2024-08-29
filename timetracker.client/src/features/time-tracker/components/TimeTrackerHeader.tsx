@@ -1,10 +1,10 @@
 import { useDispatch } from "react-redux";
 import { PiPlayFill, PiSquareFill } from "react-icons/pi";
-import { Box, Button, Divider, Flex, Icon, Text } from "@chakra-ui/react";
+import { Button, Flex, Icon, Text } from "@chakra-ui/react";
 
 import Timer from "./Timer.tsx";
 
-import { setIsTracking } from "../timeTrackerSlice.ts";
+import { setStartTracking, setStopTracking } from "../timeTrackerSlice.ts";
 import { startSession, stopSession } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 
@@ -17,18 +17,20 @@ function TimeTrackerHeader() {
     const dispatch = useDispatch();
 
     function startTracking() {
-        dispatch(setIsTracking(true))
+        const startTime = Date.now();
+
+        dispatch(setStartTracking(startTime));
 
         const workSession = {
             userId: userId,
-            startTime: Date.now(),
+            startTime,
         };
 
         dispatch(startSession(workSession));
     }
 
     function stopTracking() {
-        dispatch(setIsTracking(false))
+        dispatch(setStopTracking());
 
         const workSession = {
             id: sessionId,
@@ -47,48 +49,22 @@ function TimeTrackerHeader() {
             rounded="md"
             boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
         >
-            <Text fontSize="2xl">Start time tracking</Text>
-            <Flex align="center" gap="5">
-                <Timer/>
-                <Divider
-                    orientation="vertical"
+            <Timer/>
+            <Button
+                variant="ghost"
+                display="flex"
+                gap="2"
+                isDisabled={searchingLastSession}
+                onClick={isTracking ? stopTracking : startTracking}
+            >
+                <Icon
+                    fill={isTracking ? "red.600" : "green.600"}
+                    w="32px"
                     h="32px"
-                    borderColor="gray.500"
+                    as={isTracking ? PiSquareFill : PiPlayFill}
                 />
-                <Box minWidth="120px">
-                    {isTracking ? (
-                        <Button
-                            variant="ghost"
-                            display="flex"
-                            gap="2"
-                            onClick={stopTracking}
-                        >
-                            <Icon
-                                fill="red.600"
-                                w="32px"
-                                h="32px"
-                                as={PiSquareFill}
-                            />
-                            <Text>Stop</Text>
-                        </Button>
-                    ) : (
-                        <Button
-                            variant="ghost"
-                            display="flex"
-                            gap="2"
-                            isDisabled={searchingLastSession}
-                            onClick={startTracking}>
-                            <Icon
-                                fill="green.600"
-                                w="32px"
-                                h="32px"
-                                as={PiPlayFill}
-                            />
-                            <Text>Start</Text>
-                        </Button>
-                    )}
-                </Box>
-            </Flex>
+                <Text>{isTracking ? "Stop" : "Start"}</Text>
+            </Button>
         </Flex>
     );
 }

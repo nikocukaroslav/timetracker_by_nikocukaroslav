@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import PaginationFooter from "@components/ui/PaginationFooter.tsx";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { getWorkSessions } from "@features/time-tracker/api/actions.ts";
+import { Box } from "@chakra-ui/react";
 
 function TimeTrackerFooter() {
     const dispatch = useDispatch()
@@ -39,11 +41,14 @@ function TimeTrackerFooter() {
     }
 
     return (
-        <PaginationFooter
-            pagination={pagination}
-            onPageSizeChange={handlePageSizeChange}
-            prevPage={prevPage}
-            nextPage={nextPage}/>
+        <Box bg="gray.50" rounded="md">
+            <CustomHorizontalDivider/>
+            <PaginationFooter
+                pagination={pagination}
+                onPageSizeChange={handlePageSizeChange}
+                prevPage={prevPage}
+                nextPage={nextPage}/>
+        </Box>
     );
 }
 

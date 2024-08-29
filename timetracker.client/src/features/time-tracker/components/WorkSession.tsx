@@ -37,7 +37,14 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
     }
 
     return (
-        <Box position="relative">
+        <Box
+            position="relative"
+            sx={{
+                "&:last-child > div": {
+                    borderRadius: "10px",
+                }
+            }}
+        >
             {editedAt &&
                 <StatusLabel label="Edited" icon={PiPencilSimple} borderColor="gray.200"/>
             }

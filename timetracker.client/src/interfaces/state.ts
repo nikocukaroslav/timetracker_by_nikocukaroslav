@@ -28,7 +28,7 @@ export interface TimeTrackerState {
     sessionId: string | null;
     isTracking: boolean;
     searchingLastSession: boolean;
-    timeStart: number | null;
+    startTime: number | null;
     pagination: PaginationModel;
     error: string | null;
 }

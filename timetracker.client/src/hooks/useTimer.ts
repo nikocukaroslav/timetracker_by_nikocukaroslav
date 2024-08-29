@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 export function useTimer() {
-    const { isTracking, timeStart } = useAppSelector(state => state.timeTracker);
+    const { isTracking, startTime } = useAppSelector(state => state.timeTracker);
     const [time, setTime] = useState(0);
 
     useEffect(() => {
         const calculateTime = () => {
-            if (timeStart) {
-                setTime(Math.floor((Date.now() - timeStart) / 1000));
+            if (startTime) {
+                setTime(Math.floor((Date.now() - startTime) / 1000));
             }
         }
         calculateTime();
@@ -17,7 +17,7 @@ export function useTimer() {
         window.addEventListener("focus", calculateTime);
 
         return () => window.removeEventListener("focus", calculateTime)
-    }, [timeStart])
+    }, [startTime])
 
     useEffect(() => {
         let timer: NodeJS.Timeout;

@@ -6,8 +6,8 @@ import CustomNavbarDivider from "@components/ui/CustomNavbarDivider.tsx";
 import PermissionChecker from "./PermissionChecker.tsx";
 
 import { APPROVE_REQUESTS, MANAGE_USERS } from "@constants";
-import { useTimer } from "@hooks/useTimer.ts";
 import { formatTime } from "@utils/formatters.ts";
+import { useTimer } from "@features/time-tracker/context/timerContext.tsx";
 
 function Navbar() {
     const { isActive, time } = useTimer();

@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
+
 import { formatTime } from "@utils/formatters.ts";
-import { useTimer } from "@hooks/useTimer.ts";
+import { useTimer } from "@features/time-tracker/context/timerContext.tsx";
 
 interface TimerProps {
     color?: string;

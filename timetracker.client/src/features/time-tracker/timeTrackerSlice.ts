@@ -13,7 +13,7 @@ const initialState: TimeTrackerState = {
         pageSize: Number(localStorage.getItem("trackerPageSize")) || 20,
     },
     error: null,
-    loading: true,
+    loading: false,
 }
 
 const timeTrackerSlice = createSlice({

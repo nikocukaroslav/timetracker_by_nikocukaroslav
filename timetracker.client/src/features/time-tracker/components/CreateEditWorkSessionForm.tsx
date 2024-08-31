@@ -21,12 +21,11 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
     const userId = useAppSelector((state) => state.authentication.user?.id);
     const error = useAppSelector((state) => state.timeTracker.error)
     const loading = useAppSelector((state) => state.timeTracker.loading)
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const dispatch = useDispatch();
     const toast = useToast();
-
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const initialValues = {
         startTime: formData?.startTime,
@@ -34,10 +33,9 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
     }
 
     async function handleAddUpdate(values) {
-        setIsSubmitting(true)
         const startTimeTimestamp = new Date(values.startTime).getTime();
         const endTimeTimestamp = new Date(values.endTime).getTime();
-
+        setIsSubmitting(true);
         if (!isEditing) {
             const newSession = {
                 startTime: startTimeTimestamp,
@@ -59,9 +57,10 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
     }
 
     useEffect(() => {
-        if (!isSubmitting)
+        if (!isSubmitting || loading || !isOpen)
             return
-        if (error && isOpen) {
+        setIsSubmitting(false)
+        if (error) {
             toast({
                 title: "An error occurred",
                 description: error,
@@ -71,10 +70,9 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
             });
             return;
         }
-
-        if (!error && !isSubmitting)
+        if (!error)
             onClose()
-    }, [error, isOpen, isSubmitting, onClose, toast]);
+    }, [error, isOpen, isSubmitting, loading, onClose, toast]);
 
     return (
         <ModalForm
@@ -84,7 +82,7 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
             onOpen={onOpen}
             onClose={onClose}
             onSubmit={handleAddUpdate}
-            submitBtnLoading={false}
+            submitBtnLoading={loading}
             submitBtnText={isEditing ? "Edit" : "Add"}
             triggerBtn={children}
             validationSchema={schemas.createEditWorkSessionFormSchema}

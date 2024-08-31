@@ -31,6 +31,7 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
 
     const error = useAppSelector((state) => state.employees.error);
     const loading = useAppSelector((state) => state.employees.loading);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const toast = useToast();
@@ -51,8 +52,8 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
         permissions: formData?.permissions,
     }
 
-    function handleSubmit(values, actions) {
-
+    function handleSubmit(values) {
+        setIsSubmitting(true);
         const { email, ...rest } = values;
         const data = isEditing ? rest : values;
 
@@ -65,7 +66,13 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
         (isEditing && !error)
             ? dispatch(updateUser(completeValues))
             : dispatch(createUser(completeValues));
+    }
 
+
+    useEffect(() => {
+        if (!isSubmitting || loading || !isOpen)
+            return
+        setIsSubmitting(false)
         if (error) {
             toast({
                 title: "An error occurred",
@@ -76,10 +83,9 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
             });
             return;
         }
-
-        actions.resetForm();
-        onClose();
-    }
+        if (!error)
+            onClose()
+    }, [error, isOpen, isSubmitting, loading, onClose, toast]);
 
     function handleChangePermissions(e: ChangeEvent<HTMLInputElement>, permission: string) {
         setPermissions(e.target.checked

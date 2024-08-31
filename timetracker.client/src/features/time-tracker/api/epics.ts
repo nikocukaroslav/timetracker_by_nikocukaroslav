@@ -122,6 +122,7 @@ export const createWorkSessionEpic: Epic<MyAction> = (action$) =>
 export const updateWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(UPDATE_WORK_SESSION),
+        tap(() => store.dispatch(setLoading(true))),
         tap(() => store.dispatch(setError(""))),
         switchMap(action =>
             graphQlQuery(updateSessionMutation, {
@@ -137,6 +138,7 @@ export const updateWorkSessionEpic: Epic<MyAction> = (action$) =>
                 catchError((error) =>
                     of(setError(error))
                 ),
+                tap(() => store.dispatch(setLoading(false))),
             )
         )
     );

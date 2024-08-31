@@ -3,6 +3,8 @@ import { PiTerminalWindowBold } from "react-icons/pi";
 
 export const BASE_URL = "https://localhost:7023/graphql";
 
+export const ERROR_DURATION = 3000;
+
 export const APPROVE_REQUESTS = "APPROVE_REQUESTS"
 export const MANAGE_USERS = "MANAGE_USERS"
 export const MANAGE_OWN_TIME = "MANAGE_OWN_TIME"

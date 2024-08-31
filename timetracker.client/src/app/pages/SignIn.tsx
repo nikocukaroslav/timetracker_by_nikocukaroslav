@@ -30,7 +30,7 @@ function SignIn() {
         setShowPassword(!showPassword);
     }
 
-    function handleLogin(values, actions) {
+    function handleLogin(values) {
         const { email, password } = {
             ...values,
         };

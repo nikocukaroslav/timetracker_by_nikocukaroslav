@@ -30,6 +30,7 @@ export interface TimeTrackerState {
     searchingLastSession: boolean;
     startTime: number | null;
     pagination: PaginationModel;
+    loading: boolean;
     error: string | null;
 }
 

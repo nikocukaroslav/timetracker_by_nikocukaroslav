@@ -13,6 +13,7 @@ const initialState: TimeTrackerState = {
         pageSize: Number(localStorage.getItem("trackerPageSize")) || 20,
     },
     error: null,
+    loading: true,
 }
 
 const timeTrackerSlice = createSlice({
@@ -78,6 +79,9 @@ const timeTrackerSlice = createSlice({
         },
         setError(state, action) {
             state.error = action.payload
+        },
+        setLoading(state, action) {
+            state.loading = action.payload
         }
     },
 })
@@ -94,7 +98,8 @@ export const {
     setStartTracking,
     setStopTracking,
     setSearchingLastSession,
-    setError
+    setError,
+    setLoading
 } = timeTrackerSlice.actions;
 
 export default timeTrackerSlice.reducer;

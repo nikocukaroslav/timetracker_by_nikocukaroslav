@@ -18,25 +18,22 @@ export const createUserEpic: Epic<MyAction> = (action$) =>
             graphQlQuery(createUserMutation, {
                     user: action.payload
                 }
+            ).pipe(
+                map(response => {
+                        if (!response.errors)
+                            return getUsers(
+                                {
+                                    page: store.getState().employees.pagination.page,
+                                    pageSize: store.getState().employees.pagination.pageSize
+                                },
+                                store.getState().employees.filter
+                            );
+                        return setError(response.errors[0].message)
+                    }
+                ),
+                catchError((error) => of(setError(error))),
+                tap(() => store.dispatch(setLoading(false))),
             )
-                .pipe(
-                    map(response => {
-                            if (!response.errors)
-                                return getUsers(
-                                    {
-                                        page: store.getState().employees.pagination.page,
-                                        pageSize: store.getState().employees.pagination.pageSize
-                                    },
-                                    store.getState().employees.filter
-                                );
-                            return setError(response.errors[0].message)
-                        }
-                    ),
-                    catchError((error) =>
-                        of(setError(error))
-                    ),
-                    tap(() => store.dispatch(setLoading(false))),
-                )
         )
     );
 
@@ -108,7 +105,7 @@ export const updateUserEpic: Epic<MyAction> = (action$) =>
                                     },
                                     store.getState().employees.filter
                                 );
-                            return response.errors.forEach((message: string) => console.log(message))
+                            return setError(response.errors[0].message)
                         }
                     ),
                     tap(() => store.dispatch(setLoading(false))),

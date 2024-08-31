@@ -9,6 +9,7 @@ import {
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
     setError,
+    setLoading,
     setSearchingLastSession,
     startSuccessful,
     stopSuccessful,
@@ -97,6 +98,7 @@ export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
 export const createWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(CREATE_WORK_SESSION),
+        tap(() => store.dispatch(setLoading(true))),
         tap(() => store.dispatch(setError(""))),
         switchMap(action =>
             graphQlQuery(createSessionMutation, {
@@ -112,6 +114,7 @@ export const createWorkSessionEpic: Epic<MyAction> = (action$) =>
                 catchError((error) =>
                     of(setError(error))
                 ),
+                tap(() => store.dispatch(setLoading(false))),
             )
         )
     );

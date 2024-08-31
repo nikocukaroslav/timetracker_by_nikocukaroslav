@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import { PiTimer } from "react-icons/pi";
-import { useDisclosure, useToast } from "@chakra-ui/react";
 
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
@@ -9,6 +8,9 @@ import { createWorkSession, updateWorkSession } from "@features/time-tracker/api
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditWorkSessionFormProps } from "@interfaces/components.ts";
 import { schemas } from "@utils/inputHelpers.ts";
+import { useDisclosure, useToast } from "@chakra-ui/react";
+import { ERROR_DURATION } from "@constants";
+import { useEffect, useState } from "react";
 
 const defaultFormData = {
     startTime: "",
@@ -18,28 +20,21 @@ const defaultFormData = {
 function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEditWorkSessionFormProps) {
     const userId = useAppSelector((state) => state.authentication.user?.id);
     const error = useAppSelector((state) => state.timeTracker.error)
+    const loading = useAppSelector((state) => state.timeTracker.loading)
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const dispatch = useDispatch();
     const toast = useToast();
+
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const initialValues = {
         startTime: formData?.startTime,
         endTime: formData?.endTime,
     }
 
-    function handleAddUpdate(values) {
-        if (error) {
-            toast({
-                title: "An error occurred",
-                description: error,
-                status: "error",
-                duration: 15000,
-                isClosable: true,
-            });
-            return;
-        }
-
+    async function handleAddUpdate(values) {
+        setIsSubmitting(true)
         const startTimeTimestamp = new Date(values.startTime).getTime();
         const endTimeTimestamp = new Date(values.endTime).getTime();
 
@@ -58,11 +53,28 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
                 editedAt: new Date().getTime(),
                 editorId: userId,
             };
-
-            dispatch(updateWorkSession(newSessionData))
+            dispatch(updateWorkSession(newSessionData));
         }
-        onClose();
+
     }
+
+    useEffect(() => {
+        if (!isSubmitting)
+            return
+        if (error && isOpen) {
+            toast({
+                title: "An error occurred",
+                description: error,
+                status: "error",
+                duration: ERROR_DURATION,
+                isClosable: true,
+            });
+            return;
+        }
+
+        if (!error && !isSubmitting)
+            onClose()
+    }, [error, isOpen, isSubmitting, onClose, toast]);
 
     return (
         <ModalForm

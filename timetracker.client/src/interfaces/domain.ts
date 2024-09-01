@@ -3,7 +3,7 @@ export interface UserModel {
     name?: string,
     surname?: string,
     email?: string,
-    position?: string,
+    role?: RoleModel,
     permissions?: string[],
     password?: string,
     timeload?: string,
@@ -23,7 +23,7 @@ export interface PaginationModel {
 export interface UserFilterModel {
     isEmployed?: boolean | null,
     statusList?: string[] | null,
-    positionList?: string[] | null,
+    roleList?: string[] | null,
 }
 
 export interface WorkSessionModel {
@@ -42,4 +42,10 @@ export interface WorkDayModel {
     startTime?: string,
     endTime?: string,
     userId?: string,
+}
+
+export interface RoleModel {
+    id: string,
+    name: string,
+    defaultPermissions?: string[],
 }

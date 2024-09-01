@@ -76,7 +76,10 @@ query GetWorkSessions($id: Guid, $pagination: PaginationRequestType) {
           name
           surname
           email
-          position
+          role {
+            id
+            name
+          }
         }
       }
       totalCount

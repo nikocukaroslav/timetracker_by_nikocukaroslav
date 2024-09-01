@@ -47,7 +47,7 @@ namespace timetracker.Server.API.User
                         Surname = userInput.Surname,
                         Email = userInput.Email,
                         Timeload = userInput.Timeload.ToTimeSpan(),
-                        Position = userInput.Position,
+                        RoleId = userInput.RoleId,
                         IsEmployed = true,
                         Permissions = string.Join(",", userInput.Permissions)
                     };
@@ -80,7 +80,7 @@ namespace timetracker.Server.API.User
 
                      user.Name = updateInput.Name ?? user.Name;
                      user.Surname = updateInput.Surname ?? user.Surname;
-                     user.Position = updateInput.Position ?? user.Position;
+                     user.RoleId = updateInput.RoleId ?? user.RoleId;
                      user.Timeload = updateInput.Timeload?.ToTimeSpan() ?? user.Timeload;
                      user.Status = updateInput.Status ?? user.Status;
                      user.IsEmployed = updateInput.IsEmployed ?? user.IsEmployed;

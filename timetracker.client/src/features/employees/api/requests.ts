@@ -6,11 +6,14 @@ mutation CreateUser($user: CreateUserRequestType) {
       name
       surname
       email
-      position
       status
       timeload
       permissions
       isEmployed
+      role {
+        id
+        name
+      }
     }
   }
 }
@@ -25,7 +28,10 @@ query GetUsers($pagination: PaginationRequestType, $filter: FilterUsersRequestTy
         name
         surname
         email
-        position
+        role {
+          id
+          name
+        }
         status
         timeload
         permissions
@@ -63,7 +69,10 @@ query GetUser($id: Guid!) {
       name
       surname
       email
-      position
+      role {
+        id
+        name
+      }
       status
       timeload
       permissions
@@ -89,7 +98,10 @@ mutation UpdateUser($user: UpdateUserRequestType) {
       name
       surname
       email
-      position
+      role {
+        id
+        name
+      }
       status
       timeload
       permissions

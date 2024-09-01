@@ -5,5 +5,6 @@
         MANAGE_USERS,
         APPROVE_REQUESTS,
         MANAGE_OWN_TIME,
+        MANAGE_ROLES
     }
 }

@@ -1,6 +1,3 @@
-import { GrMoney, GrUserManager, GrUserSettings } from "react-icons/gr";
-import { PiTerminalWindowBold } from "react-icons/pi";
-
 export const BASE_URL = "https://localhost:7023/graphql";
 
 export const ERROR_DURATION = 3000;
@@ -8,6 +5,7 @@ export const ERROR_DURATION = 3000;
 export const APPROVE_REQUESTS = "APPROVE_REQUESTS"
 export const MANAGE_USERS = "MANAGE_USERS"
 export const MANAGE_OWN_TIME = "MANAGE_OWN_TIME"
+export const MANAGE_ROLES = "MANAGE_ROLES"
 
 export const permissionList = [
     {
@@ -21,39 +19,11 @@ export const permissionList = [
     {
         name: MANAGE_OWN_TIME,
         description: "manage own time"
+    },
+    {
+        name: MANAGE_ROLES,
+        description: "manage roles",
     }
-];
-
-export const DEVELOPER = "DEVELOPER"
-export const MANAGER = "MANAGER"
-export const ACCOUNTANT = "ACCOUNTANT"
-export const ACCOUNT_MANAGER = "ACCOUNT_MANAGER"
-
-export const positionList = [
-    {
-        name: DEVELOPER,
-        icon: PiTerminalWindowBold,
-        description: "Developer",
-        defaultPermissions: [MANAGE_OWN_TIME]
-    },
-    {
-        name: MANAGER,
-        icon: GrUserManager,
-        description: "Manager",
-        defaultPermissions: [MANAGE_USERS]
-    },
-    {
-        name: ACCOUNTANT,
-        icon: GrMoney,
-        description: "Accountant",
-        defaultPermissions: [APPROVE_REQUESTS]
-    },
-    {
-        name: ACCOUNT_MANAGER,
-        icon: GrUserSettings,
-        description: "Account manager",
-        defaultPermissions: [APPROVE_REQUESTS, MANAGE_USERS]
-    },
 ];
 
 export const ON_SICK_LEAVE = "ON_SICK_LEAVE"
@@ -125,6 +95,8 @@ export const UPDATE_USER = "UPDATE_USER"
 export const CREATE_USER_PASSWORD = "CREATE_USER_PASSWORD"
 export const TEMPORARY_LINK_VALIDATION = "TEMPORARY_LINK_VALIDATION"
 export const RESEND_CREATE_PASSWORD_EMAIL = "RESEND_CREATE_PASSWORD_EMAIL"
+
+export const GET_ROLES = "GET_ROLES"
 
 export const START_SESSION = "START_SESSION"
 export const STOP_SESSION = "STOP_SESSION"

@@ -2,35 +2,36 @@ import { useDispatch } from "react-redux";
 import { Stack, Text, useDisclosure } from "@chakra-ui/react";
 
 import FilterDrawer from "@components/ui/FilterDrawer.tsx";
+import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
 
 import { FilterFormProps } from "@interfaces/components.ts";
-import { positionList, userStatusList } from "@constants";
+import {  userStatusList } from "@constants";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { getUsers } from "@features/employees/api/actions.ts";
-import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
 
 function UserFilter({ children }: FilterFormProps) {
     const filter = useAppSelector((state) => state.employees.filter);
     const pagination = useAppSelector(state => state.employees.pagination);
+    const roles = useAppSelector(state => state.roles.roles);
 
-    const defaultFilterData: { filterIsEmployed: string, filterStatusList: string[], filterPositionList: string[] } = {
+    const defaultFilterData: { filterIsEmployed: string, filterStatusList: string[], filterRoleList: string[] } = {
         filterIsEmployed: "",
         filterStatusList: [],
-        filterPositionList: [],
+        filterRoleList: [],
     };
 
     const filterData = {
         filterIsEmployed: filter?.isEmployed != null ? String(filter.isEmployed) : "",
         filterStatusList: filter?.statusList || [],
-        filterPositionList: filter?.positionList || [],
+        filterRoleList: filter?.roleList || [],
     };
 
     const {
         data,
         setData
     } = useForm<typeof defaultFilterData, typeof filterData>(defaultFilterData, filterData);
-    const { filterIsEmployed, filterStatusList, filterPositionList } = data;
+    const { filterIsEmployed, filterStatusList, filterRoleList } = data;
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -38,13 +39,13 @@ function UserFilter({ children }: FilterFormProps) {
 
     function handleRequest() {
         const paginationRequest = { page: 1, pageSize: pagination.pageSize };
-        const currentPosition = filterPositionList.length ? filterPositionList : null;
+        const currentPosition = filterRoleList.length ? filterRoleList : null;
         const currentStatus = filterStatusList.length ? filterStatusList : null;
         const currentIsEmployed = filterIsEmployed === "" ? null : filterIsEmployed === "true";
 
         const filter = {
             isEmployed: currentIsEmployed,
-            positionList: currentPosition,
+            roleList: currentPosition,
             statusList: currentStatus,
         };
         const isFilterEmpty = Object.values(filter).every((value) => value === null);
@@ -74,12 +75,12 @@ function UserFilter({ children }: FilterFormProps) {
                 <Stack gap="1">
                     <Text fontWeight="500">Position</Text>
                     <Stack>
-                        {positionList.map((pos) => (
+                        {roles.map((role) => (
                             <CustomCheckbox
-                                label={pos.description}
-                                key={pos.name}
-                                isChecked={filterPositionList.includes(pos.name)}
-                                onChange={() => handleCheckboxChange(filterPositionList, pos.name, "filterPositionList")}
+                                label={role.name}
+                                key={role.id}
+                                isChecked={filterRoleList.includes(role.id)}
+                                onChange={() => handleCheckboxChange(filterRoleList, role.id, "filterRoleList")}
                             />
                         ))}
                     </Stack>

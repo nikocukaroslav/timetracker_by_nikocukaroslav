@@ -31,7 +31,7 @@ const CustomSelect = ({ label, name, icon, options, onChange, ...props }: Custom
                     field.onChange(e)
                     onChange && onChange(e)
                 }}>
-                {options.map(option => (
+                {options?.map(option => (
                     <option key={option.name} value={option.name}>
                         {option.description}
                     </option>

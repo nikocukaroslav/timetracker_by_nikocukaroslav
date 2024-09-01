@@ -32,11 +32,15 @@ import {
     getWorkDaysEpic,
     updateWorkDayEpic
 } from "@features/calendar/api/epics.ts";
+import {
+    getRolesEpic
+} from "@features/roles/api/epics.ts";
 
 import authenticationReducer from "./features/authentication/authenticationSlice.ts";
 import employeesReducer from "./features/employees/employeesSlice.ts";
 import timeTrackerReducer from "./features/time-tracker/timeTrackerSlice.ts";
 import calendarReducer from "./features/calendar/calendarSlice.ts";
+import rolesReducer from "./features/roles/rolesSlice.ts";
 
 const epics = [
     loginEpic,
@@ -61,7 +65,8 @@ const epics = [
     getWorkDaysEpic,
     createWorkDaysEpic,
     updateWorkDayEpic,
-    deleteWorkDayEpic
+    deleteWorkDayEpic,
+    getRolesEpic
 ]
 
 const epicMiddleware = createEpicMiddleware();
@@ -70,7 +75,8 @@ const appReducer = combineReducers({
     authentication: authenticationReducer,
     employees: employeesReducer,
     timeTracker: timeTrackerReducer,
-    calendar: calendarReducer
+    calendar: calendarReducer,
+    roles: rolesReducer
 });
 
 const rootReducer = (state, action) => {

@@ -8,7 +8,7 @@ namespace timetracker.Server.API.User.Types
         {
             Field<BooleanGraphType>("isEmployed");
             Field<ListGraphType<StringGraphType>>("statusList");
-            Field<ListGraphType<StringGraphType>>("positionList");
+            Field<ListGraphType<GuidGraphType>>("roleList");
         }
     }
 }

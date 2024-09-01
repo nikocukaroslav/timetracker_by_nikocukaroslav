@@ -5,7 +5,7 @@ import NavigationLink from "@components/ui/NavigationLink.tsx";
 import CustomNavbarDivider from "@components/ui/CustomNavbarDivider.tsx";
 import PermissionChecker from "./PermissionChecker.tsx";
 
-import { APPROVE_REQUESTS, MANAGE_USERS } from "@constants";
+import { APPROVE_REQUESTS, MANAGE_ROLES, MANAGE_USERS } from "@constants";
 import { formatTime } from "@utils/formatters.ts";
 import { useTimer } from "@features/time-tracker/context/timerContext.tsx";
 
@@ -64,11 +64,13 @@ function Navbar() {
                         label="Approves"
                     />
                 </PermissionChecker>
-                <NavigationLink
-                    to="positions"
-                    icon={PiUserGear}
-                    label="Positions"
-                />
+                <PermissionChecker permissions={[MANAGE_ROLES]}>
+                    <NavigationLink
+                        to="positions"
+                        icon={PiUserGear}
+                        label="Positions"
+                    />
+                </PermissionChecker>
                 <CustomNavbarDivider label="Request"/>
                 <NavigationLink
                     to="requests"

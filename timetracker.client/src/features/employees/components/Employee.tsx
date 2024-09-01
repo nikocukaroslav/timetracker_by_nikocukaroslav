@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { PiCaretDown, PiClockUser, PiUserMinus, PiUserSwitch } from "react-icons/pi";
+import { PiCaretDown, PiClockUser, PiToolbox, PiUserMinus, PiUserSwitch } from "react-icons/pi";
 import {
     Button,
     Divider,
@@ -10,7 +10,7 @@ import {
     Menu,
     MenuButton,
     MenuItem,
-    MenuList,
+    MenuList, Portal,
     Show,
     Spacer,
     Text,
@@ -20,25 +20,21 @@ import {
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuExpandedBtn } from "@components/ui/action-menu";
 import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 import StatusLabel from "@components/ui/StatusLabel.tsx";
 import TitledText from "@components/ui/TitledText.tsx";
 
 import { deleteUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
-import { permissionList, positionList } from "@constants";
+import { permissionList } from "@constants";
 import { UserModel } from "@interfaces/domain.ts";
 import { convertTime } from "@utils/formatters.ts";
-import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function Employee({ employee }: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
 
-    const { id, name, surname, email, position, permissions, timeload, isEmployed } = employee;
-    const {
-        description: positionName,
-        icon: positionIcon
-    } = positionList.find(pos => pos.name === position) || {};
+    const { id, name, surname, email, role, permissions, timeload, isEmployed } = employee;
     const itsYou = id === userId;
 
     const dispatch = useDispatch();
@@ -55,7 +51,7 @@ function Employee({ employee }: EmployeeProps) {
     const fullName = `${name} ${surname} ${itsYou ? "(you)" : ""}`;
     const timeloadString = timeload ? convertTime(timeload, "hh:mm") : "";
 
-    const positionTitle = useBreakpointValue({ base: positionName, xl: "" });
+    const roleTitle = useBreakpointValue({ base: role?.name, xl: "" });
     const timeloadTitle = useBreakpointValue({ base: timeloadString, lg: "" });
 
     return (
@@ -90,28 +86,34 @@ function Employee({ employee }: EmployeeProps) {
                             <CustomVerticalDivider/>
                             <Flex py="2" w={{ xl: 32, base: 8 }} justifyContent={{ xl: "flex-start", base: "center" }}
                                   gap="2" align="center" lineHeight="1.1">
-                                <Icon boxSize={6} as={positionIcon} title={positionTitle}/>
+                                <Icon boxSize={6} as={PiToolbox } title={roleTitle}/>
                                 <Show above="xl">
-                                    <Text>{positionName}</Text>
+                                    <Text>{role?.name}</Text>
                                 </Show>
                             </Flex>
                             <CustomVerticalDivider/>
-                            <Menu variant="ghost">
-                                <MenuButton bg="gray.200" fontWeight="normal" as={Button} rightIcon={<PiCaretDown/>}>
+
+                            <Menu variant="ghost" isLazy={true}>
+
+                                <MenuButton bg="gray.200" fontWeight="normal" as={Button}
+                                            rightIcon={<PiCaretDown/>}>
                                     Permissions
                                 </MenuButton>
-                                <MenuList>
-                                    {
-                                        permissions && permissions.length > 0 ?
-                                            permissionList
-                                                .filter(permission => permissions?.includes(permission.name))
-                                                .map((permission, index) => (
-                                                    <MenuItem key={index}>{permission.description}</MenuItem>
-                                                )) :
-                                            <MenuItem>No permissions</MenuItem>
-                                    }
-                                </MenuList>
+                                <Portal>
+                                    <MenuList>
+                                        {
+                                            permissions && permissions.length > 0 ?
+                                                permissionList
+                                                    .filter(permission => permissions?.includes(permission.name))
+                                                    .map((permission, index) => (
+                                                        <MenuItem key={index}>{permission.description}</MenuItem>
+                                                    )) :
+                                                <MenuItem>No permissions</MenuItem>
+                                        }
+                                    </MenuList>
+                                </Portal>
                             </Menu>
+
                             <CustomVerticalDivider/>
                             <Flex
                                 align="center"

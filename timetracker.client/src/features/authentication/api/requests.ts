@@ -5,7 +5,10 @@ mutation Login($email: String!, $password: String!) {
       user {
         id
         name
-        position
+        role {
+          id
+          name
+        }
         permissions
       }
       accessToken {
@@ -28,7 +31,10 @@ mutation Authorize($refreshToken: String!) {
       user {
         id
         name
-        position
+        role {
+          id
+          name
+        }
         permissions
       }
       accessToken {
@@ -75,7 +81,7 @@ mutation CreatePassword($password: String!, $temporaryLinkId: Guid!) {
 
 export const temporaryLinkValidationQuery = `
 query TemporaryLinkValidity($temporaryLinkId: Guid!) {
-  authQuery {
+  auth {
     temporaryLinkValidity(id: $temporaryLinkId)
   }
 }

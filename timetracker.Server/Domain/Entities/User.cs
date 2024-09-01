@@ -9,9 +9,9 @@ namespace timetracker.Server.Domain.Entities
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
-        public string Salt { get; set; }
-        public string Position { get; set; }
+        public string? Password { get; set; }
+        public string? Salt { get; set; }
+        public Guid RoleId { get; set; }
         public string Permissions { get; set; }
         public string? RefreshTokenHash { get; set; }
         public TimeSpan Timeload { get; set; }

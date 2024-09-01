@@ -6,7 +6,7 @@
         public string Surname { get; set; }
         public string Email { get; set; }
         public TimeOnly Timeload { get; set; }
-        public string Position { get; set; }
+        public Guid RoleId { get; set; }
         public List<string> Permissions { get; set; }
     }
 }

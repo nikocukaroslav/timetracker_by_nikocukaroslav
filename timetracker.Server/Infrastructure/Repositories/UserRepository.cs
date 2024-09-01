@@ -22,7 +22,7 @@ namespace timetracker.Server.Infrastructure.Repositories
             var sqlQuery = new QueryBuilder()
                 .AddFilter("IsEmployed", filter?.IsEmployed)
                 .AddFilter("Status", filter?.StatusList)
-                .AddFilter("Position", filter?.PositionList)
+                .AddFilter("RoleId", filter?.RoleList)
                 .AddSort(
                     sort?.SortBy ?? "Name",
                     sort?.Ascending ?? true
@@ -106,23 +106,6 @@ namespace timetracker.Server.Infrastructure.Repositories
 
             return new PaginatedList<WorkSession>(workSessions.ToList(), totalCount, pagination);
         }
-
-        /*public async Task<PaginatedList<WorkSession>> GetPaginatedWorkSessionsByUserIdAsync(Guid id, Pagination pagination)
-        {
-            using var connection = _connectionFactory.Create();
-
-            var sqlQuery = new QueryBuilder()
-                .AddFilter("UserId", id)
-                .AddSort("StartTime", false)
-                .AddPagination(pagination)
-                .Create("SELECT * FROM WorkSessions");
-
-            var totalCount = await connection.ExecuteScalarAsync<int>(sqlQuery.TotalCountQuery, sqlQuery.Parameters);
-
-            var workSessions = await connection.QueryAsync<WorkSession>(sqlQuery.Query, sqlQuery.Parameters);
-
-            return new PaginatedList<WorkSession>(workSessions.ToList(), totalCount, pagination);
-        }*/
 
         public async Task<List<WorkDay>> GetWorkDaysByUserIdAsync(WorkDaysRequest workDaysRequest)
         {

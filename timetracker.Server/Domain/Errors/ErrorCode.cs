@@ -12,6 +12,8 @@ namespace timetracker.Server.Domain.Errors
 
         public static readonly ValidationError USER_NOT_FOUND = new Error("User is not found");
 
+        public static readonly ValidationError ROLE_NOT_FOUND = new Error("Role is not found");
+
         public static readonly ValidationError WORK_SESSION_NOT_FOUND = new Error("Work session is not found");
 
         public static readonly ValidationError WORK_SESSION_ALREADY_STOPPED = new Error("Work session is already stopped");

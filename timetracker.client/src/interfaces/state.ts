@@ -1,4 +1,4 @@
-import { PaginationModel, UserFilterModel, UserModel, WorkSessionModel } from "./domain.ts";
+import { PaginationModel, RoleModel, UserFilterModel, UserModel, WorkSessionModel } from "./domain.ts";
 import { CalendarState } from "@features/calendar/types/state.ts";
 
 export interface EmployeesState {
@@ -8,6 +8,10 @@ export interface EmployeesState {
     users: UserModel[];
     pagination: PaginationModel;
     filter: UserFilterModel | null;
+}
+
+export interface RolesState {
+    roles: RoleModel[];
 }
 
 export interface AuthenticationState {
@@ -39,4 +43,5 @@ export interface State {
     authentication: AuthenticationState;
     timeTracker: TimeTrackerState;
     calendar: CalendarState;
+    roles: RolesState
 }

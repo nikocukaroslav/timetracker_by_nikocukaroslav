@@ -13,7 +13,7 @@ export const schemas = {
             .matches(regx.name, "Surname must be longer than 2 and shorter than 20 symbols")
             .required("Surname is required"),
         email: Yup.string().email("Invalid email format").required("Email is required"),
-        position: Yup.string().required("Position is required"),
+        role: Yup.string().required("Position is required"),
         timeload: Yup.string().required("Timeload is required"),
     }),
     createEditWorkDayFormSchema: Yup.object().shape({

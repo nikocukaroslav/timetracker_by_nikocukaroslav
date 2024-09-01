@@ -5,65 +5,73 @@ import { FormLabel, List, Text, useDisclosure, useToast, } from "@chakra-ui/reac
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
+import CustomSelect from "@components/ui/CustomSelect.tsx";
+import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
 
 import { createUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
-import { ERROR_DURATION, permissionList, positionList, workTime } from "@constants";
+import { ERROR_DURATION, permissionList, workTime } from "@constants";
 import { convertTime } from "@utils/formatters.ts";
 import { schemas } from "@utils/inputHelpers.ts";
-import CustomSelect from "@components/ui/CustomSelect.tsx";
-import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
-
-const defaultFormData = {
-    name: "",
-    surname: "",
-    email: "",
-    position: positionList[0].name,
-    permissions: positionList[0].defaultPermissions,
-    timeload: "08:00"
-}
 
 function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMemberFormProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [permissions, setPermissions] = useState(formData?.permissions || [])
-
     const error = useAppSelector((state) => state.employees.error);
     const loading = useAppSelector((state) => state.employees.loading);
+    const roles = useAppSelector((state) => state.roles.roles);
+    const roleOptions = roles?.map(role => ({
+        name: role.id,
+        description: role.name
+    }));
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const toast = useToast();
 
     useEffect(() => {
-        const defaultPermissions = positionList.find(({ name }) => name === "DEVELOPER")?.defaultPermissions || [];
-        setPermissions(defaultPermissions);
+        if (!formData?.permissions) {
+            const defaultPermissions = roles[0]?.defaultPermissions || [];
+            setPermissions(defaultPermissions);
+        }
         return;
-    }, [formData?.permissions, isOpen])
+    }, [formData?.permissions, isOpen, roles])
+
+    const defaultFormData = {
+        name: "",
+        surname: "",
+        email: "",
+        role: roles[0]?.id,
+        permissions: roles[0]?.defaultPermissions || [],
+        timeload: "08:00"
+    }
 
     const initialValues = {
         id: formData?.id,
         name: formData?.name,
         email: formData?.email,
         surname: formData?.surname,
-        position: formData?.position,
+        role: formData?.role?.id,
         timeload: formData?.timeload,
         permissions: formData?.permissions,
     }
 
     function handleSubmit(values) {
         setIsSubmitting(true);
-        const { email, ...rest } = values;
-        const data = isEditing ? rest : values;
+
+        const { role, email, ...rest } = values;
+        const data = isEditing ? rest : { ...rest, email };
 
         const completeValues = {
             ...data,
             timeload: convertTime(values.timeload),
             permissions: permissions,
+            roleId: role
         };
 
-        (isEditing && !error)
+        isEditing
             ? dispatch(updateUser(completeValues))
             : dispatch(createUser(completeValues));
     }
@@ -93,9 +101,9 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
             : permissions?.filter((perm) => perm !== permission));
     }
 
-    function handleChangePosition(e: ChangeEvent<HTMLSelectElement>) {
-        const position = e.target.value;
-        const defaultPermissions = positionList.find(({ name }) => name === position)?.defaultPermissions || [];
+    function handleChangeRole(e: ChangeEvent<HTMLInputElement>) {
+        const roleId = e.target.value;
+        const defaultPermissions = roles?.find(({ id }) => id === roleId)?.defaultPermissions || [];
 
         setPermissions(defaultPermissions);
     }
@@ -136,10 +144,10 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
                 isDisabled={isEditing}
             />
             <CustomSelect
-                label="Position"
-                name="position"
-                options={positionList}
-                onChange={handleChangePosition}
+                label="Role"
+                name="role"
+                options={roleOptions}
+                onChange={handleChangeRole}
             />
             <CustomSelect
                 label="Work Time"

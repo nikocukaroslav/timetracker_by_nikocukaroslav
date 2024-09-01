@@ -22,9 +22,8 @@ namespace timetracker.Server.Infrastructure
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IWorkSessionRepository, WorkSessionRepository>();
             services.AddSingleton<IWorkDayRepository, WorkDayRepository>();
-            services.AddSingleton<IRepository<WorkSession>, Repository<WorkSession>>();
-            services.AddSingleton<IRepository<WorkDay>, Repository<WorkDay>>();
             services.AddSingleton<ITemporaryLinkRepository, TemporaryLinkRepository>();
+            services.AddSingleton<IRoleRepository, RoleRepository>();
 
             services.AddAuth(configuration);
 

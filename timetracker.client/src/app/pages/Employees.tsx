@@ -4,8 +4,15 @@ import EmployeesList from "@features/employees/components/EmployeesList.tsx";
 import EmployeesFooter from "@features/employees/components/EmployeesFooter.tsx";
 import EmployeesHeader from "@features/employees/components/EmployeesHeader.tsx";
 import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
+import { useEffect } from "react";
+import { getRoles } from "@features/roles/api/actions.ts";
+import { useDispatch } from "react-redux";
 
 function Employees() {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(getRoles());
+    }, [dispatch]);
     return (
         <>
             <Grid

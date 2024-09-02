@@ -12,7 +12,6 @@ function EmployeesList() {
         <List
             display="flex"
             flexDirection="column"
-            overflowX="hidden"
         >
             {
                 employees.map((employee: UserModel) =>

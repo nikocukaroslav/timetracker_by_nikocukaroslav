@@ -13,7 +13,7 @@ function AppLayout() {
                 <GridItem>
                     <Navbar/>
                 </GridItem>
-                <GridItem as={Flex} flexDirection="column" position="relative" overflowY="auto" p={4}>
+                <GridItem as={Flex} flexDirection="column" position="relative" p={4}>
                     <Outlet/>
                 </GridItem>
             </Grid>

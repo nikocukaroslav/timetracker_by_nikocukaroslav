@@ -12,6 +12,7 @@ export interface EmployeesState {
 
 export interface RolesState {
     roles: RoleModel[];
+    loading: boolean;
 }
 
 export interface AuthenticationState {

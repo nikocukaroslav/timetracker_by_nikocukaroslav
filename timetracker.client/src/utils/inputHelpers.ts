@@ -1,19 +1,19 @@
 import * as Yup from "yup";
 
 const regx = {
-    name: /^[A-Za-zа-яА-Я]{2,20}/,
+    name: /^[A-Za-zа-яА-Я]{2}/,
 }
 
 export const schemas = {
     createEditMemberFormSchema: Yup.object().shape({
         name: Yup.string()
-            .matches(regx.name, "Name must be longer than 2 and shorter than 20 symbols")
+            .matches(regx.name, "Name must be longer than 2 symbols")
             .required("Name is required"),
         surname: Yup.string()
-            .matches(regx.name, "Surname must be longer than 2 and shorter than 20 symbols")
+            .matches(regx.name, "Surname must be longer than 2 symbols")
             .required("Surname is required"),
         email: Yup.string().email("Invalid email format").required("Email is required"),
-        role: Yup.string().required("Position is required"),
+        role: Yup.string().required("Role is required"),
         timeload: Yup.string().required("Timeload is required"),
     }),
     createEditWorkDayFormSchema: Yup.object().shape({
@@ -42,6 +42,11 @@ export const schemas = {
                 const duration = (new Date(value) - new Date(startTime)) / (1000 * 60 * 60);
                 return duration < 24;
             }),
+    }),
+    createEditRoleFormSchema: Yup.object().shape({
+        name: Yup.string()
+            .matches(regx.name, "Role name must be longer than 2 symbols")
+            .required("Name is required"),
     }),
     signInSchema: Yup.object().shape({
         email: Yup.string().required("Login is required"),

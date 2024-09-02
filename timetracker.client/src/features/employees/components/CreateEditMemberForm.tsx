@@ -1,19 +1,19 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiUser } from "react-icons/pi";
-import { FormLabel, List, Text, useDisclosure, useToast, } from "@chakra-ui/react";
+import { useDisclosure, useToast, } from "@chakra-ui/react";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomSelect from "@components/ui/CustomSelect.tsx";
-import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
 
 import { createUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
-import { ERROR_DURATION, permissionList, workTime } from "@constants";
+import { ERROR_DURATION, workTime } from "@constants";
 import { convertTime } from "@utils/formatters.ts";
 import { schemas } from "@utils/inputHelpers.ts";
+import ChoosablePermissionList from "@features/employees/components/ChoosablePermissionList.tsx";
 
 function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMemberFormProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -75,7 +75,6 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
             ? dispatch(updateUser(completeValues))
             : dispatch(createUser(completeValues));
     }
-
 
     useEffect(() => {
         if (!isSubmitting || loading || !isOpen)
@@ -154,28 +153,7 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
                 name="timeload"
                 options={workTimeList}
             />
-            <FormLabel m="0">
-                <Text>Permissions</Text>
-            </FormLabel>
-            <List
-                flexWrap="wrap"
-                display="flex"
-                gap="4"
-                lineHeight="1"
-                borderWidth="1px"
-                p="3"
-                rounded="md"
-            >
-                {permissionList.map((permission) => (
-                    <CustomCheckbox
-                        key={permission.name}
-                        label={permission.description}
-                        value={permission.name}
-                        onChange={(e) => handleChangePermissions(e, permission.name)}
-                        isChecked={permissions?.includes(permission.name)}
-                    />
-                ))}
-            </List>
+            <ChoosablePermissionList handleChangePermissions={handleChangePermissions} permissions={permissions}/>
         </ModalForm>
     );
 }

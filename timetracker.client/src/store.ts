@@ -32,9 +32,7 @@ import {
     getWorkDaysEpic,
     updateWorkDayEpic
 } from "@features/calendar/api/epics.ts";
-import {
-    getRolesEpic
-} from "@features/roles/api/epics.ts";
+import { createRoleEpic, deleteRoleEpic, getRolesEpic } from "@features/roles/api/epics.ts";
 
 import authenticationReducer from "./features/authentication/authenticationSlice.ts";
 import employeesReducer from "./features/employees/employeesSlice.ts";
@@ -66,7 +64,9 @@ const epics = [
     createWorkDaysEpic,
     updateWorkDayEpic,
     deleteWorkDayEpic,
-    getRolesEpic
+    getRolesEpic,
+    deleteRoleEpic,
+    createRoleEpic
 ]
 
 const epicMiddleware = createEpicMiddleware();

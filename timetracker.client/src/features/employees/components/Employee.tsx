@@ -1,21 +1,6 @@
 import { useDispatch } from "react-redux";
-import { PiCaretDown, PiClockUser, PiToolbox, PiUserMinus, PiUserSwitch } from "react-icons/pi";
-import {
-    Button,
-    Divider,
-    Flex,
-    Icon,
-    Img,
-    ListItem,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList, Portal,
-    Show,
-    Spacer,
-    Text,
-    useBreakpointValue
-} from "@chakra-ui/react";
+import { PiClockUser, PiToolbox, PiUserMinus, PiUserSwitch } from "react-icons/pi";
+import { Divider, Flex, Icon, Img, ListItem, Show, Spacer, Text, useBreakpointValue } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuExpandedBtn } from "@components/ui/action-menu";
@@ -27,9 +12,9 @@ import TitledText from "@components/ui/TitledText.tsx";
 import { deleteUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
-import { permissionList } from "@constants";
 import { UserModel } from "@interfaces/domain.ts";
 import { convertTime } from "@utils/formatters.ts";
+import PermissionsList from "@features/employees/components/PermissionsList.tsx";
 
 function Employee({ employee }: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
@@ -86,34 +71,13 @@ function Employee({ employee }: EmployeeProps) {
                             <CustomVerticalDivider/>
                             <Flex py="2" w={{ xl: 32, base: 8 }} justifyContent={{ xl: "flex-start", base: "center" }}
                                   gap="2" align="center" lineHeight="1.1">
-                                <Icon boxSize={6} as={PiToolbox } title={roleTitle}/>
+                                <Icon boxSize={6} as={PiToolbox} title={roleTitle}/>
                                 <Show above="xl">
                                     <Text>{role?.name}</Text>
                                 </Show>
                             </Flex>
                             <CustomVerticalDivider/>
-
-                            <Menu variant="ghost" isLazy={true}>
-
-                                <MenuButton bg="gray.200" fontWeight="normal" as={Button}
-                                            rightIcon={<PiCaretDown/>}>
-                                    Permissions
-                                </MenuButton>
-                                <Portal>
-                                    <MenuList>
-                                        {
-                                            permissions && permissions.length > 0 ?
-                                                permissionList
-                                                    .filter(permission => permissions?.includes(permission.name))
-                                                    .map((permission, index) => (
-                                                        <MenuItem key={index}>{permission.description}</MenuItem>
-                                                    )) :
-                                                <MenuItem>No permissions</MenuItem>
-                                        }
-                                    </MenuList>
-                                </Portal>
-                            </Menu>
-
+                            <PermissionsList value={permissions}/>
                             <CustomVerticalDivider/>
                             <Flex
                                 align="center"

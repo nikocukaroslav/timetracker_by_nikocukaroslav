@@ -1,8 +1,5 @@
-import {
-    getUsersSuccessful,
-    getUserSuccessful,
-} from "@features/employees/employeesSlice.ts";
-import { UserFilterModel, UserModel, PaginationModel } from "../domain.ts";
+import { getUsersSuccessful, getUserSuccessful, } from "@features/employees/employeesSlice.ts";
+import { PaginationModel, UserFilterModel, UserModel } from "../domain.ts";
 import { CREATE_USER, DELETE_USER, GET_USER, GET_USERS, UPDATE_USER } from "@constants";
 
 interface CreateUserAction {
@@ -34,7 +31,7 @@ interface UpdateUserAction {
         id: string;
         name: string;
         surname: string;
-        position: string;
+        role: string;
         permissions: [];
         timeload: string;
     };

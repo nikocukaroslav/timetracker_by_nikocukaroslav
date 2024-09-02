@@ -66,9 +66,9 @@ function Navbar() {
                 </PermissionChecker>
                 <PermissionChecker permissions={[MANAGE_ROLES]}>
                     <NavigationLink
-                        to="positions"
+                        to="roles"
                         icon={PiUserGear}
-                        label="Positions"
+                        label="Roles"
                     />
                 </PermissionChecker>
                 <CustomNavbarDivider label="Request"/>

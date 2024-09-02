@@ -4,7 +4,7 @@ import Approves from "@pages/Approves";
 import Calendar from "@pages/Calendar.tsx";
 import Employees from "@pages/Employees.tsx";
 import NotFound from "@pages/NotFound.tsx";
-import Positions from "@pages/Positions.tsx";
+import Roles from "@pages/Roles";
 import Requests from "@pages/Requests.tsx";
 import Settings from "@pages/Settings.tsx";
 import SignIn from "@pages/SignIn.tsx";
@@ -52,10 +52,10 @@ const router = createBrowserRouter([
                     </PermissionChecker>
             },
             {
-                path: "positions",
+                path: "roles",
                 element:
                     <PermissionChecker redirectToNotFound permissions={[MANAGE_ROLES]}>
-                        <Positions/>
+                        <Roles/>
                     </PermissionChecker>
             },
             {

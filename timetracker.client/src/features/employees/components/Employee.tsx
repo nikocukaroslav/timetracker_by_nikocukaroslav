@@ -69,8 +69,8 @@ function Employee({ employee }: EmployeeProps) {
                     {isEmployed && (
                         <>
                             <CustomVerticalDivider/>
-                            <Flex py="2" w={{ xl: 32, base: 8 }} justifyContent={{ xl: "flex-start", base: "center" }}
-                                  gap="2" align="center" lineHeight="1.1">
+                            <Flex py="2" w={{ xl: 32, base: 8 }} gap="2" align="center" justifyContent="center"
+                                  lineHeight="1.1">
                                 <Icon boxSize={6} as={PiToolbox} title={roleTitle}/>
                                 <Show above="xl">
                                     <Text>{role?.name}</Text>

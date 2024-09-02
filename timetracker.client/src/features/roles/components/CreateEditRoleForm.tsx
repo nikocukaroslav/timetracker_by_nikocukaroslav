@@ -7,10 +7,11 @@ import { useDisclosure } from "@chakra-ui/react";
 import CustomInput from "@components/ui/CustomInput.tsx";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useDispatch } from "react-redux";
-import { createRole } from "@features/roles/api/actions.ts";
+import { createRole, updateRole } from "@features/roles/api/actions.ts";
 
 const defaultFormData = {
     name: "",
+    defaultPermissions: [],
 }
 
 function CreateEditRoleForm({ children, formData, isEditing }) {
@@ -21,16 +22,19 @@ function CreateEditRoleForm({ children, formData, isEditing }) {
     const loading = useAppSelector((state) => state.roles.loading);
 
     const initialValues = {
-        name: formData?.role,
+        name: formData?.name,
+        defaultPermissions: formData?.defaultPermissions,
     }
 
     function handleSubmit({ name }) {
-        const newRole = {
+        const role = {
+            id: formData?.id,
             name,
             defaultPermissions: permissions
         }
-        dispatch(createRole(newRole))
-        
+
+        isEditing ? dispatch(updateRole(role)) : dispatch(createRole(role))
+
         onClose();
     }
 
@@ -59,7 +63,8 @@ function CreateEditRoleForm({ children, formData, isEditing }) {
                 name="name"
                 type="text"
             />
-            <ChoosablePermissionList handleChangePermissions={handleChangePermissions} permissions={permissions}/>
+            <ChoosablePermissionList handleChangePermissions={handleChangePermissions}
+                                     permissions={permissions}/>
         </ModalForm>
     );
 }

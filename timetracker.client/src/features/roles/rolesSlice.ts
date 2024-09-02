@@ -17,6 +17,12 @@ const rolesSlice = createSlice({
         createRoleSuccessful(state, action) {
             state.roles.push(action.payload)
         },
+        updateRoleSuccessful(state, action) {
+            const index = state.roles.findIndex(role => role.id === action.payload.id);
+            if (index !== -1) {
+                state.roles[index] = action.payload;
+            }
+        },
         deleteRoleSuccessful(state, { payload }) {
             state.roles = state.roles.filter(role => role.id !== payload)
         }
@@ -26,7 +32,8 @@ const rolesSlice = createSlice({
 export const {
     getRolesSuccessful,
     deleteRoleSuccessful,
-    createRoleSuccessful
+    createRoleSuccessful,
+    updateRoleSuccessful
 } = rolesSlice.actions;
 
 export default rolesSlice.reducer;

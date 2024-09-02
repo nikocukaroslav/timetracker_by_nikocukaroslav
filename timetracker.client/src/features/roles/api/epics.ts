@@ -2,10 +2,20 @@ import { map, switchMap } from "rxjs";
 import { Epic, ofType } from "redux-observable";
 
 import { MyAction } from "@interfaces/actions/globalActions.ts";
-import { CREATE_ROLE, DELETE_ROLE, GET_ROLES } from "@constants";
+import { CREATE_ROLE, DELETE_ROLE, GET_ROLES, UPDATE_ROLE } from "@constants";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
-import { createRoleMutation, deleteRoleMutation, getRolesQuery } from "@features/roles/api/requests.ts";
-import { createRoleSuccessful, deleteRoleSuccessful, getRolesSuccessful } from "@features/roles/rolesSlice.ts";
+import {
+    createRoleMutation,
+    deleteRoleMutation,
+    getRolesQuery,
+    updateRoleMutation
+} from "@features/roles/api/requests.ts";
+import {
+    createRoleSuccessful,
+    deleteRoleSuccessful,
+    getRolesSuccessful,
+    updateRoleSuccessful
+} from "@features/roles/rolesSlice.ts";
 
 export const getRolesEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
@@ -26,7 +36,7 @@ export const deleteRoleEpic: Epic<MyAction> = (action$) =>
                     id: action.payload
                 }
             ).pipe(
-                map(response => deleteRoleSuccessful(response.data.roles.roles)),
+                map(() => deleteRoleSuccessful(action.payload)),
             )
         ),
     );
@@ -40,6 +50,19 @@ export const createRoleEpic: Epic<MyAction> = (action$) =>
                 }
             ).pipe(
                 map(response => createRoleSuccessful(response.data.roles.createRole)),
+            )
+        ),
+    );
+
+export const updateRoleEpic: Epic<MyAction> = (action$) =>
+    action$.pipe(
+        ofType(UPDATE_ROLE),
+        switchMap((action) =>
+            graphQlQuery(updateRoleMutation, {
+                    role: action.payload
+                }
+            ).pipe(
+                map(response => updateRoleSuccessful(response.data.roles.updateRole)),
             )
         ),
     );

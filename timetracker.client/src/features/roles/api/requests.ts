@@ -28,5 +28,16 @@ mutation CreateRole($role: CreateRoleRequestType!) {
     }
   }
 }
+`
 
+export const updateRoleMutation = `
+mutation UpdateRole($role: UpdateRoleRequestType!) {
+  roles {
+    updateRole(role: $role) {
+      id
+      name
+      defaultPermissions
+    }
+  }
+}
 `

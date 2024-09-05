@@ -29,5 +29,17 @@ namespace timetracker.Server.Application.Services
 
             return sessionDuration.TotalHours >= 24;
         }
+
+        public static bool IsSameDay(long startTime, long? endTime)
+        {
+            if (endTime == null) return true;
+            DateTimeOffset startDateTime = DateTimeOffset.FromUnixTimeMilliseconds(startTime).ToOffset(TimeSpan.FromHours(3));
+            DateTimeOffset endDateTime = DateTimeOffset.FromUnixTimeMilliseconds(endTime.Value).ToOffset(TimeSpan.FromHours(3));
+
+            return startDateTime.Year == endDateTime.Year &&
+                   startDateTime.Month == endDateTime.Month &&
+                   startDateTime.Day == endDateTime.Day;
+        }
+
     }
 }

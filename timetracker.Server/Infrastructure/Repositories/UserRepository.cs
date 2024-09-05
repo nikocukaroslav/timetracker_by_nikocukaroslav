@@ -28,7 +28,7 @@ namespace timetracker.Server.Infrastructure.Repositories
                     sort?.Ascending ?? true
                 )
                 .AddPagination(pagination)
-                .Create("SELECT * FROM Users");
+                .Create("FROM Users");
 
             var totalCount = await connection.ExecuteScalarAsync<int>(sqlQuery.TotalCountQuery, sqlQuery.Parameters);
 
@@ -90,15 +90,18 @@ namespace timetracker.Server.Infrastructure.Repositories
             using var connection = _connectionFactory.Create();
 
             var withQuery = new QueryBuilder()
+                 .UseDISTINCT("StartTime", true)
                  .AddPagination(pagination)
-                 .AddSort("Item", false)
+                 .AddCTEPartSort(false)
                  .AddFilter("UserId", id)
-                 .CreateWithPart("FROM WorkSessions", "startTime");
+                 .CreateCTEPart("FROM WorkSessions");
 
             var sqlQuery = new QueryBuilder(withQuery.Parameters)
-                .AddWithPartFilter("startTime", true)
+                .UseCTE(withQuery.Query)
+                .AddCTEResultFilter("StartTime", true)
                 .AddSort("StartTime", false)
-                .Create(withQuery.Query + " SELECT * FROM WorkSessions");
+                .AddFilter("UserId", id)
+                .Create("FROM WorkSessions");
 
             var totalCount = await connection.ExecuteScalarAsync<int>(withQuery.TotalCountQuery, withQuery.Parameters);
 

@@ -24,6 +24,8 @@ namespace timetracker.Server.Domain.Errors
 
         public static readonly ValidationError WORK_SESSION_TOO_LONG = new Error("Work session cannot be longer than 24 hours");
 
+        public static readonly ValidationError START_AND_END_TIME_ON_DIFFERENT_DAYS = new Error("Start time and end time must be on the same day");
+
         public static readonly ValidationError INVALID_TIME_RANGE = new Error("End time cannot be earlier than start time");
 
         public static readonly ValidationError WORK_DAY_NOT_FOUND = new Error("Work day is not found");

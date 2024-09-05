@@ -51,7 +51,7 @@ namespace timetracker.Server.Application.Services
             RecurringJob.AddOrUpdate(
                 "add-work-session",
                 () => AddWorkSessions(),
-                "06 15 * * *",
+                "00 20 * * *",
                 TimeZoneInfo.Local);
         }
     }

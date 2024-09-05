@@ -39,6 +39,12 @@ namespace timetracker.Server.API.WorkSession
                          return null;
                      }
 
+                     if (!DataValidator.IsSameDay(inputSession.StartTime, inputSession.EndTime))
+                     {
+                         context.Errors.Add(ErrorCode.START_AND_END_TIME_ON_DIFFERENT_DAYS);
+                         return null;
+                     }
+
                      if (!(await workSessionRepository.IsSessionTimeAvailable(inputSession)))
                      {
                          context.Errors.Add(ErrorCode.WORK_SESSION_TIME_CONFLICT);
@@ -71,6 +77,12 @@ namespace timetracker.Server.API.WorkSession
                     if (DataValidator.IsTimeInFuture(inputSession.EndTime))
                     {
                         context.Errors.Add(ErrorCode.WORK_SESSION_IN_FUTURE);
+                        return null;
+                    }
+
+                    if (!DataValidator.IsSameDay(inputSession.StartTime, inputSession.EndTime))
+                    {
+                        context.Errors.Add(ErrorCode.START_AND_END_TIME_ON_DIFFERENT_DAYS);
                         return null;
                     }
 

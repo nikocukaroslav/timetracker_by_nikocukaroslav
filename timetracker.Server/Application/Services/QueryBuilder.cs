@@ -12,6 +12,8 @@ namespace timetracker.Server.Application.Services
         private List<string> Filters { get; set; } = [];
         private List<string> Sort { get; set; } = [];
         private string? PaginationQuery { get; set; }
+        private string? DistinctPath { get; set; }
+        private string? CTEPath { get; set; }
         private DynamicParameters Parameters { get; set; } = new();
 
         public QueryBuilder()
@@ -22,6 +24,19 @@ namespace timetracker.Server.Application.Services
         public QueryBuilder(DynamicParameters Parameters)
         {
             this.Parameters = Parameters;
+        }
+
+        public QueryBuilder UseDISTINCT(string column, bool convertToDay = false)
+        {
+            var columnFragment = convertToDay ? ConvertToDay(column) : column;
+            DistinctPath = $"DISTINCT {columnFragment}";
+            return this;
+        }
+
+        public QueryBuilder UseCTE(string cte)
+        {
+            CTEPath = cte;
+            return this;
         }
 
         public QueryBuilder AddFilter(string column, dynamic? value)
@@ -43,9 +58,9 @@ namespace timetracker.Server.Application.Services
             return this;
         }
 
-        public QueryBuilder AddWithPartFilter(string column, bool convert = true)
+        public QueryBuilder AddCTEResultFilter(string column, bool convertToDay = false)
         {
-            var columnFragment = convert ? ConvertToDay(column) : column;
+            var columnFragment = convertToDay ? ConvertToDay(column) : column;
             Filters.Add($"{columnFragment} in (SELECT Item FROM List)");
             return this;
         }
@@ -55,6 +70,11 @@ namespace timetracker.Server.Application.Services
             Sort.Add($"{column} {(ascending ? "ASC" : "DESC")}");
 
             return this;
+        }
+
+        public QueryBuilder AddCTEPartSort(bool ascending)
+        {
+            return AddSort("Item", ascending);
         }
 
         public QueryBuilder AddPagination(Pagination pagination)
@@ -67,9 +87,11 @@ namespace timetracker.Server.Application.Services
             return this;
         }
 
-        public QueryCreateResponse Create(string BaseQuery)
+        public QueryCreateResponse Create(string fromQuery, string select = "*")
         {
-            var sqlQuery = new StringBuilder(BaseQuery);
+            var selectPath = DistinctPath is null ? select : DistinctPath;
+            var baseQuery = $"{CTEPath} SELECT {selectPath} {fromQuery}";
+            var sqlQuery = new StringBuilder(baseQuery);
             var sqlTotalCountQuery = new StringBuilder();
 
             ApplyFilters(sqlQuery);
@@ -80,9 +102,11 @@ namespace timetracker.Server.Application.Services
             {
                 sqlQuery.Append($" {PaginationQuery}");
 
+                var countPath = DistinctPath is null ? "*" : DistinctPath;
+
                 sqlTotalCountQuery
-                    .Append(BaseQuery)
-                    .Replace("*", "COUNT(*)");
+                    .Append(baseQuery)
+                    .Replace(countPath, $"COUNT({countPath})");
 
                 ApplyFilters(sqlTotalCountQuery);
             }
@@ -94,15 +118,16 @@ namespace timetracker.Server.Application.Services
                 Parameters = Parameters
             };
         }
-        public QueryCreateResponse CreateWithPart(string fromQuery, string column)
+        public QueryCreateResponse CreateCTEPart(string fromQuery)
         {
-            var baseQuery = $"WITH List AS ( SELECT DISTINCT";
+            var baseQuery = $"WITH List AS ( SELECT";
 
             var totalCountQuery = new StringBuilder();
 
             var sqlQuery = new StringBuilder(baseQuery);
 
-            sqlQuery.Append($" {ConvertToDay(column)} AS Item {fromQuery}");
+            if (DistinctPath != null) sqlQuery.Append($" {DistinctPath} AS Item");
+            sqlQuery.Append($" {fromQuery}");
 
             ApplyFilters(sqlQuery);
             ApplySort(sqlQuery);
@@ -111,12 +136,13 @@ namespace timetracker.Server.Application.Services
             {
                 sqlQuery.Append($" {PaginationQuery}");
 
+                var itemToCount = DistinctPath is null ? "*" : DistinctPath;
                 totalCountQuery
-                    .Append($"SELECT COUNT(DISTINCT")
-                    .Append($" {ConvertToDay(column)}) {fromQuery}");
+                    .Append($"SELECT COUNT({itemToCount}) {fromQuery}");
 
                 ApplyFilters(totalCountQuery);
             }
+
             sqlQuery.Append(')');
 
             var response = new QueryCreateResponse()

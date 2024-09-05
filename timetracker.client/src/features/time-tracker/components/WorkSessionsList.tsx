@@ -18,11 +18,7 @@ function WorkSessionsList() {
     const daysGroup: [string, WorkSessionModel[]][] = Object.entries(workSessionGroups);
 
     return (
-        <Accordion as={Stack} mt={2} allowMultiple reduceMotion sx={{
-            ".chakra-collapse": {
-                overflow: "initial !important"
-            }
-        }}>
+        <Accordion as={Stack} allowMultiple reduceMotion>
             {daysGroup.map(([day, sessions]) =>
                 <WorkSessionGroup key={day} day={day} workSessions={sessions}/>
             )}

@@ -10,6 +10,7 @@ function Roles() {
             rounded="md"
             boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)"
             templateRows="auto 1fr"
+            height="calc(100dvh - 3%)"
         >
             <GridItem>
                 <RolesHeader/>

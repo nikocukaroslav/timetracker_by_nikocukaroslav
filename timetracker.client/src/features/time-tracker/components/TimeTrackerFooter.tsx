@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import PaginationFooter from "@components/ui/PaginationFooter.tsx";
-import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { getWorkSessions } from "@features/time-tracker/api/actions.ts";
@@ -41,8 +40,10 @@ function TimeTrackerFooter() {
     }
 
     return (
-        <Box bg="gray.50" rounded="md">
-            <CustomHorizontalDivider/>
+        <Box
+            bg="gray.50"
+            rounded="md"
+            boxShadow="0 0 2px 2px rgba(0, 0, 0, 0.1)">
             <PaginationFooter
                 pagination={pagination}
                 onPageSizeChange={handlePageSizeChange}

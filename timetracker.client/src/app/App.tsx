@@ -15,6 +15,7 @@ import ProtectedRoute from "@components/layouts/ProtectedRoute.tsx";
 import SetPassword from "@pages/SetPassword.tsx";
 
 import { APPROVE_REQUESTS, MANAGE_ROLES, MANAGE_USERS } from "@constants";
+import Accounting from "@pages/Accounting.tsx";
 
 const router = createBrowserRouter([
     {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
                     <PermissionChecker redirectToNotFound permissions={[MANAGE_ROLES]}>
                         <Roles/>
                     </PermissionChecker>
+            },
+            {
+                path: "accounting",
+                element: <Accounting/>
             },
             {
                 path: "requests",

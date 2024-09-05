@@ -1,4 +1,13 @@
-import { PiCalendarBlank, PiClock, PiGear, PiListChecks, PiNote, PiUserGear, PiUserPlus, } from "react-icons/pi";
+import {
+    PiCalendarBlank,
+    PiClock,
+    PiCoins,
+    PiGear,
+    PiListChecks,
+    PiNote,
+    PiUserGear,
+    PiUserPlus,
+} from "react-icons/pi";
 import { AbsoluteCenter, Box, Divider, Flex, Img, Stack } from "@chakra-ui/react";
 
 import NavigationLink from "@components/ui/NavigationLink.tsx";
@@ -50,6 +59,10 @@ function Navbar() {
                 <PermissionChecker permissions={[MANAGE_USERS, APPROVE_REQUESTS]}>
                     <CustomNavbarDivider label="Manage"/>
                 </PermissionChecker>
+                <NavigationLink
+                    icon={PiCoins}
+                    label="Accounting"
+                    to="accounting"/>
                 <PermissionChecker permissions={[MANAGE_USERS]}>
                     <NavigationLink
                         to="employees"

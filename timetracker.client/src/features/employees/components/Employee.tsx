@@ -58,7 +58,7 @@ function Employee({ employee }: EmployeeProps) {
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
                 />
                 <Flex align="center" justify="space-between" ml="5">
-                    <Flex direction="column" w={{ xl: "14rem", lg: "10rem", base: "7rem" }}>
+                    <Flex direction="column" w={{ xl: "16rem", lg: "10rem", base: "7rem" }}>
                         <TitledText title={fullName}>
                             {fullName}
                         </TitledText>

@@ -8,8 +8,8 @@ import TimerProvider from "@features/time-tracker/context/timerContext.tsx";
 function AppLayout() {
     return (
         <TimerProvider>
-            <Grid templateColumns={{ xl: "250px 1fr", lg: "200px 1fr", base: "125px 1fr" }} overflow="hidden"
-                  height="100dvh" bg="gray.100" textColor="gray.800">
+            <Grid templateColumns={{ xl: "250px 1fr", lg: "200px 1fr", base: "125px 1fr" }}
+                  height="100dvh" bg="gray.100" textColor="gray.800" overflow="hidden">
                 <GridItem>
                     <Navbar/>
                 </GridItem>

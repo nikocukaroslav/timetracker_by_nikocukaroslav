@@ -18,6 +18,8 @@ namespace timetracker.Server.Application
 
             services.AddSingleton<IEmailSender, EmailSender>();
 
+            services.AddSingleton<IPlanner, Planner>();
+
             return services;
         }
     }

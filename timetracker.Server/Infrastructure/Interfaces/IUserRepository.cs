@@ -15,5 +15,6 @@ namespace timetracker.Server.Infrastructure.Interfaces
         Task<PaginatedList<WorkSession>> GetPaginatedWorkSessionsByUserIdAsync(Guid id, Pagination pagination);
         Task<List<WorkDay>> GetWorkDaysByUserIdAsync(WorkDaysRequest workDaysRequest);
         Task<List<User>> FindUsersAsync(string input);
+        Task<PaginatedList<UserMonthlyReport>> GetUserMonthlyReportsAsync(long startDay, long endDay, Pagination pagination, FilterUsers? filter, Sort? sort);
     }
 }

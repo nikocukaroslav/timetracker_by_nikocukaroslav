@@ -10,6 +10,7 @@ using timetracker.Server.Domain.Models;
 using timetracker.Server.Infrastructure.Interfaces;
 using UserModel = timetracker.Server.Domain.Entities.User;
 using WorkSessionModel = timetracker.Server.Domain.Entities.WorkSession;
+using timetracker.Server.Application.Services;
 
 namespace timetracker.Server.API.User
 {
@@ -132,6 +133,20 @@ namespace timetracker.Server.API.User
                    }
                    return workSession;
                });
+
+            Field<PaginationResponseType<UserMonthlyReportResponseType, UserMonthlyReport>>("usersReport")
+                .Arguments(new QueryArguments(new QueryArgument<GetUsersMonthlyReportRequestType> { Name = "usersReport" }))
+                .ResolveAsync(async context =>
+                {
+                    var usersMonthlyReport = context.GetArgument<GetUsersMonthlyReportRequest>("usersReport");
+                    return await userRepository.GetUserMonthlyReportsAsync(
+                        usersMonthlyReport.StartDate,
+                        usersMonthlyReport.EndDate,
+                        usersMonthlyReport.Pagination,
+                        usersMonthlyReport.Filter,
+                        usersMonthlyReport.Sort
+                        );
+                });
         }
     }
 }

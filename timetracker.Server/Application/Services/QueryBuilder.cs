@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using System.Collections;
 using System.Text;
-using timetracker.Server.API;
 using timetracker.Server.Application.Models;
 using timetracker.Server.Domain.Models;
 
@@ -14,6 +13,8 @@ namespace timetracker.Server.Application.Services
         private string? PaginationQuery { get; set; }
         private string? DistinctPath { get; set; }
         private string? CTEPath { get; set; }
+        private string? JoinPath {  get; set; }
+        private string? GroupByPart {  get; set; }
         private DynamicParameters Parameters { get; set; } = new();
 
         public QueryBuilder()
@@ -58,6 +59,12 @@ namespace timetracker.Server.Application.Services
             return this;
         }
 
+        public QueryBuilder AddBetweenFilter(string column, dynamic fromValue, dynamic toValue)
+        {
+            Filters.Add($"{column} BETWEEN {fromValue} AND {toValue}");
+            return this;
+        }
+
         public QueryBuilder AddCTEResultFilter(string column, bool convertToDay = false)
         {
             var columnFragment = convertToDay ? ConvertToDay(column) : column;
@@ -87,29 +94,59 @@ namespace timetracker.Server.Application.Services
             return this;
         }
 
+        public QueryBuilder AddLeftJoin(string tableName, string relationship)
+        {
+            JoinPath = $"LEFT JOIN {tableName} ON {relationship}";
+            return this;
+        }
+
+        public QueryBuilder AddGroupBy(string columns)
+        {
+            GroupByPart = $"GROUP BY {columns}";
+            return this;
+        }
+
         public QueryCreateResponse Create(string fromQuery, string select = "*")
         {
             var selectPath = DistinctPath is null ? select : DistinctPath;
             var baseQuery = $"{CTEPath} SELECT {selectPath} {fromQuery}";
             var sqlQuery = new StringBuilder(baseQuery);
+            if (JoinPath != null)
+                sqlQuery.Append(" " + JoinPath);
             var sqlTotalCountQuery = new StringBuilder();
 
             ApplyFilters(sqlQuery);
 
-            ApplySort(sqlQuery);
+            if (GroupByPart != null)
+                sqlQuery.Append(" " + GroupByPart);            
 
             if (PaginationQuery != null)
             {
+                if (GroupByPart != null)
+                {
+                    sqlTotalCountQuery
+                        .Append($"SELECT COUNT(*) FROM ({sqlQuery}) AS GroupedItems");
+                }
+                else
+                {
+                    var countPath = selectPath is null ? "*" : selectPath;
+
+                    sqlTotalCountQuery
+                        .Append(baseQuery)
+                        .Replace(countPath, $"COUNT({countPath})");
+
+                    if (JoinPath != null)
+                        sqlTotalCountQuery.Append(" " + JoinPath);
+
+                    ApplyFilters(sqlTotalCountQuery);
+
+                    if (GroupByPart != null)
+                        sqlTotalCountQuery.Append(" " + GroupByPart);
+                }
+                ApplySort(sqlQuery);
                 sqlQuery.Append($" {PaginationQuery}");
-
-                var countPath = DistinctPath is null ? "*" : DistinctPath;
-
-                sqlTotalCountQuery
-                    .Append(baseQuery)
-                    .Replace(countPath, $"COUNT({countPath})");
-
-                ApplyFilters(sqlTotalCountQuery);
             }
+            else ApplySort(sqlQuery);
 
             return new QueryCreateResponse()
             {

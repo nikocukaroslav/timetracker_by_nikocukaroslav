@@ -3,7 +3,6 @@ using Hangfire;
 using timetracker.Server.API;
 using timetracker.Server.Application;
 using timetracker.Server.Application.Interfaces;
-using timetracker.Server.Application.Services;
 using timetracker.Server.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);

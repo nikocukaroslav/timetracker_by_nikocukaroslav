@@ -85,6 +85,9 @@ namespace timetracker.Server.API.User
                      user.Status = updateInput.Status ?? user.Status;
                      user.IsEmployed = updateInput.IsEmployed ?? user.IsEmployed;
 
+                     if (!user.IsEmployed)
+                         user.RefreshTokenHash = null;
+
                      if (updateInput.Permissions != null)
                      {
                          user.Permissions = string.Join(",", updateInput.Permissions);

@@ -150,5 +150,29 @@ namespace timetracker.Server.Infrastructure.Repositories
             return users.ToList();
         }
 
+        public async Task<PaginatedList<UserMonthlyReport>> GetUserMonthlyReportsAsync(long startDay, long endDay, Pagination pagination, FilterUsers? filter, Sort? sort)
+        {
+            using var connection = _connectionFactory.Create();
+
+            var query = new QueryBuilder()
+                .AddLeftJoin("Users", "WorkSessions.UserId = Users.Id")
+                .AddBetweenFilter("WorkSessions.StartTime", startDay, endDay)
+                .AddFilter("IsEmployed", filter?.IsEmployed)
+                .AddFilter("Status", filter?.StatusList)
+                .AddFilter("RoleId", filter?.RoleList)
+                .AddSort(
+                    sort?.SortBy ?? "Name",
+                    sort?.Ascending ?? true
+                )
+                .AddPagination(pagination)
+                .AddGroupBy("Users.Id, Users.Name, Users.Surname, Users.Email, Users.RoleId, Users.Timeload")
+                .Create("FROM WorkSessions", "Users.Id, Users.Name, Users.Surname, Users.Email, Users.RoleId, Users.Timeload, SUM(WorkSessions.EndTime - WorkSessions.StartTime)/1000 AS TotalTime");
+
+            var totalCount = await connection.ExecuteScalarAsync<int>(query.TotalCountQuery, query.Parameters);
+
+            var users = await connection.QueryAsync<UserMonthlyReport>(query.Query, query.Parameters);
+
+            return new PaginatedList<UserMonthlyReport>(users.ToList(), totalCount, pagination);
+        }
     }
 }

@@ -1,20 +1,15 @@
-import { catchError, map, of, switchMap, tap } from "rxjs";
+import { map, switchMap } from "rxjs";
 import { Epic, ofType } from "redux-observable";
-
-import store from "@store";
 import {
     createWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
-    getLastWorkSessionError,
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
-    setError,
-    setLoading,
-    setSearchingLastSession,
     startSuccessful,
     stopSuccessful,
     updateWorkSessionSuccessful
 } from "../timeTrackerSlice.ts";
+import { setError } from "@/store/slices/actionsStateSlice.ts";
 import {
     createSessionMutation,
     deleteSessionMutation,
@@ -26,6 +21,7 @@ import {
 } from "./requests.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
+import { fulfilled, resetState } from "@utils/actionStateHelpers.ts";
 import {
     CREATE_WORK_SESSION,
     DELETE_WORK_SESSION,
@@ -39,120 +35,141 @@ import {
 export const startSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(START_SESSION),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(startSessionMutation, {
-                    session: action.payload
+                    session: payload
                 }
             ).pipe(
-                map(response => startSuccessful(response.data.workSessions.startSession)),
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return startSuccessful(data.workSessions.startSession)
+
+                    return setError({ type: START_SESSION, error: errors[0] });
+                }),
             )
-        )
+        ),
+        fulfilled(START_SESSION)
     );
 
 export const stopSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(STOP_SESSION),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(stopSessionMutation, {
-                    session: action.payload
+                    session: payload
                 }
             ).pipe(
-                map(response => stopSuccessful(response.data.workSessions.stopSession)),
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return stopSuccessful(data.workSessions.stopSession)
+
+                    return setError({ type: STOP_SESSION, error: errors[0] });
+                }),
             )
-        )
+        ),
+        fulfilled(STOP_SESSION)
     );
 
 export const getWorkSessionsEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(GET_WORK_SESSIONS),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(getWorkSessionsQuery, {
-                    id: action.payload.userId,
-                    pagination: action.payload.pagination,
+                    id: payload.userId,
+                    pagination: payload.pagination,
                 }
             ).pipe(
-                map(response => getWorkSessionsSuccessful(response.data.users.workSessions)),
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return getWorkSessionsSuccessful(data.users.workSessions)
+
+                    return setError({ type: GET_WORK_SESSIONS, error: errors[0] });
+                }),
             )
-        )
+        ),
+        fulfilled(GET_WORK_SESSIONS)
     );
 
 export const getLastWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(GET_LAST_WORK_SESSION),
-        tap(() => store.dispatch(setSearchingLastSession(true))),
+        resetState(),
         switchMap(action =>
             graphQlQuery(getLastWorkSessionQuery, {
                     id: action.payload
                 }
             ).pipe(
-                map((response) => {
-                    if (response.errors)
-                        return getLastWorkSessionError();
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return getLastWorkSessionSuccessful(data.users.lastWorkSession);
 
-                    return getLastWorkSessionSuccessful(response.data.users.lastWorkSession);
+                    return setError({ type: GET_LAST_WORK_SESSION, error: errors[0] });
                 }),
             ),
-        )
+        ),
+        fulfilled(GET_LAST_WORK_SESSION)
     );
 
 export const createWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(CREATE_WORK_SESSION),
-        tap(() => store.dispatch(setLoading(true))),
-        tap(() => store.dispatch(setError(""))),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(createSessionMutation, {
-                    session: action.payload
+                    session: payload
                 }
             ).pipe(
-                map(response => {
-                    if (!response.errors)
-                        return createWorkSessionSuccessful(response.data.workSessions.createSession)
-                    else
-                        return setError(response.errors[0].message)
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return createWorkSessionSuccessful(data.workSessions.createSession)
+
+                    return setError({ type: CREATE_WORK_SESSION, error: errors[0] });
                 }),
-                catchError((error) =>
-                    of(setError(error))
-                ),
-                tap(() => store.dispatch(setLoading(false))),
             )
-        )
+        ),
+        fulfilled(CREATE_WORK_SESSION)
     );
 
 export const updateWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(UPDATE_WORK_SESSION),
-        tap(() => store.dispatch(setLoading(true))),
-        tap(() => store.dispatch(setError(""))),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(updateSessionMutation, {
-                    session: action.payload
+                    session: payload
                 }
             ).pipe(
-                map(response => {
-                    if (!response.errors)
-                        return updateWorkSessionSuccessful(response.data.workSessions.updateSession)
-                    else
-                        return setError(response.errors[0].message)
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return updateWorkSessionSuccessful(data.workSessions.updateSession)
+
+                    return setError({ type: UPDATE_WORK_SESSION, error: errors[0] });
                 }),
-                catchError((error) =>
-                    of(setError(error))
-                ),
-                tap(() => store.dispatch(setLoading(false))),
             )
-        )
+        ),
+        fulfilled(UPDATE_WORK_SESSION)
     );
 
 export const deleteWorkSessionEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(DELETE_WORK_SESSION),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(deleteSessionMutation, {
-                    id: action.payload
+                    id: payload
                 }
             ).pipe(
-                map(() => deleteWorkSessionSuccessful(action.payload))
+                map(({ errors }) => {
+                    if (!errors)
+                        return deleteWorkSessionSuccessful(payload)
+
+                    return setError({ type: DELETE_WORK_SESSION, error: errors[0] });
+                }),
             )
-        )
+        ),
+        fulfilled(DELETE_WORK_SESSION)
     );
 

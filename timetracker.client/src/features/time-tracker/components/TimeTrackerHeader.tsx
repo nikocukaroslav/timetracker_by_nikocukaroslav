@@ -5,15 +5,16 @@ import { Button, Flex, Icon, Text } from "@chakra-ui/react";
 import Timer from "./Timer.tsx";
 
 import { setStartTracking, setStopTracking } from "../timeTrackerSlice.ts";
-import { startSession, stopSession } from "../api/actions.ts";
+import { getLastWorkSession, startSession, stopSession } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { useActionState } from "@hooks/useActionState.ts";
 
 function TimeTrackerHeader() {
-    const userId = useAppSelector(state => state.authentication.user?.id)
-    const isTracking = useAppSelector(state => state.timeTracker.isTracking)
-    const searchingLastSession = useAppSelector(state => state.timeTracker.searchingLastSession)
-    const sessionId = useAppSelector(state => state.timeTracker.sessionId)
+    const userId = useAppSelector(state => state.authentication.user?.id) as string;
+    const isTracking = useAppSelector(state => state.timeTracker.isTracking);
+    const sessionId = useAppSelector(state => state.timeTracker.sessionId);
 
+    const { loading } = useActionState(getLastWorkSession);
     const dispatch = useDispatch();
 
     function startTracking() {
@@ -22,7 +23,7 @@ function TimeTrackerHeader() {
         dispatch(setStartTracking(startTime));
 
         const workSession = {
-            userId: userId,
+            userId,
             startTime,
         };
 
@@ -33,7 +34,7 @@ function TimeTrackerHeader() {
         dispatch(setStopTracking());
 
         const workSession = {
-            id: sessionId,
+            id: sessionId as string,
             endTime: Date.now(),
         };
 
@@ -54,7 +55,7 @@ function TimeTrackerHeader() {
                 variant="ghost"
                 display="flex"
                 gap="2"
-                isDisabled={searchingLastSession}
+                isDisabled={loading}
                 onClick={isTracking ? stopTracking : startTracking}
             >
                 <Icon

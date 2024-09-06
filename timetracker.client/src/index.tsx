@@ -4,7 +4,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 import App from "./app/App.tsx";
 
-import store from "@store";
+import store from "@/store/store.ts";
 
 const customTheme = extendTheme({
     fonts: {

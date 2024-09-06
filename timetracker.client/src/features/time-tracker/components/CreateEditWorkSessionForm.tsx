@@ -1,16 +1,17 @@
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiTimer } from "react-icons/pi";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomInput from "@components/ui/CustomInput.tsx";
 
 import { createWorkSession, updateWorkSession } from "@features/time-tracker/api/actions.ts";
-import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { CreateEditWorkSessionFormProps } from "@interfaces/components.ts";
 import { schemas } from "@utils/inputHelpers.ts";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { useActionState } from "@hooks/useActionState.ts";
 import { ERROR_DURATION } from "@constants";
-import { useEffect, useState } from "react";
 
 const defaultFormData = {
     startTime: "",
@@ -18,14 +19,19 @@ const defaultFormData = {
 }
 
 function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEditWorkSessionFormProps) {
-    const userId = useAppSelector((state) => state.authentication.user?.id);
-    const error = useAppSelector((state) => state.timeTracker.error)
-    const loading = useAppSelector((state) => state.timeTracker.loading)
+    const userId = useAppSelector((state) => state.authentication.user?.id) as string;
+
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const dispatch = useDispatch();
     const toast = useToast();
+
+    const { loading: createWorkSessionLoading, error: createWorkSessionError } = useActionState(createWorkSession);
+    const { loading: updateWorkSessionLoading, error: updateWorkSessionError } = useActionState(updateWorkSession);
+
+    const error = createWorkSessionError || updateWorkSessionError;
+    const loading = createWorkSessionLoading || updateWorkSessionLoading;
 
     const initialValues = {
         startTime: formData?.startTime,
@@ -45,7 +51,7 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
             dispatch(createWorkSession(newSession));
         } else {
             const newSessionData = {
-                id: formData?.id,
+                id: formData?.id as string,
                 startTime: startTimeTimestamp,
                 endTime: endTimeTimestamp,
                 editedAt: new Date().getTime(),
@@ -53,7 +59,6 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
             };
             dispatch(updateWorkSession(newSessionData));
         }
-
     }
 
     useEffect(() => {
@@ -63,7 +68,7 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
         if (error) {
             toast({
                 title: "An error occurred",
-                description: error,
+                description: error.message,
                 status: "error",
                 duration: ERROR_DURATION,
                 isClosable: true,
@@ -72,7 +77,7 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
         }
         if (!error)
             onClose()
-    }, [error, isOpen, isSubmitting, loading, onClose, toast]);
+    }, [error, isOpen, isSubmitting, loading, onClose]);
 
     return (
         <ModalForm

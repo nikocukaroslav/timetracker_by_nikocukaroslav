@@ -7,16 +7,17 @@ import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkD
 import Spinner from "@components/ui/Spinner.tsx";
 
 import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts";
-import { convertTime } from "@utils/formatters.ts";
-import { useAppSelector } from "@hooks/useAppSelector.ts";
-import { createWorkDays } from "@features/calendar/api/actions.ts";
 import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
 import { CalendarContextType } from "@features/calendar/types/calendar.ts";
+import { createWorkDays, getWorkDays } from "@features/calendar/api/actions.ts";
+import { convertTime } from "@utils/formatters.ts";
+import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { useActionState } from "@hooks/useActionState.ts";
 
 function CalendarBody() {
     const { currentDate } = useContext(CalendarContext) as CalendarContextType;
+    const { loading } = useActionState(getWorkDays);
 
-    const isLoading = useAppSelector((state) => state.calendar.loading);
     const userId = useAppSelector((state) => state.authentication.user?.id);
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -83,10 +84,10 @@ function CalendarBody() {
                     onClose: handleCloseForm
                 }}
             />
-            {isLoading &&
-                <AbsoluteCenter w="full" h="full">
-                    <Spinner/>
-                </AbsoluteCenter>
+            {loading &&
+				<AbsoluteCenter w="full" h="full">
+					<Spinner/>
+				</AbsoluteCenter>
             }
         </SimpleGrid>
     );

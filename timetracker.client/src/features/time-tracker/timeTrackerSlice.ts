@@ -7,13 +7,10 @@ const initialState: TimeTrackerState = {
     workSessions: [],
     sessionId: null,
     isTracking: false,
-    searchingLastSession: false,
     startTime: null,
     pagination: {
         pageSize: Number(localStorage.getItem("trackerPageSize")) || 20,
     },
-    error: null,
-    loading: false,
 }
 
 const timeTrackerSlice = createSlice({
@@ -36,7 +33,6 @@ const timeTrackerSlice = createSlice({
             state.pagination.hasPreviousPage = action.payload.hasPreviousPage
         },
         getLastWorkSessionSuccessful(state, { payload }) {
-            state.searchingLastSession = false;
             if (!payload) return
 
             const { id, startTime } = payload;
@@ -44,9 +40,6 @@ const timeTrackerSlice = createSlice({
             state.sessionId = id;
             state.startTime = startTime;
             state.isTracking = true;
-        },
-        getLastWorkSessionError(state) {
-            state.searchingLastSession = false;
         },
         createWorkSessionSuccessful(state, action) {
             state.workSessions.unshift(action.payload);
@@ -74,15 +67,6 @@ const timeTrackerSlice = createSlice({
             state.isTracking = false;
             state.startTime = null;
         },
-        setSearchingLastSession(state, action) {
-            state.searchingLastSession = action.payload
-        },
-        setError(state, action) {
-            state.error = action.payload
-        },
-        setLoading(state, action) {
-            state.loading = action.payload
-        }
     },
 })
 
@@ -91,15 +75,11 @@ export const {
     stopSuccessful,
     getWorkSessionsSuccessful,
     getLastWorkSessionSuccessful,
-    getLastWorkSessionError,
     createWorkSessionSuccessful,
     updateWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
     setStartTracking,
     setStopTracking,
-    setSearchingLastSession,
-    setError,
-    setLoading
 } = timeTrackerSlice.actions;
 
 export default timeTrackerSlice.reducer;

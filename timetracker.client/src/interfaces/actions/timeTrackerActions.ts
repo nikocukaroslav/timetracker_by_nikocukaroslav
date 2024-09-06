@@ -1,21 +1,21 @@
 import {
     createWorkSessionSuccessful,
     deleteWorkSessionSuccessful,
-    updateWorkSessionSuccessful, getLastWorkSessionError,
     getLastWorkSessionSuccessful,
     getWorkSessionsSuccessful,
     startSuccessful,
-    stopSuccessful
+    stopSuccessful,
+    updateWorkSessionSuccessful
 } from "@features/time-tracker/timeTrackerSlice.ts";
 
 import {
     CREATE_WORK_SESSION,
     DELETE_WORK_SESSION,
-    UPDATE_WORK_SESSION,
     GET_LAST_WORK_SESSION,
     GET_WORK_SESSIONS,
     START_SESSION,
-    STOP_SESSION
+    STOP_SESSION,
+    UPDATE_WORK_SESSION
 } from "@constants";
 
 interface StartSessionAction {
@@ -52,9 +52,6 @@ interface GetLastWorkSessionAction {
 
 interface GetLastWorkSessionSuccessfulAction {
     type: typeof getLastWorkSessionSuccessful.type,
-}
-interface GetLastWorkSessionErrorAction {
-    type: typeof getLastWorkSessionError.type,
 }
 
 interface CreateWorkSessionAction {
@@ -93,7 +90,6 @@ export type TimeTrackerActions =
     | GetWorkSessionsSuccessfulAction
     | GetLastWorkSessionAction
     | GetLastWorkSessionSuccessfulAction
-    | GetLastWorkSessionErrorAction
     | CreateWorkSessionAction
     | CreateWorkSessionSuccessfulAction
     | UpdateWorkSessionAction

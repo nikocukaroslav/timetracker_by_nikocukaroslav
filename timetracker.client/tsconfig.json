@@ -48,7 +48,7 @@
             "constants.ts"
          ],
          "@store": [
-            "store.ts"
+            "store/store.ts"
          ]
       }
    },

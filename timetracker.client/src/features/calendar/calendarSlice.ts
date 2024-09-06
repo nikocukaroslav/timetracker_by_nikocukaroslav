@@ -5,7 +5,6 @@ import { CalendarState } from "@features/calendar/types/state.ts";
 const initialState: CalendarState = {
     workDays: [],
     user: null,
-    loading: false,
 }
 
 const calendarSlice = createSlice({
@@ -34,9 +33,6 @@ const calendarSlice = createSlice({
         deleteWorkDaySuccessful(state, { payload }) {
             state.workDays = state.workDays.filter(workDay => workDay.id !== payload)
         },
-        setLoading(state, { payload }) {
-            state.loading = payload;
-        }
     },
 })
 
@@ -45,7 +41,6 @@ export const {
     createWorkDaysSuccessful,
     updateWorkDaySuccessful,
     deleteWorkDaySuccessful,
-    setLoading,
 } = calendarSlice.actions;
 
 export default calendarSlice.reducer;

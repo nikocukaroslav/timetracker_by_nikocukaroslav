@@ -2,8 +2,8 @@ import plugin from '@vitejs/plugin-react';
 import child_process from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import {env} from 'process';
-import {defineConfig} from 'vite';
+import { env } from 'process';
+import { defineConfig } from 'vite';
 
 const baseFolder =
     env.APPDATA !== undefined && env.APPDATA !== ''
@@ -23,7 +23,7 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
         '--format',
         'Pem',
         '--no-password',
-    ], {stdio: 'inherit',}).status) {
+    ], { stdio: 'inherit', }).status) {
         throw new Error("Could not create certificate.");
     }
 }
@@ -44,7 +44,7 @@ export default defineConfig({
             '@interfaces': path.resolve(__dirname, './src/interfaces'),
             '@utils': path.resolve(__dirname, './src/utils'),
             "@constants": path.resolve(__dirname, './src/constants.ts'),
-            "@store": path.resolve(__dirname, './src/store.ts'),
+            "@store": path.resolve(__dirname, './src/store/store.ts'),
         }
     },
     server: {

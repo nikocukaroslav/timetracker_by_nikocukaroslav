@@ -1,33 +1,38 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiUser } from "react-icons/pi";
-import { useDisclosure, useToast, } from "@chakra-ui/react";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomSelect from "@components/ui/CustomSelect.tsx";
+import ChoosablePermissionList from "@features/employees/components/ChoosablePermissionList.tsx";
 
 import { createUser, updateUser } from "../api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
+import { useActionState } from "@hooks/useActionState.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";
-import { ERROR_DURATION, workTime } from "@constants";
 import { convertTime } from "@utils/formatters.ts";
 import { schemas } from "@utils/inputHelpers.ts";
-import ChoosablePermissionList from "@features/employees/components/ChoosablePermissionList.tsx";
+import { ERROR_DURATION, workTime } from "@constants";
 
 function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMemberFormProps) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
     const [permissions, setPermissions] = useState(formData?.permissions || [])
-    const error = useAppSelector((state) => state.employees.error);
-    const loading = useAppSelector((state) => state.employees.loading);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+    const { loading: createUserLoading, error: createUserError } = useActionState(createUser);
+    const { loading: updateUserLoading, error: updateUserError } = useActionState(updateUser);
+
+    const loading = createUserLoading || updateUserLoading;
+    const error = createUserError || updateUserError;
+
     const roles = useAppSelector((state) => state.roles.roles);
     const roleOptions = roles?.map(role => ({
         name: role.id,
         description: role.name
     }));
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const dispatch = useDispatch();
     const toast = useToast();
 
@@ -83,7 +88,7 @@ function CreateEditMemberForm({ formData, isEditing, children }: CreateEditMembe
         if (error) {
             toast({
                 title: "An error occurred",
-                description: error,
+                description: error.message,
                 status: "error",
                 duration: ERROR_DURATION,
                 isClosable: true,

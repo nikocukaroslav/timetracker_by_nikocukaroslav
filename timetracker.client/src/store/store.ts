@@ -9,14 +9,14 @@ import {
     refreshTokenEpic,
     resendCreatePasswordEmailEpic,
     temporaryLinkValidationEpic,
-} from "./features/authentication/api/epics.ts";
+} from "@features/authentication/api/epics.ts";
 import {
     createUserEpic,
     deleteUserEpic,
     getUserEpic,
     getUsersEpic,
     updateUserEpic,
-} from "./features/employees/api/epics.ts";
+} from "@features/employees/api/epics.ts";
 import {
     createWorkSessionEpic,
     deleteWorkSessionEpic,
@@ -25,7 +25,7 @@ import {
     startSessionEpic,
     stopSessionEpic,
     updateWorkSessionEpic,
-} from "./features/time-tracker/api/epics.ts";
+} from "@features/time-tracker/api/epics.ts";
 import {
     createWorkDaysEpic,
     deleteWorkDayEpic,
@@ -34,11 +34,12 @@ import {
 } from "@features/calendar/api/epics.ts";
 import { createRoleEpic, deleteRoleEpic, getRolesEpic, updateRoleEpic } from "@features/roles/api/epics.ts";
 
-import authenticationReducer from "./features/authentication/authenticationSlice.ts";
-import employeesReducer from "./features/employees/employeesSlice.ts";
-import timeTrackerReducer from "./features/time-tracker/timeTrackerSlice.ts";
-import calendarReducer from "./features/calendar/calendarSlice.ts";
-import rolesReducer from "./features/roles/rolesSlice.ts";
+import authenticationReducer from "@features/authentication/authenticationSlice.ts";
+import employeesReducer from "@features/employees/employeesSlice.ts";
+import timeTrackerReducer from "@features/time-tracker/timeTrackerSlice.ts";
+import calendarReducer from "@features/calendar/calendarSlice.ts";
+import rolesReducer from "@features/roles/rolesSlice.ts";
+import actionsStateReducer from "./slices/actionsStateSlice.ts";
 
 const epics = [
     loginEpic,
@@ -77,7 +78,8 @@ const appReducer = combineReducers({
     employees: employeesReducer,
     timeTracker: timeTrackerReducer,
     calendar: calendarReducer,
-    roles: rolesReducer
+    roles: rolesReducer,
+    actionsState: actionsStateReducer
 });
 
 const rootReducer = (state, action) => {

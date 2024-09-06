@@ -1,16 +1,11 @@
 import {
     authorizeError,
     authorizeSuccessful,
+    createUserPasswordSuccessful,
     logoutSuccessful,
     refreshTokenSuccessful,
-    createUserPasswordSuccessful,
-    setError,
-    temporaryLinkValidationError,
-    temporaryLinkValidationSuccessful,
-    resendCreatePasswordEmailSuccessful,
-    resendCreatePasswordEmailError,
 } from "@features/authentication/authenticationSlice.ts";
-import { AUTHORIZE, LOGIN, LOGOUT, REFRESH_TOKEN, CREATE_USER_PASSWORD } from "@constants";
+import { AUTHORIZE, CREATE_USER_PASSWORD, LOGIN, LOGOUT, REFRESH_TOKEN } from "@constants";
 
 interface LoginAction {
     type: typeof LOGIN;
@@ -18,11 +13,6 @@ interface LoginAction {
         email: string,
         password: string
     }
-}
-
-interface SetErrorAction {
-    type: typeof setError.type;
-    payload: string
 }
 
 interface AuthorizeAction {
@@ -66,31 +56,8 @@ interface SetUserPasswordAction {
     }
 }
 
-interface TemporaryLinkValidationErrorAction {
-    type: typeof temporaryLinkValidationError.type,
-    payload: string,
-}
-
-interface TemporaryLinkValidationSuccessfulAction {
-    type: typeof temporaryLinkValidationSuccessful.type,
-}
-
-interface ResendCreatePasswordEmailSuccessfulAction {
-    type: typeof resendCreatePasswordEmailSuccessful.type,
-    payload: boolean | null,
-}
-
-interface ResendCreatePasswordEmailErrorAction {
-    type: typeof resendCreatePasswordEmailError.type,
-    payload: {
-        message: string | null,
-        code: string | null,
-    } ,
-}
-
 export type AuthenticationActions =
     | LoginAction
-    | SetErrorAction
     | AuthorizeAction
     | AuthorizeSuccessfulAction
     | AuthorizeErrorAction
@@ -100,7 +67,3 @@ export type AuthenticationActions =
     | RefreshTokenSuccessfulAction
     | SetUserPasswordSuccessfulAction
     | SetUserPasswordAction
-    | TemporaryLinkValidationErrorAction
-    | TemporaryLinkValidationSuccessfulAction
-    | ResendCreatePasswordEmailSuccessfulAction
-    | ResendCreatePasswordEmailErrorAction

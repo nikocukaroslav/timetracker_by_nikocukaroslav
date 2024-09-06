@@ -1,5 +1,5 @@
 import { Epic, ofType } from "redux-observable";
-import { debounceTime, map, switchMap, tap } from "rxjs";
+import { debounceTime, map, switchMap } from "rxjs";
 
 import {
     createWorkDaysMutation,
@@ -11,10 +11,9 @@ import {
     createWorkDaysSuccessful,
     deleteWorkDaySuccessful,
     getWorkDaysSuccessful,
-    setLoading,
     updateWorkDaySuccessful
 } from "@features/calendar/calendarSlice.ts";
-import { graphQlQuery } from "@utils/graphQlQuery.ts";
+import { setError } from "@/store/slices/actionsStateSlice.ts";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import {
     CREATE_WORK_DAYS,
@@ -22,59 +21,86 @@ import {
     GET_WORK_DAYS,
     UPDATE_WORK_DAYS
 } from "@features/calendar/types/actions.ts";
-import store from "@store";
+import { graphQlQuery } from "@utils/graphQlQuery.ts";
+import { fulfilled, resetState } from "@utils/actionStateHelpers.ts";
 
 export const getWorkDaysEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(GET_WORK_DAYS),
-        tap(() => store.dispatch(setLoading(true))),
+        resetState(),
         debounceTime(200),
-        switchMap(action =>
+        switchMap(({ payload }) =>
             graphQlQuery(getWorkDaysQuery, {
-                    workDays: action.payload
+                    workDays: payload
                 }
             ).pipe(
-                map(response => getWorkDaysSuccessful(response.data.users.workDays)),
-                tap(() => store.dispatch(setLoading(false))),
-            )
-        )
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return getWorkDaysSuccessful(data.users.workDays);
+
+                    return setError({ type: GET_WORK_DAYS, error: errors[0] });
+                }),
+            ),
+        ),
+        fulfilled(GET_WORK_DAYS)
     );
 
 export const createWorkDaysEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(CREATE_WORK_DAYS),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(createWorkDaysMutation, {
-                    workDays: action.payload
+                    workDays: payload
                 }
             ).pipe(
-                map(response => createWorkDaysSuccessful(response.data.workDays.createWorkDays)),
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return createWorkDaysSuccessful(data.workDays.createWorkDays);
+
+                    return setError({ type: CREATE_WORK_DAYS, error: errors[0] });
+                }),
             )
-        )
+        ),
+        fulfilled(CREATE_WORK_DAYS)
     );
 
 export const updateWorkDayEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(UPDATE_WORK_DAYS),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(updateWorkDayMutation, {
-                    workDay: action.payload
+                    workDay: payload
                 }
             ).pipe(
-                map(response => updateWorkDaySuccessful(response.data.workDays.updateWorkDay)),
+                map(({ errors, data }) => {
+                    if (!errors)
+                        return updateWorkDaySuccessful(data.workDays.updateWorkDay);
+
+                    return setError({ type: UPDATE_WORK_DAYS, error: errors[0] });
+                }),
             )
-        )
+        ),
+        fulfilled(UPDATE_WORK_DAYS)
     );
 
 export const deleteWorkDayEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(DELETE_WORK_DAYS),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(deleteWorkDayMutation, {
-                    id: action.payload
+                    id: payload
                 }
             ).pipe(
-                map(() => deleteWorkDaySuccessful(action.payload)),
+                map(({ errors }) => {
+                    if (!errors)
+                        return deleteWorkDaySuccessful(payload);
+
+                    return setError({ type: DELETE_WORK_DAYS, error: errors[0] });
+                }),
             )
-        )
+        ),
+        fulfilled(DELETE_WORK_DAYS)
     );

@@ -2,7 +2,8 @@ import { AuthenticationActions } from "./authenticationActions.ts";
 import { EmployeesActions } from "./employeesActions.ts";
 import { TimeTrackerActions } from "./timeTrackerActions.ts";
 import { WorkDayActions } from "@features/calendar/types/actions.ts";
-import { RolesActions } from "@interfaces/actions/rolesActions.ts";
+import { RolesActions } from "./rolesActions.ts";
+import { ActionStateActions } from "./actionStateActions.ts";
 
 export type MyAction =
     EmployeesActions
@@ -10,4 +11,5 @@ export type MyAction =
     | AuthenticationActions
     | WorkDayActions
     | RolesActions
+    | ActionStateActions
 

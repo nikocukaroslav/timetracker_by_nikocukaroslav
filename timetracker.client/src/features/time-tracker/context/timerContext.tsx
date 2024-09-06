@@ -26,7 +26,7 @@ export default function TimerProvider({ children }: { children: ReactNode }) {
     };
 
     useEffect(() => {
-        dispatch(getLastWorkSession(userId))
+        dispatch(getLastWorkSession(userId as string))
     }, [userId]);
 
     useEffect(() => {

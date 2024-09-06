@@ -2,8 +2,6 @@ import { PaginationModel, RoleModel, UserFilterModel, UserModel, WorkSessionMode
 import { CalendarState } from "@features/calendar/types/state.ts";
 
 export interface EmployeesState {
-    error: string | null;
-    loading: boolean;
     user: UserModel;
     users: UserModel[];
     pagination: PaginationModel;
@@ -19,24 +17,26 @@ export interface AuthenticationState {
     user: UserModel | null;
     accessToken: string | null;
     expiresAt: number | null;
-    loading: boolean;
     authenticating: boolean;
-    error: string | null;
-    isPageFound: boolean;
-    createPasswordResult: boolean;
-    isTemporaryLinkValid: boolean;
-    resendCreatePasswordEmailStatus: string | null;
 }
 
 export interface TimeTrackerState {
     workSessions: WorkSessionModel[];
     sessionId: string | null;
     isTracking: boolean;
-    searchingLastSession: boolean;
     startTime: number | null;
     pagination: PaginationModel;
-    loading: boolean;
-    error: string | null;
+}
+
+export interface ActionsState {
+    actions: Record<string, {
+        fulfilled?: boolean;
+        loading?: boolean;
+        error?: {
+            message: string;
+            code: string;
+        } | null;
+    }>
 }
 
 export interface State {
@@ -44,5 +44,6 @@ export interface State {
     authentication: AuthenticationState;
     timeTracker: TimeTrackerState;
     calendar: CalendarState;
-    roles: RolesState
+    roles: RolesState;
+    actionsState: ActionsState;
 }

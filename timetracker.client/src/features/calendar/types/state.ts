@@ -7,5 +7,4 @@ export interface CalendarState {
         name: string,
         surname: string
     } | null,
-    loading: boolean;
 }

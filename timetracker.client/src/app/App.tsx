@@ -30,13 +30,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "time-tracker",
-                element:
-                    <TimeTracker/>
+                element: <TimeTracker/>
             },
             {
                 path: "calendar",
-                element:
-                    <Calendar/>
+                element: <Calendar/>
             },
             {
                 path: "employees",
@@ -65,20 +63,17 @@ const router = createBrowserRouter([
             },
             {
                 path: "requests",
-                element:
-                    <Requests/>
+                element: <Requests/>
             },
             {
                 path: "settings",
-                element:
-                    <Settings/>
+                element: <Settings/>
             },
         ],
     },
     {
         path: "auth/create-password/:temporaryLinkId",
-        element:
-            <SetPassword/>
+        element: <SetPassword/>
     },
     {
         path: "/sign-in",

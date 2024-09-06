@@ -1,20 +1,8 @@
-import { catchError, map, of, switchMap, tap } from "rxjs";
+import { map, switchMap } from "rxjs";
 import { Epic, ofType } from "redux-observable";
 
-import store from "@store";
-import {
-    authorizeError,
-    authorizeSuccessful,
-    createUserPasswordSuccessful,
-    logoutSuccessful,
-    refreshTokenSuccessful,
-    resendCreatePasswordEmailError,
-    resendCreatePasswordEmailSuccessful,
-    setError,
-    setLoading,
-    temporaryLinkValidationError,
-    temporaryLinkValidationSuccessful,
-} from "../authenticationSlice.ts";
+import { authorizeSuccessful, logoutSuccessful, refreshTokenSuccessful, } from "../authenticationSlice.ts";
+import { setError } from "@/store/slices/actionsStateSlice.ts";
 import {
     authorizeMutation,
     createUserPasswordMutation,
@@ -27,6 +15,7 @@ import {
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import { getCookie } from "@utils/cookieHandlers.ts";
+import { fulfilled, resetState } from "@utils/actionStateHelpers.ts";
 import {
     AUTHORIZE,
     CREATE_USER_PASSWORD,
@@ -40,129 +29,121 @@ import {
 export const loginEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(LOGIN),
-        tap(() => store.dispatch(setLoading(true))),
-        tap(() => store.dispatch(setError(""))),
-        switchMap(action =>
-            graphQlQuery(loginMutation, {
-                email: action.payload.email,
-                password: action.payload.password
-            })
+        resetState(),
+        switchMap(({ payload }) =>
+            graphQlQuery(loginMutation, payload)
                 .pipe(
-                    map(response => {
-                        if (!response.errors)
-                            return authorizeSuccessful(response.data.auth.login)
-                        return setError(response.errors[0].message)
+                    map(({ errors, data }) => {
+                        if (!errors)
+                            return authorizeSuccessful(data.auth.authorize)
+
+                        return setError({ type: LOGIN, error: errors[0] });
                     }),
-                    catchError((error) => of(setError(error.message))),
-                    tap(() => store.dispatch(setLoading(false))),
                 )
-        )
+        ),
+        fulfilled(LOGIN)
     );
 
 export const authorizeEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(AUTHORIZE),
-        tap(() => store.dispatch(setError(""))),
+        resetState(),
         switchMap(() =>
             graphQlQuery(authorizeMutation, { refreshToken: getCookie("refreshToken") })
                 .pipe(
-                    map(response => {
-                        if (response.errors)
-                            return authorizeError();
+                    map(({ errors, data }) => {
+                        if (!errors)
+                            return authorizeSuccessful(data.auth.authorize)
 
-                        return authorizeSuccessful(response.data.auth.authorize);
+                        return setError({ type: AUTHORIZE, error: errors[0] });
                     }),
-                    catchError((error) => of(setError(error.message))),
                 )
-        )
+        ),
+        fulfilled(AUTHORIZE)
     );
-
 
 export const logoutEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(LOGOUT),
-        tap(() => store.dispatch(setError(""))),
+        resetState(),
         switchMap(() =>
             graphQlQuery(logoutMutation, { refreshToken: getCookie("refreshToken") })
                 .pipe(
-                    map(() => logoutSuccessful()),
-                    catchError((error) => of(setError(error.message))),
+                    map(({ errors }) => {
+                        if (!errors)
+                            return logoutSuccessful()
+
+                        return setError({ type: LOGOUT, error: errors[0] });
+                    }),
                 )
-        )
+        ),
+        fulfilled(LOGOUT)
     )
 
 export const refreshTokenEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(REFRESH_TOKEN),
-        tap(() => store.dispatch(setError(""))),
+        resetState(),
         switchMap(() =>
             graphQlQuery(refreshTokenMutation, { refreshToken: getCookie("refreshToken") })
                 .pipe(
-                    map((response) => {
-                        if (response.errors)
-                            return authorizeError();
+                    map(({ errors, data }) => {
+                        if (!errors)
+                            return refreshTokenSuccessful(data.auth)
 
-                        return refreshTokenSuccessful(response.data.auth);
+                        return setError({ type: REFRESH_TOKEN, error: errors[0] });
                     }),
-                    catchError((error) => of(setError(error.message))),
                 )
-        )
+        ),
+        fulfilled(REFRESH_TOKEN)
     )
 
 export const createUserPasswordEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(CREATE_USER_PASSWORD),
-        switchMap(action =>
-            graphQlQuery(createUserPasswordMutation, {
-                password: action.payload.password,
-                temporaryLinkId: action.payload.temporaryLinkId
-            })
+        resetState(),
+        switchMap(({ payload }) =>
+            graphQlQuery(createUserPasswordMutation, payload)
                 .pipe(
-                    map((response) => {
-                        if (!response.errors)
-                            return createUserPasswordSuccessful(response.data.users);
-                        return setError(response.errors[0].message)
+                    map(({ errors }) => {
+                        if (errors)
+                            return setError({ type: CREATE_USER_PASSWORD, error: errors[0] });
                     }),
-                    catchError((error) => of(setError(error.message))),
                 )
-        )
+        ),
+        fulfilled(CREATE_USER_PASSWORD)
     )
 
 export const temporaryLinkValidationEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(TEMPORARY_LINK_VALIDATION),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(temporaryLinkValidationQuery, {
-                temporaryLinkId: action.payload
-            })
-                .pipe(
-                    map(response => {
-                        if (!response.errors)
-                            return temporaryLinkValidationSuccessful()
-                        return temporaryLinkValidationError(response.errors[0].extensions.code)
-                    }),
-                    catchError((error) => of(setError(error.message))),
-                )
-        )
+                temporaryLinkId: payload
+            }).pipe(
+                map(({ errors }) => {
+                    if (errors)
+                        return setError({ type: TEMPORARY_LINK_VALIDATION, error: errors[0] });
+                }),
+            )
+        ),
+        fulfilled(TEMPORARY_LINK_VALIDATION)
     )
 
 export const resendCreatePasswordEmailEpic: Epic<MyAction> = (action$) =>
     action$.pipe(
         ofType(RESEND_CREATE_PASSWORD_EMAIL),
-        switchMap(action =>
+        resetState(),
+        switchMap(({ payload }) =>
             graphQlQuery(resendCreatePasswordEmailMutation, {
-                temporaryLinkId: action.payload
-            })
-                .pipe(
-                    map(response => {
-                        if (!response.errors)
-                            return resendCreatePasswordEmailSuccessful(response.data.users.resendCreatePasswordEmail)
-                        return resendCreatePasswordEmailError({
-                            message: response.errors[0].message,
-                            code: response.errors[0].extensions.code
-                        })
-                    }),
-                    catchError((error) => of(setError(error.message))),
-                )
-        )
+                temporaryLinkId: payload
+            }).pipe(
+                map(({ errors }) => {
+                    if (errors)
+                        return setError({ type: RESEND_CREATE_PASSWORD_EMAIL, error: errors[0] });
+                }),
+            )
+        ),
+        fulfilled(RESEND_CREATE_PASSWORD_EMAIL)
     )

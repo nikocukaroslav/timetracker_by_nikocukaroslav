@@ -5,11 +5,12 @@ import { Button, Icon, Text } from "@chakra-ui/react";
 import { PiKey, PiSignIn, PiUser } from "react-icons/pi";
 
 import CustomInput from "@components/ui/CustomInput";
+import AuthForm from "@features/authentication/components/AuthForm.tsx";
+import HandlePasswordVisibilityButton from "@features/authentication/components/HandlePasswordVisibilityButton.tsx";
 
 import { login } from "@features/authentication/api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
-import AuthForm from "@features/authentication/components/AuthForm.tsx";
-import HandlePasswordVisibilityButton from "@features/authentication/components/HandlePasswordVisibilityButton.tsx";
+import { useActionState } from "@hooks/useActionState.ts";
 import { schemas } from "@utils/inputHelpers.ts";
 
 const defaultFormData = {
@@ -21,8 +22,7 @@ function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
 
     const loginStatus = useAppSelector(state => state.authentication.user);
-    const loading = useAppSelector(state => state.authentication.loading);
-    const error = useAppSelector(state => state.authentication.error);
+    const { loading, error } = useActionState(login);
 
     const dispatch = useDispatch();
 
@@ -42,8 +42,11 @@ function SignIn() {
         return <Navigate to="/time-tracker"/>;
 
     return (
-        <AuthForm onSubmit={handleLogin} initialValues={defaultFormData}
-                  validationSchema={schemas.signInSchema}>
+        <AuthForm
+            onSubmit={handleLogin}
+            initialValues={defaultFormData}
+            validationSchema={schemas.signInSchema}
+        >
             <CustomInput
                 name="email"
                 icon={PiUser}
@@ -66,7 +69,7 @@ function SignIn() {
                       _hover={{ textDecoration: "underline" }}>
                     Forgot password</Text>
             </NavLink>*/}
-            <Text color="red.500">{error}</Text>
+            {error && <Text color="red.500">{error.message}</Text>}
             <Button
                 type="submit"
                 mt="auto"

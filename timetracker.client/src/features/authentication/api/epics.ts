@@ -35,7 +35,7 @@ export const loginEpic: Epic<MyAction> = (action$) =>
                 .pipe(
                     map(({ errors, data }) => {
                         if (!errors)
-                            return authorizeSuccessful(data.auth.authorize)
+                            return authorizeSuccessful(data.auth.login)
 
                         return setError({ type: LOGIN, error: errors[0] });
                     }),

@@ -1,7 +1,12 @@
 import { map, switchMap } from "rxjs";
 import { Epic, ofType } from "redux-observable";
 
-import { authorizeSuccessful, logoutSuccessful, refreshTokenSuccessful, } from "../authenticationSlice.ts";
+import {
+    authorizeError,
+    authorizeSuccessful,
+    logoutSuccessful,
+    refreshTokenSuccessful,
+} from "../authenticationSlice.ts";
 import { setError } from "@/store/slices/actionsStateSlice.ts";
 import {
     authorizeMutation,
@@ -55,7 +60,7 @@ export const authorizeEpic: Epic<MyAction> = (action$) =>
                         if (!errors)
                             return authorizeSuccessful(data.auth.authorize)
 
-                        return setError({ type: AUTHORIZE, error: errors[0] });
+                        return authorizeError();
                     }),
                 )
         ),

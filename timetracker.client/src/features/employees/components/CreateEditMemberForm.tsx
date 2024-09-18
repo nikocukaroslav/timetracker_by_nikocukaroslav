@@ -8,7 +8,7 @@ import ModalForm from "@components/ui/forms/ModalForm.tsx";
 import CustomSelect from "@components/ui/CustomSelect.tsx";
 import ChoosablePermissionList from "@features/employees/components/ChoosablePermissionList.tsx";
 
-import { createUser, updateUser } from "../api/actions.ts";
+import { createUser, updateUser } from "@features/employees/api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useActionState } from "@hooks/useActionState.ts";
 import { CreateEditMemberFormProps } from "@interfaces/components.ts";

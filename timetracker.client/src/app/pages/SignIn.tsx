@@ -5,7 +5,7 @@ import { Button, Icon, Text } from "@chakra-ui/react";
 import { PiKey, PiSignIn, PiUser } from "react-icons/pi";
 
 import CustomInput from "@components/ui/CustomInput";
-import AuthForm from "@features/authentication/components/AuthForm.tsx";
+import AuthForm from "@components/ui/forms/AuthForm.tsx";
 import HandlePasswordVisibilityButton from "@features/authentication/components/HandlePasswordVisibilityButton.tsx";
 
 import { login } from "@features/authentication/api/actions.ts";
@@ -69,7 +69,7 @@ function SignIn() {
                       _hover={{ textDecoration: "underline" }}>
                     Forgot password</Text>
             </NavLink>*/}
-            {error && <Text color="red.500">{error.message}</Text>}
+            {<Text color="red.500">{error?.message}</Text>}
             <Button
                 type="submit"
                 mt="auto"

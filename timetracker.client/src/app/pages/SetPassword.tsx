@@ -6,7 +6,7 @@ import { Box, Button, Flex, Text, useToast } from '@chakra-ui/react';
 
 import CustomInput from "@components/ui/CustomInput.tsx";
 import HandlePasswordVisibilityButton from "@features/authentication/components/HandlePasswordVisibilityButton.tsx";
-import AuthForm from "@features/authentication/components/AuthForm.tsx";
+import AuthForm from "@components/ui/forms/AuthForm.tsx";
 import Spinner from "@components/ui/Spinner.tsx";
 import { useActionState } from "@hooks/useActionState.ts";
 import {

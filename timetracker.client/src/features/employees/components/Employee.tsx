@@ -9,12 +9,12 @@ import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx"
 import StatusLabel from "@components/ui/StatusLabel.tsx";
 import TitledText from "@components/ui/TitledText.tsx";
 
-import { deleteUser, updateUser } from "../api/actions.ts";
+import { deleteUser, updateUser } from "@features/employees/api/actions.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
 import { UserModel } from "@interfaces/domain.ts";
 import { convertTime } from "@utils/formatters.ts";
-import PermissionsList from "@features/employees/components/PermissionsList.tsx";
+import PermissionList from "@features/employees/components/PermissionList.tsx";
 
 function Employee({ employee }: EmployeeProps) {
     const userId = useAppSelector(state => state.authentication.user?.id);
@@ -69,7 +69,7 @@ function Employee({ employee }: EmployeeProps) {
                     {isEmployed && (
                         <>
                             <CustomVerticalDivider/>
-                            <Flex py="2" w={{ xl: 32, base: 8 }} gap="2" align="center" justifyContent="center"
+                            <Flex py="2" w={{ xl: 32, base: 8 }} gap="2" align="center"
                                   lineHeight="1.1">
                                 <Icon boxSize={6} as={PiToolbox} title={roleTitle}/>
                                 <Show above="xl">
@@ -77,7 +77,7 @@ function Employee({ employee }: EmployeeProps) {
                                 </Show>
                             </Flex>
                             <CustomVerticalDivider/>
-                            <PermissionsList value={permissions}/>
+                            <PermissionList value={permissions}/>
                             <CustomVerticalDivider/>
                             <Flex
                                 align="center"

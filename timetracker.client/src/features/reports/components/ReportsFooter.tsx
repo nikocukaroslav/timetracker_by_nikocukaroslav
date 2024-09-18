@@ -1,41 +1,46 @@
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-
-import PaginationFooter from "@components/ui/PaginationFooter.tsx";
-
 import { useAppSelector } from "@hooks/useAppSelector.ts";
-import { getReports } from "@features/time-tracker/api/actions.ts";
+import { useContext, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
+import PaginationFooter from "@components/ui/PaginationFooter.tsx";
+import { getReports } from "@features/reports/api/actions.ts";
+import { ReportsContext } from "@features/reports/context/reportContext.ts";
 
-function TimeTrackerFooter() {
+function ReportsFooter() {
     const dispatch = useDispatch()
-    const pagination = useAppSelector(state => state.timeTracker.pagination)
-    const userId = useAppSelector(state => state.authentication.user?.id)
+    const pagination = useAppSelector(state => state.reports.pagination)
+
+    const { currentDate } = useContext(ReportsContext);
+
+    const date = new Date(currentDate);
+
+    const startDate = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime();
 
     useEffect(() => {
         const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }
-        dispatch(getReports(userId, paginationRequest));
-    }, [dispatch]);
+        dispatch(getReports(paginationRequest, startDate, endDate));
+    }, [dispatch, endDate, pagination.page, pagination.pageSize, startDate]);
 
     function prevPage() {
         if (pagination.page) {
             const paginationRequest = { page: pagination.page - 1, pageSize: pagination.pageSize }
-            dispatch(getReports(userId, paginationRequest));
+            dispatch(getReports(paginationRequest, startDate, endDate));
         }
     }
 
     function nextPage() {
         if (pagination.page) {
             const paginationRequest = { page: pagination.page + 1, pageSize: pagination.pageSize }
-            dispatch(getReports(userId, paginationRequest));
+            dispatch(getReports(paginationRequest, startDate, endDate));
         }
     }
 
     const handlePageSizeChange = (value: string) => {
         const newSize = Number(value)
         if (newSize > 0 && newSize <= 100) {
-            dispatch(getReports(userId, { page: 1, pageSize: newSize }));
-            localStorage.setItem("trackerPageSize", newSize.toString());
+            dispatch(getReports({ page: 1, pageSize: newSize }, startDate, endDate));
+            localStorage.setItem("reportsPageSize", newSize.toString());
         }
     }
 
@@ -53,4 +58,4 @@ function TimeTrackerFooter() {
     );
 }
 
-export default TimeTrackerFooter;
+export default ReportsFooter;

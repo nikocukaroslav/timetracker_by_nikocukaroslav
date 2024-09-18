@@ -1,23 +1,20 @@
 import { Slider, SliderFilledTrack, SliderTrack } from "@chakra-ui/react";
 
-interface TimeLoadVisualSliderProps {
-    timeload: number
-}
 
-function TimeLoadVisualSlider({ timeload }: TimeLoadVisualSliderProps) {
+function TimeLoadVisualSlider({ percent }) {
     function handleColor() {
-        if (timeload >= 100)
+        if (percent >= 100)
             return "green.500"
-        if (timeload >= 50)
+        if (percent >= 50)
             return "orange.500"
-        if (timeload < 50)
+        if (percent < 50)
             return "red.500"
     }
 
     return (
         <Slider
             aria-label="timeload-slider"
-            value={timeload}
+            value={percent}
             isReadOnly
             focusThumbOnChange={false}
             isDisabled

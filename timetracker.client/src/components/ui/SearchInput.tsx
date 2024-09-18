@@ -2,7 +2,7 @@ import { Input, InputGroup, InputProps } from "@chakra-ui/react";
 
 function SearchInput({ children, ...props }: InputProps) {
     return (
-        <InputGroup>
+        <InputGroup maxWidth="64">
             <Input
                 {...props}
                 borderColor="gray.300"

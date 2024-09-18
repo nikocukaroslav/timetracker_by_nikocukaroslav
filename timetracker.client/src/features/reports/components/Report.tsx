@@ -3,20 +3,18 @@ import TitledText from "@components/ui/TitledText.tsx";
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import { PiClockUser, PiToolbox } from "react-icons/pi";
 import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
-import TimeLoadVisualSlider from "@features/accounting/components/TimeLoadVisualSlider.tsx";
-import { convertTimeToPercentage } from "@utils/convertors.ts";
+import TimeLoadVisualSlider from "@features/reports/components/TimeLoadVisualSlider.tsx";
 import { convertTime } from "@utils/formatters.ts";
 import { EmployeeProps } from "@interfaces/components.ts";
 
-function EmployeeStatistic({ employee }: EmployeeProps) {
-    const { name, surname, email, role, timeload } = employee;
+function Report({ employee }: EmployeeProps) {
+    const { name, surname, email, role, timeload, percent } = employee;
 
     const fullName = `${name} ${surname}`;
 
     const roleTitle = useBreakpointValue({ base: role?.name, xl: "" });
+    
     const timeloadString = timeload ? convertTime(timeload, "hh:mm") : "";
-
-    const convertedTimeload = convertTimeToPercentage(timeload)
 
     return (
         <>
@@ -72,13 +70,13 @@ function EmployeeStatistic({ employee }: EmployeeProps) {
                     gap={4}
                 >
                     <Text fontWeight="500">Total:</Text>
-                    <TimeLoadVisualSlider timeload={convertedTimeload}/>
+                    <TimeLoadVisualSlider percent={percent}/>
                 </Flex>
-                <Text w="48" align="center" fontWeight="500">{convertedTimeload}%</Text>
+                <Text w="48" align="center" fontWeight="500">{percent}%</Text>
             </ListItem>
             <CustomHorizontalDivider/>
         </>
     );
 }
 
-export default EmployeeStatistic;
+export default Report;

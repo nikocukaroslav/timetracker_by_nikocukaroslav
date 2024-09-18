@@ -2,7 +2,7 @@ import { Flex, Icon, ListItem, Spacer, Text } from "@chakra-ui/react";
 import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 import { GrMoney, GrUserManager, GrUserSettings } from "react-icons/gr";
 import { PiTerminalWindowBold } from "react-icons/pi";
-import PermissionsList from "@features/employees/components/PermissionsList.tsx";
+import PermissionList from "@features/employees/components/PermissionList.tsx";
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/action-menu";
 import { useDispatch } from "react-redux";
@@ -43,7 +43,7 @@ function Role({ role }) {
                     </Flex>
                 </Flex>
                 <CustomVerticalDivider/>
-                <PermissionsList value={role.defaultPermissions}/>
+                <PermissionList value={role.defaultPermissions}/>
                 <Spacer/>
                 <ActionMenu>
                     <CreateEditRoleForm

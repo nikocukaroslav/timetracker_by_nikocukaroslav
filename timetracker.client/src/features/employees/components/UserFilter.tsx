@@ -5,7 +5,7 @@ import FilterDrawer from "@components/ui/FilterDrawer.tsx";
 import CustomCheckbox from "@components/ui/CustomCheckbox.tsx";
 
 import { FilterFormProps } from "@interfaces/components.ts";
-import {  userStatusList } from "@constants";
+import { userStatusList } from "@constants";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useForm } from "@hooks/useForm.ts";
 import { getUsers } from "@features/employees/api/actions.ts";

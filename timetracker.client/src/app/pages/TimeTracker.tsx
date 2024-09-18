@@ -1,14 +1,15 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 
 import TimeTrackerHeader from "@features/time-tracker/components/TimeTrackerHeader.tsx";
-import TimeTrackerFooter from "@features/time-tracker/components/TimeTrackerFooter.tsx";
 import PermissionChecker from "@components/layouts/PermissionChecker.tsx";
 
 import { MANAGE_OWN_TIME } from "@constants";
 import WorkSessionsList from "@features/time-tracker/components/WorkSessionsList.tsx";
 import WorkSessionHeader from "@features/time-tracker/components/WorkSessionHeader.tsx";
+import TimeTrackerFooter from "@features/time-tracker/components/TimeTrackerFooter.tsx";
 
 function TimeTracker() {
+
     return (
         <Grid
             gap={2}

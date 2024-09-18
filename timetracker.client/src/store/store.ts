@@ -40,6 +40,8 @@ import timeTrackerReducer from "@features/time-tracker/timeTrackerSlice.ts";
 import calendarReducer from "@features/calendar/calendarSlice.ts";
 import rolesReducer from "@features/roles/rolesSlice.ts";
 import actionsStateReducer from "./slices/actionsStateSlice.ts";
+import reportsReducer from "@features/reports/reportsSlice.ts"
+import { getReportsEpic } from "@features/reports/api/epics.ts";
 
 const epics = [
     loginEpic,
@@ -68,7 +70,8 @@ const epics = [
     getRolesEpic,
     deleteRoleEpic,
     createRoleEpic,
-    updateRoleEpic
+    updateRoleEpic,
+    getReportsEpic
 ]
 
 const epicMiddleware = createEpicMiddleware();
@@ -76,6 +79,7 @@ const epicMiddleware = createEpicMiddleware();
 const appReducer = combineReducers({
     authentication: authenticationReducer,
     employees: employeesReducer,
+    reports: reportsReducer,
     timeTracker: timeTrackerReducer,
     calendar: calendarReducer,
     roles: rolesReducer,

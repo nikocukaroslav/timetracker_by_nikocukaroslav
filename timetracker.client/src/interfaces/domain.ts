@@ -4,6 +4,7 @@ export interface UserModel {
     surname?: string,
     email?: string,
     role?: RoleModel,
+    percent?: number,
     permissions?: string[],
     password?: string,
     timeload?: string,

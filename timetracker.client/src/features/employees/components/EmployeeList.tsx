@@ -5,7 +5,7 @@ import Employee from "./Employee.tsx";
 import { UserModel } from "@interfaces/domain.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 
-function EmployeesList() {
+function EmployeeList() {
     const employees: UserModel[] = useAppSelector(state => state.employees.users)
 
     return (
@@ -23,4 +23,4 @@ function EmployeesList() {
     );
 }
 
-export default EmployeesList;
+export default EmployeeList;

@@ -8,6 +8,12 @@ export interface EmployeesState {
     filter: UserFilterModel | null;
 }
 
+export interface ReportsState {
+    reports: UserModel[];
+    pagination: PaginationModel;
+    filter: UserFilterModel | null;
+}
+
 export interface RolesState {
     roles: RoleModel[];
     loading: boolean;
@@ -43,6 +49,7 @@ export interface State {
     employees: EmployeesState;
     authentication: AuthenticationState;
     timeTracker: TimeTrackerState;
+    reports: ReportsState;
     calendar: CalendarState;
     roles: RolesState;
     actionsState: ActionsState;

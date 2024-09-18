@@ -2,7 +2,7 @@ import { Button, Menu, MenuButton, MenuItem, MenuList, Portal } from "@chakra-ui
 import { PiCaretDown } from "react-icons/pi";
 import { permissionList } from "@constants";
 
-function PermissionsList({ value }) {
+function PermissionList({ value }) {
     return (
         <Menu variant="ghost" isLazy={true}>
             <MenuButton bg="gray.200" fontWeight="normal" as={Button}
@@ -26,4 +26,4 @@ function PermissionsList({ value }) {
     );
 }
 
-export default PermissionsList;
+export default PermissionList;

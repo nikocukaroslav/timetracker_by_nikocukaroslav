@@ -45,8 +45,8 @@ function Calendar() {
         }}>
             <Stack gap={0} h="full">
                 <HStack gap={4} justifyContent="space-between" mb={4}>
-                    <CalendarHeading/>
                     <CalendarControls/>
+                    <CalendarHeading/>
                     <CalendarSearch/>
                 </HStack>
                 <CalendarHeader/>

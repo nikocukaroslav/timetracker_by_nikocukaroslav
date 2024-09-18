@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import PaginationFooter from "@components/ui/PaginationFooter.tsx";
-
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { getUsers } from "@features/employees/api/actions.ts";
 
 function EmployeesFooter() {
-    const dispatch = useDispatch()
     const pagination = useAppSelector(state => state.employees.pagination)
     const filter = useAppSelector(state => state.employees.filter)
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }

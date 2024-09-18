@@ -1,7 +1,7 @@
 import {
     PiCalendarBlank,
+    PiChartLine,
     PiClock,
-    PiCoins,
     PiGear,
     PiListChecks,
     PiNote,
@@ -59,10 +59,6 @@ function Navbar() {
                 <PermissionChecker permissions={[MANAGE_USERS, APPROVE_REQUESTS]}>
                     <CustomNavbarDivider label="Manage"/>
                 </PermissionChecker>
-                <NavigationLink
-                    icon={PiCoins}
-                    label="Accounting"
-                    to="accounting"/>
                 <PermissionChecker permissions={[MANAGE_USERS]}>
                     <NavigationLink
                         to="employees"
@@ -83,6 +79,10 @@ function Navbar() {
                         icon={PiUserGear}
                         label="Roles"
                     />
+                    <NavigationLink
+                        icon={PiChartLine}
+                        label="Reports"
+                        to="reports"/>
                 </PermissionChecker>
                 <CustomNavbarDivider label="Request"/>
                 <NavigationLink

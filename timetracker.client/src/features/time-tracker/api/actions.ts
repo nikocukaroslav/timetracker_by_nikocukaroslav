@@ -17,7 +17,7 @@ export const stopSession = (session: {
     id: string,
     endTime: number,
 }) => ({ type: STOP_SESSION, payload: session })
-export const getWorkSessions = (userId: string, pagination: PaginationModel) => ({
+export const getReports = (userId: string, pagination: PaginationModel) => ({
     type: GET_WORK_SESSIONS,
     payload: { userId, pagination }
 })

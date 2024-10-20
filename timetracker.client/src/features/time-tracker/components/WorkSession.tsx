@@ -1,9 +1,8 @@
 import { useDispatch } from "react-redux";
 import { PiPencilSimple, PiTimer } from "react-icons/pi";
-import { Box, Divider, Flex, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Icon, Text } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
-import StatusLabel from "@components/ui/StatusLabel.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuInfoBtn } from "@components/ui/action-menu";
 
 import dateConverter, { convertTime, convertToLocalISO, formatTime } from "@utils/formatters.ts";
@@ -39,50 +38,52 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
     }
 
     return (
-        <Box
+
+        <Flex
             position="relative"
-            sx={{
-                "&:last-child > div": {
-                    borderRadius: "10px",
-                }
-            }}
+            align="center"
+            justify="space-between"
+            p="5"
+            bg="gray.50"
         >
-            {editedAt &&
-                <StatusLabel label="Edited" icon={PiPencilSimple} borderColor="gray.200"/>
-            }
-            <Flex
-                position="relative"
-                align="center"
-                justify="space-between"
-                p="5"
-                bg="gray.50"
-            >
-                <Flex align="center">
-                    <Flex gap="2" align="center" w="96">
-                        <PiTimer size="28"/>
-                        <Text>{`Working time: ${workingTime}`}</Text>
-                    </Flex>
-                    <CustomVerticalDivider/>
-                    <Text w="36">
-                        {`Total: ${formatTime(totalTime)}`}
-                    </Text>
+            <Flex align="center">
+                <Flex gap="2" align="center" w={96}>
+                    <PiTimer size="28"/>
+                    <Text>{`Working time: ${workingTime}`}</Text>
                 </Flex>
-                <ActionMenu>
-                    <ActionMenuInfoBtn info={
-                        <Box>
-                            {descriptionSetBy && <Text>Set {descriptionSetBy}</Text>}
-                            {editMessage && <Text mt={1}>{editMessage}</Text>}
-                        </Box>
-                    }/>
-                    <Divider/>
-                    <CreateEditWorkSessionForm formData={formData} isEditing>
-                        <ActionMenuEditBtn/>
-                    </CreateEditWorkSessionForm>
-                    <Divider/>
-                    <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={handleDelete}/>
-                </ActionMenu>
+                <CustomVerticalDivider/>
+                <Text w="36">
+                    {`Total: ${formatTime(totalTime)}`}
+                </Text>
             </Flex>
-        </Box>
+            {editedAt &&
+                <Flex
+                    alignItems="center"
+                    rounded="md"
+                    px={2}
+                    gap={2}
+                    borderColor="gray.300"
+                    borderWidth={2}
+                >
+                    <Icon as={PiPencilSimple} boxSize="4"></Icon>
+                    <Text>Edited</Text>
+                </Flex>
+            }
+            <ActionMenu>
+                <ActionMenuInfoBtn info={
+                    <Box>
+                        {descriptionSetBy && <Text>Set {descriptionSetBy}</Text>}
+                        {editMessage && <Text mt={1}>{editMessage}</Text>}
+                    </Box>
+                }/>
+                <Divider/>
+                <CreateEditWorkSessionForm formData={formData} isEditing>
+                    <ActionMenuEditBtn/>
+                </CreateEditWorkSessionForm>
+                <Divider/>
+                <ActionMenuDeleteBtn confirmText="Delete this work session?" onClick={handleDelete}/>
+            </ActionMenu>
+        </Flex>
     );
 }
 

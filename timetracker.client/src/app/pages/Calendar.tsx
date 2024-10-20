@@ -13,6 +13,7 @@ import { getWorkDays } from "@features/calendar/api/actions.ts";
 import { getCalendarBounds } from "@features/calendar/utils/getCalendarBounds.ts";
 import { convertDateToISODate } from "@utils/formatters.ts";
 import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
+import HomeButton from "@features/calendar/components/HomeButton.tsx";
 
 function Calendar() {
     const accountId = useAppSelector(state => state.authentication.user?.id);
@@ -52,6 +53,7 @@ function Calendar() {
                 <CalendarHeader/>
                 <CalendarBody/>
             </Stack>
+            {accountId !== userId && <HomeButton onClick={() => setUserId(accountId)}/>}
         </CalendarContext.Provider>
     );
 }

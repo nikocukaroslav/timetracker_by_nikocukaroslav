@@ -5,13 +5,14 @@ import {
     NumberIncrementStepper,
     NumberInput,
     NumberInputField,
-    NumberInputStepper, Text
+    NumberInputStepper,
+    Text
 } from "@chakra-ui/react";
 import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
 
 import { PaginationFooterProps } from "@interfaces/components.ts";
 
-function PaginationFooter({ pagination, onPageSizeChange, prevPage, nextPage } : PaginationFooterProps) {
+function PaginationFooter({ pagination, onPageSizeChange, prevPage, nextPage }: PaginationFooterProps) {
     return (
         <Flex
             alignItems="center"

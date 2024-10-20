@@ -13,8 +13,8 @@ namespace timetracker.Server.Application.Services
         private string? PaginationQuery { get; set; }
         private string? DistinctPath { get; set; }
         private string? CTEPath { get; set; }
-        private string? JoinPath {  get; set; }
-        private string? GroupByPart {  get; set; }
+        private string? JoinPath { get; set; }
+        private string? GroupByPart { get; set; }
         private DynamicParameters Parameters { get; set; } = new();
 
         public QueryBuilder()
@@ -74,7 +74,14 @@ namespace timetracker.Server.Application.Services
 
         public QueryBuilder AddSort(string column, bool ascending)
         {
-            Sort.Add($"{column} {(ascending ? "ASC" : "DESC")}");
+            if (column == "IsEmployed")
+            {
+                Sort.Add($"CASE WHEN {column} = 1 THEN 1 ELSE 0 END {(ascending ? "ASC" : "DESC")}");
+            }
+            else
+            {
+                Sort.Add($"{column} {(ascending ? "ASC" : "DESC")}");
+            }
 
             return this;
         }
@@ -118,7 +125,7 @@ namespace timetracker.Server.Application.Services
             ApplyFilters(sqlQuery);
 
             if (GroupByPart != null)
-                sqlQuery.Append(" " + GroupByPart);            
+                sqlQuery.Append(" " + GroupByPart);
 
             if (PaginationQuery != null)
             {

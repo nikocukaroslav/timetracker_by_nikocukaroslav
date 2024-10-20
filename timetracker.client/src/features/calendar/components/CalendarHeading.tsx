@@ -11,7 +11,7 @@ function CalendarHeading() {
         : `Calendar ${user?.name} ${user?.surname}`;
 
     return (
-        <TitledText title={title} fontSize={24} fontWeight="bold">
+        <TitledText title={title} fontSize={24} fontWeight="450">
             {title}
         </TitledText>
     );

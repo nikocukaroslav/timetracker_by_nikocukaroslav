@@ -1,7 +1,5 @@
-import { Flex, Icon, ListItem, Spacer, Text } from "@chakra-ui/react";
+import { Flex, ListItem, Spacer, Text } from "@chakra-ui/react";
 import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
-import { GrMoney, GrUserManager, GrUserSettings } from "react-icons/gr";
-import { PiTerminalWindowBold } from "react-icons/pi";
 import PermissionList from "@features/employees/components/PermissionList.tsx";
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn } from "@components/ui/action-menu";
@@ -11,17 +9,6 @@ import CreateEditRoleForm from "@features/roles/components/CreateEditRoleForm.ts
 
 function Role({ role }) {
     const dispatch = useDispatch();
-
-    function handleAvatar() {
-        if (role.name === "Developer")
-            return PiTerminalWindowBold
-        if (role.name === "Manager")
-            return GrUserManager
-        if (role.name === "Accountant")
-            return GrMoney
-        if (role.name === "Account manager")
-            return GrUserSettings
-    }
 
 
     function handleDelete() {
@@ -33,14 +20,12 @@ function Role({ role }) {
             <ListItem
                 display="flex"
                 alignItems="center"
-                p="5"
+                p={4}
+                px={5}
                 rounded="md"
             >
-                <Flex align="center" w={64} justify="space-between">
-                    <Flex gap="4" align="center">
-                        <Icon boxSize={6} as={handleAvatar()}/>
-                        <Text>{role.name}</Text>
-                    </Flex>
+                <Flex align="center" w="15%" minW={64} justify="space-between">
+                    <Text isTruncated>{role.name}</Text>
                 </Flex>
                 <CustomVerticalDivider/>
                 <PermissionList value={role.defaultPermissions}/>

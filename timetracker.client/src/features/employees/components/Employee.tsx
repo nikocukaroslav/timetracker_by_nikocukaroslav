@@ -1,12 +1,11 @@
 import { useDispatch } from "react-redux";
-import { PiClockUser, PiToolbox, PiUserMinus, PiUserSwitch } from "react-icons/pi";
-import { Divider, Flex, Icon, Img, ListItem, Show, Spacer, Text, useBreakpointValue } from "@chakra-ui/react";
+import { PiUserMinus, PiUserSwitch } from "react-icons/pi";
+import { Divider, Flex, Img, ListItem, Spacer, Text } from "@chakra-ui/react";
 
 import CustomVerticalDivider from "@components/ui/CustomVerticalDivider.tsx";
 import ActionMenu, { ActionMenuDeleteBtn, ActionMenuEditBtn, ActionMenuExpandedBtn } from "@components/ui/action-menu";
 import CreateEditMemberForm from "./CreateEditMemberForm.tsx";
 import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
-import StatusLabel from "@components/ui/StatusLabel.tsx";
 import TitledText from "@components/ui/TitledText.tsx";
 
 import { deleteUser, updateUser } from "@features/employees/api/actions.ts";
@@ -33,11 +32,8 @@ function Employee({ employee }: EmployeeProps) {
         dispatch(updateUser(newEmployee))
     }
 
-    const fullName = `${name} ${surname} ${itsYou ? "(you)" : ""}`;
+    const fullName = ` ${name} ${surname} ${itsYou ? "(you)" : ""} ${isEmployed ? "" : "(Terminated)"}`;
     const timeloadString = timeload ? convertTime(timeload, "hh:mm") : "";
-
-    const roleTitle = useBreakpointValue({ base: role?.name, xl: "" });
-    const timeloadTitle = useBreakpointValue({ base: timeloadString, lg: "" });
 
     return (
         <>
@@ -45,20 +41,21 @@ function Employee({ employee }: EmployeeProps) {
                 position="relative"
                 display="flex"
                 alignItems="center"
-                p="5"
+                py={4}
+                px={5}
                 rounded="md"
+                bg={`${!isEmployed && "red.100"}`}
             >
-                {!isEmployed &&
-                    <StatusLabel label="Terminated" bgColor="red.500" borderColor="red.500" color="gray.50"/>
-                }
-                <Img
-                    alt="user-img"
-                    w="28px"
-                    h="28px"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
-                />
-                <Flex align="center" justify="space-between" ml="5">
-                    <Flex direction="column" w={{ xl: "16rem", lg: "10rem", base: "7rem" }}>
+
+                <Flex minW={80} align="center">
+                    <Img
+                        alt="user-img"
+                        w="28px"
+                        h="28px"
+                        mr="5"
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png"
+                    />
+                    <Flex direction="column">
                         <TitledText title={fullName}>
                             {fullName}
                         </TitledText>
@@ -66,36 +63,18 @@ function Employee({ employee }: EmployeeProps) {
                             {email}
                         </TitledText>
                     </Flex>
-                    {isEmployed && (
-                        <>
-                            <CustomVerticalDivider/>
-                            <Flex py="2" w={{ xl: 32, base: 8 }} gap="2" align="center"
-                                  lineHeight="1.1">
-                                <Icon boxSize={6} as={PiToolbox} title={roleTitle}/>
-                                <Show above="xl">
-                                    <Text>{role?.name}</Text>
-                                </Show>
-                            </Flex>
-                            <CustomVerticalDivider/>
-                            <PermissionList value={permissions}/>
-                            <CustomVerticalDivider/>
-                            <Flex
-                                align="center"
-                                gap="2"
-                                px="5"
-                                py="2"
-                                bg="gray.200"
-                                rounded="md"
-                                w={{ lg: 32, base: 16 }}
-                            >
-                                <PiClockUser size="24px" title={timeloadTitle}/>
-                                <Show above="lg">
-                                    <Text>{timeloadString}</Text>
-                                </Show>
-                            </Flex>
-                        </>
-                    )}
                 </Flex>
+
+                <CustomVerticalDivider/>
+                <Flex py="2" minW={24} maxW={24}>
+                    <Text isTruncated>{role?.name}</Text>
+                </Flex>
+                <CustomVerticalDivider/>
+                <Flex minW={24} justifyContent="center">
+                    <Text>{timeloadString}</Text>
+                </Flex>
+                <CustomVerticalDivider/>
+                <PermissionList value={permissions}/>
                 <Spacer/>
                 {!itsYou &&
                     <ActionMenu>

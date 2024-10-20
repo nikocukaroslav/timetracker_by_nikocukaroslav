@@ -7,7 +7,8 @@ function RolesHeader() {
         <Flex
             justify="space-between"
             align="center"
-            p="5"
+            px={5}
+            pb={2}
         >
             <Text fontSize="2xl">Manage roles</Text>
             <Flex alignItems="flex-start">

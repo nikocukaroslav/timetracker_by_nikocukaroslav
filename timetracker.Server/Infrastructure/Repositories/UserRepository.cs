@@ -21,8 +21,12 @@ namespace timetracker.Server.Infrastructure.Repositories
 
             var sqlQuery = new QueryBuilder()
                 .AddFilter("IsEmployed", filter?.IsEmployed)
-                .AddFilter("Status", filter?.StatusList)
                 .AddFilter("RoleId", filter?.RoleList)
+                .AddFilter("Status", filter?.StatusList)
+                .AddSort(
+                    sort?.SortBy ?? "IsEmployed",
+                    sort?.Ascending ?? false
+                )
                 .AddSort(
                     sort?.SortBy ?? "Name",
                     sort?.Ascending ?? true

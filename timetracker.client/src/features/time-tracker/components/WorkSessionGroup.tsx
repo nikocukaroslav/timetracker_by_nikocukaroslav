@@ -1,11 +1,12 @@
 import { Fragment } from "react";
 import { PiCalendar } from "react-icons/pi";
-import { AccordionButton, AccordionItem, AccordionPanel, Divider, Flex, Stack, Text } from "@chakra-ui/react";
+import { AccordionButton, AccordionItem, AccordionPanel, Flex, Stack, Text } from "@chakra-ui/react";
 
 import WorkSession from "@features/time-tracker/components/WorkSession.tsx";
 
 import dateConverter, { formatTime } from "@utils/formatters.ts";
 import { WorkSessionModel } from "@interfaces/domain.ts";
+import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
 
 function WorkSessionGroup({ day, workSessions }: { day: string, workSessions: WorkSessionModel[] }) {
     const totalTime: number = workSessions.reduce((accumulator, { startTime, endTime }) => {
@@ -43,7 +44,7 @@ function WorkSessionGroup({ day, workSessions }: { day: string, workSessions: Wo
                 {workSessions.map((workSession: WorkSessionModel, i: number) => (
                     <Fragment key={workSession.id}>
                         <WorkSession data={workSession}/>
-                        {i < (workSessions.length - 1) && <Divider borderBottomWidth={2}/>}
+                        {i < (workSessions.length - 1) && <CustomHorizontalDivider/>}
                     </Fragment>
                 ))}
             </AccordionPanel>

@@ -11,7 +11,7 @@ function Timer({ color }: TimerProps) {
     const { time } = useTimer();
 
     return (
-        <Box fontSize="28px" color={color}>
+        <Box fontSize="24px" color={color}>
             {formatTime(time)}
         </Box>
     );

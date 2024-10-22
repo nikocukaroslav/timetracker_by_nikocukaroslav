@@ -59,6 +59,24 @@ namespace timetracker.Server.Application.Services
             return this;
         }
 
+        public QueryBuilder AddSearch(string[] columns, string search)
+        {
+            if (!string.IsNullOrEmpty(search))
+            {
+                var searchConditions = columns.Select(column => $"{column} LIKE @{column}");
+                Filters.Add($"({string.Join(" OR ", searchConditions)})");
+
+                Parameters.Add("SearchParam", $"%{search}%");
+            }
+
+            foreach (var column in columns)
+            {
+                Parameters.Add(column, $"%{search}%");
+            }
+
+            return this;
+        }
+
         public QueryBuilder AddBetweenFilter(string column, dynamic fromValue, dynamic toValue)
         {
             Filters.Add($"{column} BETWEEN {fromValue} AND {toValue}");
@@ -74,15 +92,9 @@ namespace timetracker.Server.Application.Services
 
         public QueryBuilder AddSort(string column, bool ascending)
         {
-            if (column == "IsEmployed")
-            {
-                Sort.Add($"CASE WHEN {column} = 1 THEN 1 ELSE 0 END {(ascending ? "ASC" : "DESC")}");
-            }
-            else
-            {
+  
                 Sort.Add($"{column} {(ascending ? "ASC" : "DESC")}");
-            }
-
+  
             return this;
         }
 

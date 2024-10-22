@@ -15,6 +15,9 @@ const employeesSlice = createSlice({
     name: "employees",
     initialState,
     reducers: {
+        setUsers(state, action) {
+            state.users = action.payload
+        },
         getUserSuccessful(state, action) {
             state.user = action.payload
         },
@@ -34,6 +37,7 @@ const employeesSlice = createSlice({
 })
 
 export const {
+    setUsers,
     getUsersSuccessful,
     setFilter,
     getUserSuccessful,

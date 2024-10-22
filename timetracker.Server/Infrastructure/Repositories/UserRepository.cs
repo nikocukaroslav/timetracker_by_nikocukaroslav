@@ -23,10 +23,8 @@ namespace timetracker.Server.Infrastructure.Repositories
                 .AddFilter("IsEmployed", filter?.IsEmployed)
                 .AddFilter("RoleId", filter?.RoleList)
                 .AddFilter("Status", filter?.StatusList)
-                .AddSort(
-                    sort?.SortBy ?? "IsEmployed",
-                    sort?.Ascending ?? false
-                )
+                .AddSearch(["Name", "Surname", "Email"], filter?.Search)
+                .AddSort("IsEmployed", false)
                 .AddSort(
                     sort?.SortBy ?? "Name",
                     sort?.Ascending ?? true

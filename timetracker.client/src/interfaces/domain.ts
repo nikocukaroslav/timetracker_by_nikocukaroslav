@@ -22,6 +22,7 @@ export interface PaginationModel {
 }
 
 export interface UserFilterModel {
+    search?: string | null,
     isEmployed?: boolean | null,
     statusList?: string[] | null,
     roleList?: string[] | null,

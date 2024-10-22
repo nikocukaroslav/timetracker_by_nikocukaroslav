@@ -44,7 +44,7 @@ function Employee({ employee }: EmployeeProps) {
                 py={4}
                 px={5}
                 rounded="md"
-                bg={`${!isEmployed && "red.100"}`}
+                bg={`${!isEmployed && "gray.200"}`}
             >
 
                 <Flex minW={80} align="center">

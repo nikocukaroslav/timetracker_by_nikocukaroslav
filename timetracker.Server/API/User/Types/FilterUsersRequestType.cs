@@ -6,6 +6,7 @@ namespace timetracker.Server.API.User.Types
     {
         public FilterUsersRequestType() 
         {
+            Field<StringGraphType>("search");
             Field<BooleanGraphType>("isEmployed");
             Field<ListGraphType<StringGraphType>>("statusList");
             Field<ListGraphType<GuidGraphType>>("roleList");

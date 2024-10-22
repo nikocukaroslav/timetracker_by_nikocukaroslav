@@ -38,12 +38,11 @@ function WorkSession({ data }: { data: WorkSessionModel }) {
     }
 
     return (
-
         <Flex
             position="relative"
             align="center"
             justify="space-between"
-            p="5"
+            p={4}
             bg="gray.50"
         >
             <Flex align="center">

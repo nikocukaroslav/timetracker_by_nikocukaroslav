@@ -43,7 +43,7 @@ function TimeTrackerHeader() {
 
     return (
         <Flex
-            p="5"
+            p="4"
             bg="gray.50"
             justify="space-between"
             align="center"
@@ -60,8 +60,8 @@ function TimeTrackerHeader() {
             >
                 <Icon
                     fill={isTracking ? "red.600" : "green.600"}
-                    w="32px"
-                    h="32px"
+                    w="28px"
+                    h="28px"
                     as={isTracking ? PiSquareFill : PiPlayFill}
                 />
                 <Text>{isTracking ? "Stop" : "Start"}</Text>

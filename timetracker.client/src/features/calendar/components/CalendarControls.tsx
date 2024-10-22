@@ -19,10 +19,10 @@ function CalendarControls() {
     }
 
     return (
-        <HStack flex="0 0 auto" fontWeight="450">
-            <Button onClick={prevMonth}><PiCaretLeftBold size="24"/></Button>
-            <Text fontSize="xl" w={170} textAlign="center" size="md">{formattedDate}</Text>
-            <Button onClick={nextMonth}><PiCaretRightBold size="24"/></Button>
+        <HStack flex="0 0 auto" width={72} fontWeight="450">
+            <Button onClick={prevMonth}><PiCaretLeftBold size="18"/></Button>
+            <Text fontSize="xl" w={170} textAlign="center">{formattedDate}</Text>
+            <Button onClick={nextMonth}><PiCaretRightBold size="18"/></Button>
         </HStack>
     );
 }

@@ -3,3 +3,7 @@ export type TimerContextType = {
     isActive: boolean;
 };
 
+export type TimeTrackerContextType = {
+    userId: string;
+    setUserId: (userId: string) => void;
+}

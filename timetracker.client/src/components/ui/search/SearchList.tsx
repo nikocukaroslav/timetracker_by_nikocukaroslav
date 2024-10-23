@@ -1,12 +1,7 @@
-import { useContext } from "react";
 import { Flex, Stack, Text } from "@chakra-ui/react";
-
-import { CalendarContext } from "@features/calendar/context/calendarContext.tsx";
-import { CalendarContextType } from "@features/calendar/types/calendar.ts";
 import { CalendarSearchListProps } from "@features/calendar/types/components.ts";
 
-function CalendarSearchList({ users, handleSelectUser }: CalendarSearchListProps) {
-    const { userId } = useContext(CalendarContext) as CalendarContextType;
+function SearchList({ userId, users, handleSelectUser }: CalendarSearchListProps) {
 
     return (
         users.length
@@ -41,4 +36,4 @@ function CalendarSearchList({ users, handleSelectUser }: CalendarSearchListProps
     );
 }
 
-export default CalendarSearchList;
+export default SearchList;

@@ -36,17 +36,17 @@ function Calendar() {
 
     return (
         <CalendarContext.Provider value={{
+            userId,
+            setUserId,
             currentDate,
             setCurrentDate,
             showMode,
             setShowMode,
-            userId,
-            setUserId
         }}>
             <Stack gap={0} h="full">
                 <HStack mx={4} mb={2} justifyContent="space-between">
                     <CalendarHeading/>
-                    <CalendarSearch setShowMode={setShowMode} setUserId={setUserId}/>
+                    <CalendarSearch/>
                     <CalendarControls/>
                 </HStack>
                 <CalendarHeader/>

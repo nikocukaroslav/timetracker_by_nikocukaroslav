@@ -18,6 +18,7 @@ export interface CreateEditWorkDayFormProps extends CreateEditFormProps {
 }
 
 export interface CalendarSearchListProps {
+    userId: string,
     users: Array<{ id: string, name: string, surname: string, email: string }>;
     handleSelectUser: (id: string) => void;
 }

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import PaginationFooter from "@components/ui/PaginationFooter.tsx";
@@ -6,16 +6,20 @@ import PaginationFooter from "@components/ui/PaginationFooter.tsx";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { getReports } from "@features/time-tracker/api/actions.ts";
 import { Box } from "@chakra-ui/react";
+import { TimeTrackerContext } from "@features/time-tracker/context/timeTrackerContext.ts";
+import { TimeTrackerContextType } from "@features/time-tracker/types/context.ts";
 
 function TimeTrackerFooter() {
     const dispatch = useDispatch()
     const pagination = useAppSelector(state => state.timeTracker.pagination)
-    const userId = useAppSelector(state => state.authentication.user?.id)
+    const { userId } = useContext(TimeTrackerContext) as TimeTrackerContextType;
+
+    console.log(userId)
 
     useEffect(() => {
         const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }
         dispatch(getReports(userId, paginationRequest));
-    }, [dispatch]);
+    }, [dispatch, userId]);
 
     function prevPage() {
         if (pagination.page) {

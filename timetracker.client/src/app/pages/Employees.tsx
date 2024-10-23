@@ -1,15 +1,14 @@
-import { AbsoluteCenter, Grid, GridItem } from "@chakra-ui/react";
+import { AbsoluteCenter, Grid, GridItem, Spinner } from "@chakra-ui/react";
 
 import EmployeeList from "@features/employees/components/EmployeeList.tsx";
 import EmployeesFooter from "@features/employees/components/EmployeesFooter.tsx";
 import EmployeesHeader from "@features/employees/components/EmployeesHeader.tsx";
 import CustomHorizontalDivider from "@components/ui/CustomHorizontalDivider.tsx";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getRoles } from "@features/roles/api/actions.ts";
 import { useDispatch } from "react-redux";
 import EmployeesTableHeader from "@features/employees/components/EmployeesTableHeader.tsx";
 import { EmployeesContext } from "@features/employees/context/employeesContext.ts";
-import Spinner from "@components/ui/Spinner.tsx";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 
 function Employees() {
@@ -40,16 +39,17 @@ function Employees() {
                     <EmployeesTableHeader/>
                     <CustomHorizontalDivider/>
                 </GridItem>
-                <GridItem overflow="auto" position="relative">
+                <GridItem overflow="auto">
                     {
                         !loading ?
-                            <AbsoluteCenter w="full" h="full">
-                                <Spinner/>
+                            <AbsoluteCenter>
+                                <Spinner size="xl"/>
                             </AbsoluteCenter> :
                             employees.length > 0 ?
-                                <EmployeeList/>
-                                :
-                                <AbsoluteCenter>Employees not found</AbsoluteCenter>
+                                <EmployeeList/> :
+                                <AbsoluteCenter>
+                                    Employees not found
+                                </AbsoluteCenter>
                     }
                 </GridItem>
                 <GridItem>

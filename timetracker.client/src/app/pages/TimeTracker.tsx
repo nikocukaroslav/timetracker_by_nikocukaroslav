@@ -1,6 +1,6 @@
 import { AbsoluteCenter, Grid, GridItem, Spinner } from "@chakra-ui/react";
 
-import TimeTrackerHeader from "@features/time-tracker/components/TimeTrackerHeader.tsx";
+import TimeTrackerTimer from "@features/time-tracker/components/TimeTrackerTimer.tsx";
 import PermissionChecker from "@components/layouts/PermissionChecker.tsx";
 
 import { MANAGE_OWN_TIME } from "@constants";
@@ -32,7 +32,7 @@ function TimeTracker() {
             >
                 <GridItem>
                     <PermissionChecker permissions={[MANAGE_OWN_TIME]}>
-                        <TimeTrackerHeader/>
+                        <TimeTrackerTimer/>
                     </PermissionChecker>
                 </GridItem>
                 <GridItem>

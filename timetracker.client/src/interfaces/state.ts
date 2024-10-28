@@ -27,6 +27,7 @@ export interface AuthenticationState {
 }
 
 export interface TimeTrackerState {
+    onActiveUser: boolean | null,
     workSessions: WorkSessionModel[];
     sessionId: string | null;
     isTracking: boolean;

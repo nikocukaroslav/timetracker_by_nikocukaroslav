@@ -75,6 +75,7 @@ function CalendarBody() {
                     selectedItems={selectedItems}
                     onEndSelect={handleEndSelect}
                     onSelect={handleSelect}
+                    onCreate={handleCreate}
                 />;
             })}
             <CreateEditWorkDayForm
@@ -85,9 +86,9 @@ function CalendarBody() {
                 }}
             />
             {loading &&
-				<AbsoluteCenter w="full" h="full">
-					<Spinner/>
-				</AbsoluteCenter>
+                <AbsoluteCenter w="full" h="full">
+                    <Spinner/>
+                </AbsoluteCenter>
             }
         </SimpleGrid>
     );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { PiTimer } from "react-icons/pi";
 import { useDisclosure, useToast } from "@chakra-ui/react";
@@ -12,6 +12,8 @@ import { schemas } from "@utils/inputHelpers.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
 import { useActionState } from "@hooks/useActionState.ts";
 import { ERROR_DURATION } from "@constants";
+import { TimeTrackerContext } from "@features/time-tracker/context/timeTrackerContext.ts";
+import { TimeTrackerContextType } from "@features/time-tracker/types/context.ts";
 
 const defaultFormData = {
     startTime: "",
@@ -19,7 +21,8 @@ const defaultFormData = {
 }
 
 function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEditWorkSessionFormProps) {
-    const userId = useAppSelector((state) => state.authentication.user?.id) as string;
+    const currentUserId = useAppSelector((state) => state.authentication.user?.id) as string;
+    const { userId } = useContext(TimeTrackerContext) as TimeTrackerContextType;
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -42,6 +45,7 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
         const startTimeTimestamp = new Date(values.startTime).getTime();
         const endTimeTimestamp = new Date(values.endTime).getTime();
         setIsSubmitting(true);
+
         if (!isEditing) {
             const newSession = {
                 startTime: startTimeTimestamp,
@@ -55,7 +59,7 @@ function CreateEditWorkSessionForm({ formData, isEditing, children }: CreateEdit
                 startTime: startTimeTimestamp,
                 endTime: endTimeTimestamp,
                 editedAt: new Date().getTime(),
-                editorId: userId,
+                editorId: currentUserId,
             };
             dispatch(updateWorkSession(newSessionData));
         }

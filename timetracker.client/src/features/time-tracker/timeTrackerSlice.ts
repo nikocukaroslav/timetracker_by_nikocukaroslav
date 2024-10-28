@@ -4,6 +4,7 @@ import { WorkSessionModel } from "@interfaces/domain.ts";
 import { TimeTrackerState } from "@interfaces/state.ts";
 
 const initialState: TimeTrackerState = {
+    onActiveUser: null,
     workSessions: [],
     sessionId: null,
     isTracking: false,
@@ -17,11 +18,16 @@ const timeTrackerSlice = createSlice({
     name: "timeTracker",
     initialState,
     reducers: {
+        setOnActiveUser(state, action) {
+            state.onActiveUser = action.payload
+        },
         startSuccessful(state, action) {
             state.sessionId = action.payload.id
         },
         stopSuccessful(state, action) {
-            state.workSessions.unshift(action.payload)
+            if (state.onActiveUser) {
+                state.workSessions.unshift(action.payload)
+            }
         },
         getWorkSessionsSuccessful(state, action) {
             state.workSessions = action.payload.items;
@@ -71,6 +77,7 @@ const timeTrackerSlice = createSlice({
 })
 
 export const {
+    setOnActiveUser,
     startSuccessful,
     stopSuccessful,
     getWorkSessionsSuccessful,

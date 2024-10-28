@@ -5,6 +5,8 @@ namespace timetracker.Server.Domain.Errors
     public static class ErrorCode
     {
         public static readonly ValidationError UNAUTHORIZED = new Error("Authorization error");
+
+        public static readonly ValidationError ACCESS_DENIED = new Error("You are not allowed to perform this action");
         
         public static readonly ValidationError INVALID_CREDENTIALS = new Error("Incorrect email or password");
 
@@ -17,8 +19,6 @@ namespace timetracker.Server.Domain.Errors
         public static readonly ValidationError WORK_SESSION_NOT_FOUND = new Error("Work session is not found");
 
         public static readonly ValidationError WORK_SESSION_ALREADY_STOPPED = new Error("Work session is already stopped");
-
-        public static readonly ValidationError WORK_SESSION_IN_FUTURE = new Error("Work session cannot be set in the future");
 
         public static readonly ValidationError WORK_SESSION_TIME_CONFLICT = new Error("Work session time overlaps with an existing one");
 

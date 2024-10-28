@@ -15,7 +15,7 @@ namespace timetracker.Server.Infrastructure.Repositories
         {
             using var connection = _connectionFactory.Create();
 
-            var query = $"SELECT COUNT(*) FROM {_tableName} WHERE StartTime < @EndTime AND (EndTime > @StartTime OR EndTime IS NULL) AND Id != @Id";
+            var query = $"SELECT COUNT(*) FROM {_tableName} WHERE UserId = @UserId AND StartTime < @EndTime AND (EndTime > @StartTime OR EndTime IS NULL) AND Id != @Id";
 
             var totalCount = await connection.ExecuteScalarAsync<int>(query, session);
 

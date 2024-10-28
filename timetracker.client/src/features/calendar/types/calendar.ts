@@ -6,5 +6,5 @@ export type CalendarContextType = {
     showMode: boolean;
     setShowMode: Dispatch<SetStateAction<boolean>>;
     userId: string;
-    setUserId: Dispatch<SetStateAction<string>>;
+    setUserId: (userId: string) => void;
 };

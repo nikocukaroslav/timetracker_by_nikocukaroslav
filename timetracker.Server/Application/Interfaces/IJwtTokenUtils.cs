@@ -5,6 +5,7 @@ namespace timetracker.Server.Application.Interfaces
 {
     public interface IJwtTokenUtils
     {
+        string? GetAuthenticatedUserEmail();
         TokenResponse GenerateToken(Claim[] claims, int expireMinutes);
         ClaimsPrincipal? ValidateToken(string token);
         TokenResponse GenerateAccessToken(string Email);

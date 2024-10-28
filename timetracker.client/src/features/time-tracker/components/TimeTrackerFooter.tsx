@@ -14,8 +14,6 @@ function TimeTrackerFooter() {
     const pagination = useAppSelector(state => state.timeTracker.pagination)
     const { userId } = useContext(TimeTrackerContext) as TimeTrackerContextType;
 
-    console.log(userId)
-
     useEffect(() => {
         const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }
         dispatch(getReports(userId, paginationRequest));

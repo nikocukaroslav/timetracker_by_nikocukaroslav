@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using timetracker.Server.Application.Interfaces;
 using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Enums;
 using timetracker.Server.Infrastructure.Database;

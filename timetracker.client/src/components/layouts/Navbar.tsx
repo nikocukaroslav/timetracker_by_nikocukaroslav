@@ -66,23 +66,23 @@ function Navbar() {
                         label="Employees"
                     />
                 </PermissionChecker>
-                <PermissionChecker permissions={[APPROVE_REQUESTS]}>
-                    <NavigationLink
-                        to="approves"
-                        icon={PiListChecks}
-                        label="Approves"
-                    />
-                </PermissionChecker>
+                <NavigationLink
+                    icon={PiChartLine}
+                    label="Reports"
+                    to="reports"/>
                 <PermissionChecker permissions={[MANAGE_ROLES]}>
                     <NavigationLink
                         to="roles"
                         icon={PiUserGear}
                         label="Roles"
                     />
+                </PermissionChecker>
+                <PermissionChecker permissions={[APPROVE_REQUESTS]}>
                     <NavigationLink
-                        icon={PiChartLine}
-                        label="Reports"
-                        to="reports"/>
+                        to="approves"
+                        icon={PiListChecks}
+                        label="Approves"
+                    />
                 </PermissionChecker>
                 <CustomNavbarDivider label="Request"/>
                 <NavigationLink

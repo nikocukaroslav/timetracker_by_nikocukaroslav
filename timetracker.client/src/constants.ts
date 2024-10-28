@@ -6,6 +6,7 @@ export const APPROVE_REQUESTS = "APPROVE_REQUESTS"
 export const MANAGE_USERS = "MANAGE_USERS"
 export const MANAGE_OWN_TIME = "MANAGE_OWN_TIME"
 export const MANAGE_ROLES = "MANAGE_ROLES"
+export const MANAGE_SOMEONES_WORK_SESSIONS = "MANAGE_SOMEONES_WORK_SESSIONS"
 
 export const permissionList = [
     {
@@ -23,6 +24,10 @@ export const permissionList = [
     {
         name: MANAGE_ROLES,
         description: "manage roles",
+    },
+    {
+        name: MANAGE_SOMEONES_WORK_SESSIONS,
+        description: "manage someones work sessions",
     }
 ];
 

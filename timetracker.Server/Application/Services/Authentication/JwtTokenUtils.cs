@@ -10,7 +10,8 @@ using timetracker.Server.Infrastructure.Interfaces;
 
 namespace timetracker.Server.Application.Services.Authentication
 {
-    public class JwtTokenUtils : IJwtTokenUtils
+    public class JwtTokenUtils : 
+        IJwtTokenUtils
     {
         private readonly JwtSettings _jwtSettings;
         private readonly IUserRepository _userRepository;
@@ -25,6 +26,25 @@ namespace timetracker.Server.Application.Services.Authentication
             _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
         }
+        public string? GetAuthenticatedUserEmail()
+        {
+            var authorizationHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
+
+            if (authorizationHeader != null && authorizationHeader.StartsWith("Bearer "))
+            {
+                var token = authorizationHeader.Substring("Bearer ".Length).Trim();
+                var claimsPrincipal = ValidateToken(token);
+
+                if (claimsPrincipal != null && claimsPrincipal.Identity.IsAuthenticated)
+                {
+                    var emailClaim = claimsPrincipal.FindFirst(ClaimTypes.Email);
+                    return emailClaim?.Value;
+                }
+            }
+
+            return null;
+        }
+
 
         public TokenResponse GenerateToken(Claim[] claims, int expireMinutes)
         {

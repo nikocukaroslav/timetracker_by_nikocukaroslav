@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using System.Security.Claims;
 using timetracker.Server.API.Pagination.Models;
 using timetracker.Server.API.User.Models;
+using timetracker.Server.Application.Interfaces;
 using timetracker.Server.Application.Services;
 using timetracker.Server.Domain.Entities;
 using timetracker.Server.Domain.Models;
@@ -61,7 +63,7 @@ namespace timetracker.Server.Infrastructure.Repositories
             );
 
             return user;
-        }
+        } 
 
         public async Task<IDictionary<Guid?, User>> GetUsersByIdAsync(IEnumerable<Guid?> ids)
         {

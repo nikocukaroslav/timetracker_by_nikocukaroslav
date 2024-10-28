@@ -3,8 +3,9 @@
     public enum Permission
     {
         MANAGE_USERS,
-        APPROVE_REQUESTS,
         MANAGE_OWN_TIME,
-        MANAGE_ROLES
+        MANAGE_ROLES,
+        MANAGE_SOMEONES_WORK_SESSIONS,
+        APPROVE_REQUESTS
     }
 }

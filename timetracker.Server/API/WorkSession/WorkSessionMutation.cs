@@ -1,6 +1,8 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using System.Security.Claims;
 using timetracker.Server.API.WorkSession.Types;
+using timetracker.Server.Application.Interfaces;
 using timetracker.Server.Application.Services;
 using timetracker.Server.Domain.Enums;
 using timetracker.Server.Domain.Errors;
@@ -11,7 +13,8 @@ namespace timetracker.Server.API.WorkSession
 {
     public class WorkSessionMutation : ObjectGraphType
     {
-        public WorkSessionMutation(IWorkSessionRepository workSessionRepository)
+        public WorkSessionMutation(IWorkSessionRepository workSessionRepository,
+            IJwtTokenUtils jwtTokenUtils, IUserRepository userRepository)
         {
             this.Authorize();
 
@@ -20,6 +23,25 @@ namespace timetracker.Server.API.WorkSession
                  .ResolveAsync(async context =>
                  {
                      var inputSession = context.GetArgument<WorkSessionModel>("session");
+
+                     var authenticatedUserEmail = jwtTokenUtils.GetAuthenticatedUserEmail();
+
+                     if (authenticatedUserEmail == null)
+                     {
+                         context.Errors.Add(ErrorCode.ACCESS_DENIED);
+                         return null;
+                     }
+
+                     var authenticatedUser = await userRepository.GetUserByEmailAsync(authenticatedUserEmail);
+
+                     if (inputSession.UserId != authenticatedUser.Id)
+                     {
+                         if (!authenticatedUser.Permissions.Contains(Permission.MANAGE_SOMEONES_WORK_SESSIONS.ToString()))
+                         {
+                             context.Errors.Add(ErrorCode.ACCESS_DENIED);
+                             return null;
+                         }
+                     }
 
                      if (inputSession.StartTime > inputSession.EndTime)
                      {
@@ -30,12 +52,6 @@ namespace timetracker.Server.API.WorkSession
                      if (DataValidator.IsSessionDurationValid(inputSession.StartTime, inputSession.EndTime))
                      {
                          context.Errors.Add(ErrorCode.WORK_SESSION_TOO_LONG);
-                         return null;
-                     }
-
-                     if (DataValidator.IsTimeInFuture(inputSession.EndTime))
-                     {
-                         context.Errors.Add(ErrorCode.WORK_SESSION_IN_FUTURE);
                          return null;
                      }
 
@@ -62,21 +78,34 @@ namespace timetracker.Server.API.WorkSession
                 {
                     var inputSession = context.GetArgument<WorkSessionModel>("session");
 
+                    var authenticatedUserEmail = jwtTokenUtils.GetAuthenticatedUserEmail();
+
+                    if (authenticatedUserEmail == null)
+                    {
+                        context.Errors.Add(ErrorCode.ACCESS_DENIED);
+                        return null;
+                    }
+
+                    var authenticatedUser = await userRepository.GetUserByEmailAsync(authenticatedUserEmail);
+
+                    if (inputSession.UserId != authenticatedUser.Id)
+                    {
+                        if (!authenticatedUser.Permissions.Contains(Permission.MANAGE_SOMEONES_WORK_SESSIONS.ToString()))
+                        {
+                            context.Errors.Add(ErrorCode.ACCESS_DENIED);
+                            return null;
+                        }
+                    }
+
                     if (inputSession.StartTime > inputSession.EndTime)
                     {
                         context.Errors.Add(ErrorCode.INVALID_TIME_RANGE);
                         return null;
                     }
 
-                    if(DataValidator.IsSessionDurationValid(inputSession.StartTime, inputSession.EndTime))
+                    if (DataValidator.IsSessionDurationValid(inputSession.StartTime, inputSession.EndTime))
                     {
                         context.Errors.Add(ErrorCode.WORK_SESSION_TOO_LONG);
-                        return null;
-                    }
-
-                    if (DataValidator.IsTimeInFuture(inputSession.EndTime))
-                    {
-                        context.Errors.Add(ErrorCode.WORK_SESSION_IN_FUTURE);
                         return null;
                     }
 
@@ -114,6 +143,25 @@ namespace timetracker.Server.API.WorkSession
                 {
                     Guid id = context.GetArgument<Guid>("id");
                     var workSession = await workSessionRepository.GetByIdAsync(id);
+
+                    var authenticatedUserEmail = jwtTokenUtils.GetAuthenticatedUserEmail();
+
+                    if (authenticatedUserEmail == null)
+                    {
+                        context.Errors.Add(ErrorCode.ACCESS_DENIED);
+                        return null;
+                    }
+
+                    var authenticatedUser = await userRepository.GetUserByEmailAsync(authenticatedUserEmail);
+
+                    if (workSession.UserId != authenticatedUser.Id)
+                    {
+                        if (!authenticatedUser.Permissions.Contains(Permission.MANAGE_SOMEONES_WORK_SESSIONS.ToString()))
+                        {
+                            context.Errors.Add(ErrorCode.ACCESS_DENIED);
+                            return null;
+                        }
+                    }
 
                     if (workSession is null)
                     {

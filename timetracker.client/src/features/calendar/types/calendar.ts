@@ -4,7 +4,7 @@ export type CalendarContextType = {
     currentDate: Date;
     setCurrentDate: Dispatch<SetStateAction<Date>>;
     showMode: boolean;
-    setShowMode: Dispatch<SetStateAction<boolean>>;
     userId: string;
+    setShowMode: Dispatch<SetStateAction<boolean>>;
     setUserId: (userId: string) => void;
 };

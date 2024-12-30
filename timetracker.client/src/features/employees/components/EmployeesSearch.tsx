@@ -1,4 +1,4 @@
-import SearchInput from "@components/ui/SearchInput.tsx";
+import SearchInput from "@components/ui/search/SearchInput.tsx";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { EmployeesContext } from "@features/employees/context/employeesContext.ts";
@@ -29,12 +29,11 @@ function EmployeesSearch() {
 
             dispatch(setFilter(updatedFilter))
             dispatch(getUsers(paginationRequest, updatedFilter));
-
         }, 300);
 
-        setLoading(false)
+        setLoading(false);
         return () => clearTimeout(searchUsers);
-    }, [search, dispatch, setLoading])
+    }, [search])
 
     return (
         <SearchInput

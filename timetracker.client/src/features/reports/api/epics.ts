@@ -2,7 +2,7 @@ import { Epic, ofType } from "redux-observable";
 import { MyAction } from "@interfaces/actions/globalActions.ts";
 import { GET_REPORTS } from "@constants";
 import { fulfilled, resetState } from "@utils/actionStateHelpers.ts";
-import { map, switchMap } from "rxjs";
+import { map, switchMap, tap } from "rxjs";
 import { graphQlQuery } from "@utils/graphQlQuery.ts";
 import { setError } from "@/store/slices/actionsStateSlice.ts";
 import { getReportsQuery } from "@features/reports/api/requests.ts";
@@ -15,6 +15,7 @@ export const getReportsEpic: Epic<MyAction> = (action$) =>
         switchMap(action =>
             graphQlQuery(getReportsQuery, {
                 pagination: action.payload.pagination,
+                filter: action.payload.filter,
                 startDate: action.payload.startDate,
                 endDate: action.payload.endDate
             }).pipe(
@@ -28,3 +29,4 @@ export const getReportsEpic: Epic<MyAction> = (action$) =>
         ),
         fulfilled(GET_REPORTS)
     );
+

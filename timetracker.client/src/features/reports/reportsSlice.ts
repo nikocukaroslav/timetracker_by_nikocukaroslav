@@ -22,11 +22,15 @@ const reportsSlice = createSlice({
             state.pagination.hasNextPage = payload.hasNextPage
             state.pagination.hasPreviousPage = payload.hasPreviousPage
         },
+        setFilter(state, action) {
+            state.filter = action.payload
+        },
     },
 })
 
 export const {
     getReportsSuccessful,
+    setFilter
 } = reportsSlice.actions;
 
 export default reportsSlice.reducer;

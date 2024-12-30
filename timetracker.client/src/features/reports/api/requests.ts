@@ -1,7 +1,7 @@
 export const getReportsQuery = `
-  query UsersReport($pagination: PaginationRequestType!, $startDate: Long!, $endDate: Long!) {
+  query UsersReport($pagination: PaginationRequestType!, $startDate: Long!, $endDate: Long!, $filter: FilterUsersRequestType) {
   users {
-    usersReport(usersReport: { pagination: $pagination, startDate: $startDate, endDate: $endDate }) {
+    usersReport(usersReport: { pagination: $pagination, filter: $filter, startDate: $startDate, endDate: $endDate }) {
       items {
         id
         name

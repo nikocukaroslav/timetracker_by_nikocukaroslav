@@ -1,5 +1,4 @@
-﻿using GraphQL;
-using GraphQL.DataLoader;
+﻿using GraphQL.DataLoader;
 using GraphQL.Types;
 using timetracker.Server.API.Role.Types;
 using timetracker.Server.Application.Services;

@@ -14,7 +14,7 @@ import {
 import { request } from "@utils/request.ts";
 import { findEmployeesQuery } from "@features/calendar/api/requests.ts";
 import { useAppSelector } from "@hooks/useAppSelector.ts";
-import SearchInput from "@components/ui/SearchInput.tsx";
+import SearchInput from "@components/ui/search/SearchInput.tsx";
 import SearchList from "@components/ui/search/SearchList.tsx";
 
 interface SearchProps {
@@ -76,13 +76,13 @@ function Search({ setUserId, setShowMode, userId }: SearchProps) {
         }
 
         return () => clearTimeout(searchUsers);
-    }, [search])
+    }, [accountId, onClose, onOpen, search])
 
     useEffect(() => {
         if (search === "") {
             setUserId(accountId);
         }
-    }, [search]);
+    }, [accountId, search, setUserId]);
 
     return (
         <Popover isOpen={isOpen} onClose={onClose} placement='bottom-end' isLazy>
@@ -94,7 +94,7 @@ function Search({ setUserId, setShowMode, userId }: SearchProps) {
                             setSearch("")
                         }}
                         type="text"
-                        placeholder="Search сalendar"
+                        placeholder="Search employee"
                         onChange={handleSearchChange}
                         value={search}/>
                 </Box>

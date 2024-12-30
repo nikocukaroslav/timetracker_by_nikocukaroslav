@@ -154,23 +154,36 @@ namespace timetracker.Server.Infrastructure.Repositories
             return users.ToList();
         }
 
-        public async Task<PaginatedList<UserMonthlyReport>> GetUserMonthlyReportsAsync(long startDay, long endDay, Pagination pagination, FilterUsers? filter, Sort? sort)
+        public async Task<PaginatedList<UserMonthlyReport>> GetUserMonthlyReportsAsync(long startDate, long endDate, Pagination pagination, FilterUsers? filter, Sort? sort)
         {
             using var connection = _connectionFactory.Create();
 
             var query = new QueryBuilder()
-                .AddLeftJoin("Users", "WorkSessions.UserId = Users.Id")
-                .AddBetweenFilter("WorkSessions.StartTime", startDay, endDay)
+                .AddLeftJoin("WorkSessions", "Users.Id = WorkSessions.UserId")
                 .AddFilter("IsEmployed", filter?.IsEmployed)
                 .AddFilter("Status", filter?.StatusList)
                 .AddFilter("RoleId", filter?.RoleList)
+                .AddSearch(["Name", "Surname", "Email"], filter?.Search)
                 .AddSort(
                     sort?.SortBy ?? "Name",
                     sort?.Ascending ?? true
                 )
                 .AddPagination(pagination)
                 .AddGroupBy("Users.Id, Users.Name, Users.Surname, Users.Email, Users.RoleId, Users.Timeload")
-                .Create("FROM WorkSessions", "Users.Id, Users.Name, Users.Surname, Users.Email, Users.RoleId, Users.Timeload, SUM(WorkSessions.EndTime - WorkSessions.StartTime)/1000 AS TotalTime");
+                .Create("FROM Users",
+                    @"Users.Id, 
+                      Users.Name, 
+                      Users.Surname, 
+                      Users.Email, 
+                      Users.RoleId, 
+                      Users.Timeload, 
+                      COALESCE(SUM(CASE 
+                          WHEN WorkSessions.StartTime BETWEEN @startDate AND @endDate 
+                          THEN WorkSessions.EndTime - WorkSessions.StartTime 
+                          ELSE 0 END), 0) / 1000 AS TotalTime");
+
+            query.Parameters.Add("startDate", startDate);
+            query.Parameters.Add("endDate", endDate);
 
             var totalCount = await connection.ExecuteScalarAsync<int>(query.TotalCountQuery, query.Parameters);
 

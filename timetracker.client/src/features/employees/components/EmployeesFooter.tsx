@@ -14,7 +14,7 @@ function EmployeesFooter() {
     useEffect(() => {
         const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }
         dispatch(getUsers(paginationRequest, filter));
-    }, [dispatch]);
+    }, [dispatch, filter, pagination.page, pagination.pageSize]);
 
     function prevPage() {
         if (pagination.page) {

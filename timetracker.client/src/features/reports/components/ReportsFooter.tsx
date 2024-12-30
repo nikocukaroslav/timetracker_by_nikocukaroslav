@@ -9,6 +9,7 @@ import { ReportsContext } from "@features/reports/context/reportContext.ts";
 function ReportsFooter() {
     const dispatch = useDispatch()
     const pagination = useAppSelector(state => state.reports.pagination)
+    const filter = useAppSelector(state => state.employees.filter)
 
     const { currentDate } = useContext(ReportsContext);
 
@@ -19,27 +20,27 @@ function ReportsFooter() {
 
     useEffect(() => {
         const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }
-        dispatch(getReports(paginationRequest, startDate, endDate));
+        dispatch(getReports(paginationRequest,filter, startDate, endDate));
     }, [dispatch, endDate, pagination.page, pagination.pageSize, startDate]);
 
     function prevPage() {
         if (pagination.page) {
             const paginationRequest = { page: pagination.page - 1, pageSize: pagination.pageSize }
-            dispatch(getReports(paginationRequest, startDate, endDate));
+            dispatch(getReports(paginationRequest,filter, startDate, endDate));
         }
     }
 
     function nextPage() {
         if (pagination.page) {
             const paginationRequest = { page: pagination.page + 1, pageSize: pagination.pageSize }
-            dispatch(getReports(paginationRequest, startDate, endDate));
+            dispatch(getReports(paginationRequest,filter, startDate, endDate));
         }
     }
 
     const handlePageSizeChange = (value: string) => {
         const newSize = Number(value)
         if (newSize > 0 && newSize <= 100) {
-            dispatch(getReports({ page: 1, pageSize: newSize }, startDate, endDate));
+            dispatch(getReports({ page: 1, pageSize: newSize },filter, startDate, endDate));
             localStorage.setItem("reportsPageSize", newSize.toString());
         }
     }

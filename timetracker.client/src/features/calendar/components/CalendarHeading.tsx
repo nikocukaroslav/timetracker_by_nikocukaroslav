@@ -1,7 +1,7 @@
 import TitledText from "@components/ui/TitledText.tsx";
 
 import { useAppSelector } from "@hooks/useAppSelector.ts";
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 function CalendarHeading() {
     const user = useAppSelector(state => state.calendar.user);
@@ -12,11 +12,11 @@ function CalendarHeading() {
         : `Calendar ${user?.name} ${user?.surname}`;
 
     return (
-        <Box w={72} justifyItems="end">
+        <Flex w={72} justifyContent="end">
             <TitledText title={title} fontSize="xl" fontWeight={450}>
                 {title}
             </TitledText>
-        </Box>
+        </Flex>
     );
 }
 

@@ -6,6 +6,7 @@ export interface CreateEditWorkDayFormProps extends CreateEditFormProps {
     onCreate?: ({ startTime, endTime }: {
         startTime: string;
         endTime: string;
+        days: [];
     }) => void,
     onUpdate?: ({ startTime, endTime }: {
         startTime: string;

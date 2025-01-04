@@ -5,13 +5,14 @@ import { Box } from "@chakra-ui/react";
 import PaginationFooter from "@components/ui/PaginationFooter.tsx";
 import { getReports } from "@features/reports/api/actions.ts";
 import { ReportsContext } from "@features/reports/context/reportContext.ts";
+import { ReportsContextType } from "@features/reports/types/context.ts";
 
 function ReportsFooter() {
     const dispatch = useDispatch()
     const pagination = useAppSelector(state => state.reports.pagination)
     const filter = useAppSelector(state => state.employees.filter)
 
-    const { currentDate } = useContext(ReportsContext);
+    const { currentDate } = useContext(ReportsContext) as ReportsContextType;
 
     const date = new Date(currentDate);
 
@@ -20,27 +21,27 @@ function ReportsFooter() {
 
     useEffect(() => {
         const paginationRequest = { page: pagination.page || 1, pageSize: pagination.pageSize || 10 }
-        dispatch(getReports(paginationRequest,filter, startDate, endDate));
+        dispatch(getReports(paginationRequest, filter, startDate, endDate));
     }, [dispatch, endDate, pagination.page, pagination.pageSize, startDate]);
 
     function prevPage() {
         if (pagination.page) {
             const paginationRequest = { page: pagination.page - 1, pageSize: pagination.pageSize }
-            dispatch(getReports(paginationRequest,filter, startDate, endDate));
+            dispatch(getReports(paginationRequest, filter, startDate, endDate));
         }
     }
 
     function nextPage() {
         if (pagination.page) {
             const paginationRequest = { page: pagination.page + 1, pageSize: pagination.pageSize }
-            dispatch(getReports(paginationRequest,filter, startDate, endDate));
+            dispatch(getReports(paginationRequest, filter, startDate, endDate));
         }
     }
 
     const handlePageSizeChange = (value: string) => {
         const newSize = Number(value)
         if (newSize > 0 && newSize <= 100) {
-            dispatch(getReports({ page: 1, pageSize: newSize },filter, startDate, endDate));
+            dispatch(getReports({ page: 1, pageSize: newSize }, filter, startDate, endDate));
             localStorage.setItem("reportsPageSize", newSize.toString());
         }
     }

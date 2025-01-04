@@ -19,9 +19,9 @@ export const schemas = {
     createEditWorkDayFormSchema: Yup.object().shape({
         startTime: Yup.string()
             .required("Work start is required")
-            .test("is-workStart-before-workEnd", "Work start must be before Work end", function (value) {
-                const { workEnd } = this.parent;
-                return !workEnd || new Date(`1970-01-01T${value}:00Z`) <= new Date(`1970-01-01T${workEnd}:00Z`);
+            .test("is-workStart-before-workEnd", "Work start must be before work end", function (value) {
+                const { endTime } = this.parent;
+                return !endTime || new Date(`1970-01-01T${value}:00Z`) < new Date(`1970-01-01T${endTime}:00Z`);
             }),
         endTime: Yup.string().required("Work end is required"),
     }),

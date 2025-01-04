@@ -18,7 +18,6 @@ export const createWorkDays = (workDays: {
 }) => ({ type: CREATE_WORK_DAYS, payload: workDays })
 export const updateWorkDay = (workDayToUpdate: {
     id: string,
-    day: string,
     startTime: string,
     endTime: string,
 }) => ({

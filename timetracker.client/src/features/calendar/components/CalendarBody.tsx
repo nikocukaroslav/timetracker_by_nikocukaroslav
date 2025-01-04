@@ -45,14 +45,14 @@ function CalendarBody() {
         }
     }
 
-    function handleCreate({ startTime, endTime }: { startTime: string; endTime: string }) {
+    function handleCreate({ startTime, endTime, days }: { startTime: string; endTime: string, days: [] }) {
         const newWorkDays = {
-            days: selectedItemsRef.current,
+            days: !days ? selectedItemsRef.current : days,
             startTime: convertTime(startTime),
             endTime: convertTime(endTime),
             userId: userId as string,
         }
-
+        console.log(newWorkDays)
         dispatch(createWorkDays(newWorkDays))
     }
 
@@ -75,7 +75,7 @@ function CalendarBody() {
                     selectedItems={selectedItems}
                     onEndSelect={handleEndSelect}
                     onSelect={handleSelect}
-                    onCreate={handleCreate}
+                    handleCreate={handleCreate}
                 />;
             })}
             <CreateEditWorkDayForm

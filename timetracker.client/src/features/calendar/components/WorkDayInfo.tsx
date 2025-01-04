@@ -17,10 +17,6 @@ import { convertTime } from "@utils/formatters.ts";
 import { WorkDayModel } from "@interfaces/domain.ts";
 import WorkDayOptions from "@features/calendar/components/WorkDayOptions.tsx";
 
-function CustomHorizontalDivider() {
-    return null;
-}
-
 function WorkDayInfo({ workDays, isOpen, onClose, handleDelete, onOpen }: {
     workDays: WorkDayModel[]
     isOpen: boolean,
@@ -47,18 +43,17 @@ function WorkDayInfo({ workDays, isOpen, onClose, handleDelete, onOpen }: {
                         </Flex>
                     </ModalHeader>
                     <ModalCloseButton/>
-                    <CustomHorizontalDivider/>
                     <ModalBody>
                         <Stack gap={4}>
-                            {workDays.map(({ id, startTime, endTime }) => (
-                                <Flex justifyContent="space-between">
-                                    <Center key={id} gap={2} py={1}>
+                            {workDays.map(({ id, startTime, endTime }: WorkDayModel) => (
+                                <Flex key={id} justifyContent="space-between">
+                                    <Center gap={2} py={1}>
                                         <PiClock size={20}/>
                                         <TitledText>
                                             {convertTime(startTime as string, "hh:mm")} - {convertTime(endTime as string, "hh:mm")}
                                         </TitledText>
                                     </Center>
-                                    <WorkDayOptions key={id} handleDelete={handleDelete} onOpen={onOpen} id={id}/>
+                                    <WorkDayOptions handleDelete={handleDelete} onOpen={onOpen} id={id}/>
                                 </Flex>
                             ))}
                         </Stack>

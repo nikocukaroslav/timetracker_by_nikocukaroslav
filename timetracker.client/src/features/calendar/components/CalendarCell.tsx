@@ -1,6 +1,6 @@
 import { MutableRefObject, useContext, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { PiClock, PiPlus } from "react-icons/pi";
+import { PiClock } from "react-icons/pi";
 import { Button, Center, Flex, Stack, useDisclosure } from "@chakra-ui/react";
 
 import CreateEditWorkDayForm from "@features/calendar/components/CreateEditWorkDayForm.tsx";
@@ -20,10 +20,10 @@ interface CalendarCellProps {
     selectedItems: string[],
     onEndSelect: () => void,
     onSelect: (day: string) => void,
-    handleCreate: ({ startTime, endTime }: { startTime: string; endTime: string }) => void
+    handleCreate: ({ startTime, endTime, days }: { startTime: string; endTime: string, days: [] }) => void
 }
 
-function CalendarCell({ selecting, date, selectedItems, onEndSelect, onSelect, handleCreate }: CalendarCellProps) {
+function CalendarCell({ selecting, date, selectedItems, onEndSelect, onSelect }: CalendarCellProps) {
     const isoDate = convertDateToISODate(date);
     const workDays = useAppSelector((state) => state.calendar.workDays.filter(({ day }) => day == isoDate));
     const ref = useRef<HTMLDivElement>(null);
@@ -35,17 +35,12 @@ function CalendarCell({ selecting, date, selectedItems, onEndSelect, onSelect, h
     const isSelected = selectedItems.includes(isoDate);
     const cellBg = isSelected ? "gray.400 !important" : "gray.100";
 
-    const isContainsWorkDays = workDays.length > 0
-
     const number = date.getDate();
 
     const dispatch = useDispatch();
     const updateFormDisclosure = useDisclosure();
-    const createFormDisclosure = useDisclosure();
-    const infoDisclosure = useDisclosure();
+    const infoFormDisclosure = useDisclosure();
     const { showMode } = useContext(CalendarContext) as CalendarContextType;
-
-    const { onOpen } = updateFormDisclosure;
 
     function handleUpdate(workDayId: string, updatedTime: { startTime: string; endTime: string }) {
         dispatch(updateWorkDay({
@@ -72,10 +67,8 @@ function CalendarCell({ selecting, date, selectedItems, onEndSelect, onSelect, h
             }
         }
 
-        if (!isContainsWorkDays) {
-            ref.current?.addEventListener('mousedown', mouseDown);
-            ref.current?.addEventListener('mouseover', mouseOver);
-        }
+        ref.current?.addEventListener('mousedown', mouseDown);
+        ref.current?.addEventListener('mouseover', mouseOver);
 
         ref.current?.addEventListener('mouseup', onEndSelect);
 
@@ -122,7 +115,7 @@ function CalendarCell({ selecting, date, selectedItems, onEndSelect, onSelect, h
                         {!showMode && (
                             <>
                                 <WorkDayOptions handleDelete={handleDelete}
-                                                onOpen={onOpen} id={id} visibleOnHover/>
+                                                onOpen={updateFormDisclosure.onOpen} id={id} visibleOnHover/>
                                 <CreateEditWorkDayForm
                                     disclosure={updateFormDisclosure}
                                     formData={{ startTime, endTime }}
@@ -130,23 +123,25 @@ function CalendarCell({ selecting, date, selectedItems, onEndSelect, onSelect, h
                                     isEditing
                                 />
                             </>
+
                         )}
                     </Flex>
+
                 ))}
             </Stack>
             {workDays.length > 2 &&
-                <Button h={6} w={16} fontWeight="500" onClick={infoDisclosure.onOpen} fontSize="sm">More...</Button>}
-            <WorkDayInfo onClose={infoDisclosure.onClose} isOpen={infoDisclosure.isOpen}
-                         workDays={workDays} handleDelete={handleDelete} onOpen={onOpen}
-            />
-            {isContainsWorkDays &&
-                <Center onClick={createFormDisclosure.onOpen} position="absolute" _hover={{ bg: "gray.200" }} p={2}
-                        rounded="md" right={1}>
-                    <PiPlus/>
-                </Center>}
-            <CreateEditWorkDayForm
-                disclosure={createFormDisclosure}
-                onCreate={handleCreate}
+                <Button h={6}
+                        w={16}
+                        fontWeight={500}
+                        fontSize="sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            infoFormDisclosure.onOpen()
+                        }}
+                >More...
+                </Button>}
+            <WorkDayInfo onClose={infoFormDisclosure.onClose} isOpen={infoFormDisclosure.isOpen}
+                         workDays={workDays} handleDelete={handleDelete} onOpen={infoFormDisclosure.onOpen}
             />
         </Stack>
     );
